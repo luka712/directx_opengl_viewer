@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\ViewerWin32\x64\Debug\ViewerWin32.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\ViewerWin32\x64\Debug\StandardMaterialPShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\ViewerWin32\x64\Debug\StandardMaterialVShader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
