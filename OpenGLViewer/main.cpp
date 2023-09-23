@@ -29,6 +29,9 @@ int main(int argc, char *args[])
    GeometryBuffer geometryBuffer;
    geometryBuffer.Initialize(geometry.positionVertices, geometry.indices);
 
+   glm::mat4x4 projectionViewMatrix = glm::ortho(-10.0, 10.0, -5.0, 5.0, -1.0, 1.0);
+   glm::mat4x4 modelMatrix = glm::mat4x4(1.0f);
+
    while (true)
    {
       SDL_Event Event;
@@ -44,16 +47,11 @@ int main(int argc, char *args[])
 
       renderer.Begin();
 
+      // Draw
       shader.Use();
-
-      shader.SetProjectionViewMatrix(glm::ortho(-10.0, 10.0, -5.0, 5.0, -1.0, 1.0));
-
-      glm::mat4x4 modelMatrix = glm::mat4x4(1.0f);
-      modelMatrix = glm::translate(modelMatrix, glm::vec3(9.5f, 0.0f, 0.0f));
+      shader.SetProjectionViewMatrix(projectionViewMatrix);
       shader.SetModelMatrix(modelMatrix);
-
-      geometryBuffer.Bind();
-      glDrawElements(GL_TRIANGLES, geometry.indices.size(), GL_UNSIGNED_SHORT, nullptr);
+      geometryBuffer.Draw();
 
       renderer.End();
 

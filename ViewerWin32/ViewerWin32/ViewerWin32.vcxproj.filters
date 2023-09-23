@@ -25,12 +25,6 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{e8ecffb6-8e5c-4bfd-923a-824da71570d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Controls">
-      <UniqueIdentifier>{ad402bea-e994-44f2-b4be-d8a1e8cf2ed9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Controls">
-      <UniqueIdentifier>{0381826d-da93-4f0e-9af1-cb738938e3b5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\UI">
       <UniqueIdentifier>{6ce5d088-e962-4537-b349-f2bdc1a1aac3}</UniqueIdentifier>
     </Filter>
@@ -78,9 +72,6 @@
     <ClInclude Include="GeometryBuffer.hpp">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="ColorPicker.hpp">
-      <Filter>Header Files\Controls</Filter>
-    </ClInclude>
     <ClInclude Include="UIControl.hpp">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
@@ -94,6 +85,9 @@
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="MatrixUtil.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32ErrorUtil.hpp">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,9 +104,6 @@
     <ClCompile Include="GeometryBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="ColorPicker.cpp">
-      <Filter>Source Files\Controls</Filter>
-    </ClCompile>
     <ClCompile Include="UIControl.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
@@ -123,6 +114,9 @@
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="MatrixUtil.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32ErrorUtil.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
   </ItemGroup>

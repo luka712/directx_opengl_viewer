@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "Win32ErrorUtil.hpp"
 
 namespace Viewer
 {
@@ -58,9 +59,16 @@ namespace Viewer
 			return false;
 		}
 
+		if (!ConfigureDepthStencil(width, height))
+		{
+			MessageBoxW(nullptr, L"Failed to configure depth stencil", L"Error", MB_OK | MB_ICONERROR);
+			return false;
+		}
+
 		// Set the render target view as the current render target
 		ID3D11RenderTargetView* renderTargetViewPtr = m_renderTargetView.p;
-		m_deviceContext->OMSetRenderTargets(1, &renderTargetViewPtr, nullptr);
+		ID3D11DepthStencilView* depthStencilViewPtr = m_depthStencilView.p;
+		m_deviceContext->OMSetRenderTargets(1, &renderTargetViewPtr, depthStencilViewPtr);
 
 		// Set the viewport
 		CD3D11_VIEWPORT viewport = CD3D11_VIEWPORT(
@@ -75,7 +83,7 @@ namespace Viewer
 		D3D11_RASTERIZER_DESC raster_desc;
 		raster_desc.FillMode = D3D11_FILL_SOLID;
 		raster_desc.CullMode = D3D11_CULL_BACK;
-		raster_desc.FrontCounterClockwise = false;
+		raster_desc.FrontCounterClockwise = true;
 		raster_desc.DepthBias = 0;
 		raster_desc.DepthBiasClamp = 0.0f;
 		raster_desc.SlopeScaledDepthBias = 0.0f;
@@ -94,6 +102,8 @@ namespace Viewer
 		}
 		m_deviceContext->RSSetState(raster_state);
 
+	
+
 		return true;
 	}
 
@@ -101,12 +111,53 @@ namespace Viewer
 	{
 		// CLEAR COLOR
 		m_deviceContext->ClearRenderTargetView(m_renderTargetView, m_clearColor.m128_f32);
+
+		// CLEAR DEPTH STENCIL
+		m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
 	void Renderer::End()
 	{
 		// present
 		m_swapChain->Present(0, 0);
+	}
+
+	bool Renderer::ConfigureDepthStencil(unsigned int width, unsigned int height)
+	{
+		m_depthStencilTexture = nullptr;
+		D3D11_TEXTURE2D_DESC descDepth;
+		descDepth.Width = width;
+		descDepth.Height = height;
+		descDepth.MipLevels = 1;
+		descDepth.ArraySize = 1;
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		descDepth.SampleDesc.Count = 1;
+		descDepth.SampleDesc.Quality = 0;
+		descDepth.Usage = D3D11_USAGE_DEFAULT;
+		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		descDepth.CPUAccessFlags = 0;
+		descDepth.MiscFlags = 0;
+
+		// create a buffer(texture) for the depth stencil
+		HRESULT hr = m_device->CreateTexture2D(&descDepth, nullptr, &m_depthStencilTexture.p);
+
+		if (FAILED(hr))
+		{
+			MessageBoxW(nullptr, L"Failed to create depth stencil texture", L"Error", MB_OK | MB_ICONERROR);
+			return false;
+		}
+
+		// Create the depth stencil view
+		hr = m_device->CreateDepthStencilView(m_depthStencilTexture, nullptr, &m_depthStencilView.p);
+
+		if (FAILED(hr))
+		{
+			Win32ErrorUtil::DisplayLastErrorMessage();
+			MessageBoxW(nullptr, L"Failed to create depth stencil view", L"Error", MB_OK | MB_ICONERROR);
+			return false;
+		}
+
+		return true;
 	}
 
 }

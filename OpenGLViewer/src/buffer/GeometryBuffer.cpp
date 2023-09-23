@@ -3,8 +3,10 @@
 
 namespace Viewer
 {
-    void GeometryBuffer::Initialize(std::vector<float>& positionData, std::vector<uint16_t>& indicesData)
+    void GeometryBuffer::Initialize(std::vector<float> &positionData, std::vector<uint16_t> &indicesData)
     {
+        m_indexCount = indicesData.size();
+
         glGenVertexArrays(1, &m_vaoID);
         glGenBuffers(1, &m_vertexPositionBuffer);
         glGenBuffers(1, &m_indexBuffer);
@@ -16,12 +18,12 @@ namespace Viewer
 
         glBindBuffer(GL_ARRAY_BUFFER, m_vertexPositionBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * positionData.size(), positionData.data(), GL_STATIC_DRAW);
-        
+
         glEnableVertexAttribArray(0);
         // we assume that the vertex buffer contains only position data (3 floats per vertex)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-        glBindVertexArray(0);    
+        glBindVertexArray(0);
     }
 
     GeometryBuffer::~GeometryBuffer()
@@ -39,5 +41,12 @@ namespace Viewer
     void GeometryBuffer::Unbind()
     {
         glBindVertexArray(0);
+    }
+
+    void GeometryBuffer::Draw()
+    {
+        Bind();
+        glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_SHORT, 0);
+        Unbind();
     }
 }

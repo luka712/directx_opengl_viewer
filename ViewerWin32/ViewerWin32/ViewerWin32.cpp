@@ -80,9 +80,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Viewer::StandardMaterialShader shader;
 	shader.Initialize(renderer.GetDevice());
 
-	Viewer::Geometry geometry = Viewer::Geometry::CreateQuadGeometry();
+	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::GeometryBuffer geometryBuffer;
-	geometryBuffer.Initialize(renderer.GetDevice(), geometry.positionVertices, geometry.indices);
+	geometryBuffer.Initialize(renderer.GetDevice(), geometry.positionVertices, geometry.indices, geometry.colorVertices);
 
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> projectionViewBuffer;
 	projectionViewBuffer.Initialize(renderer.GetDevice());
@@ -92,8 +92,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
-	DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixOrthographicOffCenterRH(-10, 10, -5, 5, 1, -1));
-	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(5, 3, 0));
+    // DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixOrthographicOffCenterRH(-10, 10, -5, 5, 1, -1));
+	DirectX::XMVECTOR eyePosition = DirectX::XMVectorSet(3, 3, -3, 0);
+	DirectX::XMVECTOR focusPoint = DirectX::XMVectorSet(0, 0, 0, 0);
+	DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0, 1, 0, 0);
+
+
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtRH(eyePosition, focusPoint, upDirection);
+
+	float aspectRatio = (float)width / (float)height;
+	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PI / 4.0, aspectRatio, 0.1, 1000);
+
+	DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(viewMatrix * projectionMatrix);
+	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(0, 0, 0));
 
 	Viewer::MatrixUtil::Print(transformMatrix);
 
@@ -110,16 +121,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		modelBuffer.Update(renderer.GetDeviceContext(), transformMatrix);
 
 		renderer.Begin();
+
 		// DRAW
-
-		geometryBuffer.Use(renderer.GetDeviceContext());
 		shader.Use(renderer.GetDeviceContext());
-
 		shader.SetProjectionViewMatrix(renderer.GetDeviceContext(), projectionViewBuffer.GetBuffer());
 		shader.SetModelMatrix(renderer.GetDeviceContext(), modelBuffer.GetBuffer());
-
-		renderer.GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		renderer.GetDeviceContext()->DrawIndexed(geometry.indices.size(), 0, 0);
+		geometryBuffer.Draw(renderer.GetDeviceContext());
 
 		// PRESENT
 		renderer.End();

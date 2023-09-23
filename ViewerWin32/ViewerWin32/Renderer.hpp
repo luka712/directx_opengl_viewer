@@ -34,8 +34,26 @@ namespace Viewer
 		/// </summary>
 		CComPtr<ID3D11RasterizerState> m_rasterizerState;
 
+
+		/// <summary>
+		/// A depth stencil view is a view into a texture that allows the GPU to read and write depth information.
+		/// </summary>
+		CComPtr<ID3D11DepthStencilState> m_depthStencilState;
+
+		/// <summary>
+		/// A texture that contains depth information for the scene.
+		/// </summary>
+		CComPtr<ID3D11Texture2D> m_depthStencilTexture;
+
+		/// <summary>
+		/// A view into the depth stencil texture that allows the GPU to read and write depth information.
+		/// </summary>
+		CComPtr<ID3D11DepthStencilView> m_depthStencilView;
+
 		CD3D11_VIEWPORT m_viewport;
 
 		DirectX::XMVECTOR m_clearColor = DirectX::XMVectorSet(1.0f, 0.71f, 0.76f, 1.0f);
+
+		bool ConfigureDepthStencil(unsigned int width, unsigned int height);
 	};
 }
