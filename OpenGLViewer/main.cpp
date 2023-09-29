@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include "geometry/Geometry.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "loaders/ImageLoader.hpp"
+#include "texture/Texture2D.hpp"
 
 using namespace Viewer;
 
@@ -25,12 +27,26 @@ int main(int argc, char *args[])
    StandardMaterialShader shader;
    shader.Initialize();
 
-   Geometry geometry = Geometry::CreateQuadGeometry();
+   Geometry geometry = Geometry::CreateCubeGeometry();
    GeometryBuffer geometryBuffer;
-   geometryBuffer.Initialize(geometry.positionVertices, geometry.indices);
+   geometryBuffer.Initialize(geometry.positionVertices, geometry.indices, geometry.textureVertices);
 
-   glm::mat4x4 projectionViewMatrix = glm::ortho(-10.0, 10.0, -5.0, 5.0, -1.0, 1.0);
+   glm::vec3 eyePosition = glm::vec3(3,3,-3);
+   glm::vec3 lookAtPosition = glm::vec3(0,0,0);
+   glm::vec3 upVector = glm::vec3(0,1,0);
+   
+   glm::mat4x4 viewMatrix = glm::lookAt(eyePosition, lookAtPosition, upVector);
+   float aspectRatio = (float)clientWidth / (float)clientHeight;
+   glm::mat4x4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+
+   glm::mat4x4 projectionViewMatrix = projectionMatrix * viewMatrix;
+
+   // glm::mat4x4 projectionViewMatrix = glm::ortho(-10.0, 10.0, -5.0, 5.0, -1.0, 1.0);
    glm::mat4x4 modelMatrix = glm::mat4x4(1.0f);
+
+   ImageData* imgData = ImageLoader::LoadImage("assets/crate_texture.png");
+   Texture2D texture(imgData->data, imgData->width, imgData->height, imgData->bytePerPixel);
+   texture.Initialize();
 
    while (true)
    {
@@ -48,6 +64,7 @@ int main(int argc, char *args[])
       renderer.Begin();
 
       // Draw
+      texture.Bind();
       shader.Use();
       shader.SetProjectionViewMatrix(projectionViewMatrix);
       shader.SetModelMatrix(modelMatrix);

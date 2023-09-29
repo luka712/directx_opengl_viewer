@@ -3,12 +3,16 @@
 
 namespace Viewer
 {
-    void GeometryBuffer::Initialize(std::vector<float> &positionData, std::vector<uint16_t> &indicesData)
+    void GeometryBuffer::Initialize(
+    std::vector<float> &positionData, 
+    std::vector<uint16_t> &indicesData, 
+    std::vector<float> &textureCoords)
     {
         m_indexCount = indicesData.size();
 
         glGenVertexArrays(1, &m_vaoID);
         glGenBuffers(1, &m_vertexPositionBuffer);
+        glGenBuffers(1, &m_vertexTextureBuffer);
         glGenBuffers(1, &m_indexBuffer);
 
         glBindVertexArray(m_vaoID);
@@ -16,12 +20,17 @@ namespace Viewer
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indicesData.size(), indicesData.data(), GL_STATIC_DRAW);
 
+        // Position(xyz)
         glBindBuffer(GL_ARRAY_BUFFER, m_vertexPositionBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * positionData.size(), positionData.data(), GL_STATIC_DRAW);
-
         glEnableVertexAttribArray(0);
-        // we assume that the vertex buffer contains only position data (3 floats per vertex)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+        // Texture(uv)
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexTextureBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textureCoords.size(), textureCoords.data(), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
         glBindVertexArray(0);
     }
@@ -30,6 +39,7 @@ namespace Viewer
     {
         glDeleteBuffers(1, &m_indexBuffer);
         glDeleteBuffers(1, &m_vertexPositionBuffer);
+        glDeleteBuffers(1, &m_vertexTextureBuffer);
         glDeleteVertexArrays(1, &m_vaoID);
     }
 

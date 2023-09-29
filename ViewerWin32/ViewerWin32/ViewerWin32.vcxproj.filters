@@ -49,6 +49,15 @@
     <Filter Include="Header Files\Util">
       <UniqueIdentifier>{ba49a1f4-4128-4f4e-9251-3adac39f016d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Texture">
+      <UniqueIdentifier>{4c9b57c4-832a-4dbe-a422-5ee72d9fe502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{66e51bde-1107-4f09-af7a-6413b8d6324d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vendor">
+      <UniqueIdentifier>{05b8be41-fd3b-4c1f-8fde-a5132e86bc3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -90,6 +99,12 @@
     <ClInclude Include="Win32ErrorUtil.hpp">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Texture2D.hpp">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\vendor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -119,6 +134,9 @@
     <ClCompile Include="Win32ErrorUtil.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerWin32.rc">
@@ -130,6 +148,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="ViewerWin32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="crate_texture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="uv_test.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

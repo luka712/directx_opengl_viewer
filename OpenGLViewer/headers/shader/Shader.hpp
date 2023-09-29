@@ -4,6 +4,7 @@
 
 #include <string>
 #include <glad/glad.h>
+#include "texture/Texture2D.hpp"
 
 namespace Viewer
 {
@@ -19,9 +20,10 @@ namespace Viewer
     protected:
         std::string m_vertexPath;
         std::string m_fragmentPath;
-        unsigned int m_ID;
+        unsigned int m_programId;
 
         unsigned int CreateShader(std::string path, unsigned int type);
+
     };
 }
 #endif

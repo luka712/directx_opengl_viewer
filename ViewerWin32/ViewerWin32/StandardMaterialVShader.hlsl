@@ -12,13 +12,13 @@ cbuffer ModelConstantBuffer : register(b1)
 struct VS_INPUT
 {
     float4 pos : POSITION;
-    float4 color : COLOR0;
+    float2 tex : TEXCOORD0;
 };
 
 struct PS_INPUT
 {
     float4 pos : SV_POSITION;
-    float4 color : COLOR0;
+    float2 tex : TEXCOORD0;
 };
 
 PS_INPUT main(VS_INPUT input) 
@@ -27,6 +27,6 @@ PS_INPUT main(VS_INPUT input)
     
     PS_INPUT output;
     output.pos = mul(worldPos, ProjectionViewMatrix);
-    output.color = input.color;
+    output.tex = input.tex;
     return output;
 }

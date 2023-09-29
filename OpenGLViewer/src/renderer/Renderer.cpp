@@ -24,6 +24,8 @@ namespace Viewer
         }
 
         glViewport(0, 0, width, height);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
         return true;
     }
 
@@ -35,7 +37,8 @@ namespace Viewer
 			m_clearColor.b,
 			m_clearColor.a
         );
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      
     }
 
     void Renderer::End()

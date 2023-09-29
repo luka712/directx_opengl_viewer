@@ -18,7 +18,7 @@ namespace Viewer
 			return false;
 		}
 
-		m_viewProjectionMatrixLocation = glGetUniformLocation(m_ID, "u_projectionViewMatrix");
+		m_viewProjectionMatrixLocation = glGetUniformLocation(m_programId, "u_projectionViewMatrix");
 
 		if (m_viewProjectionMatrixLocation == -1)
 		{
@@ -32,7 +32,7 @@ namespace Viewer
 			return false;
 		}
 
-		m_modelMatrixLocation = glGetUniformLocation(m_ID, "u_modelMatrix");
+		m_modelMatrixLocation = glGetUniformLocation(m_programId, "u_modelMatrix");
 
 		return true;
 	}

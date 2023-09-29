@@ -128,7 +128,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Texture2D.hpp" />
     <ClInclude Include="ConstantBuffer.hpp" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="Win32ErrorUtil.hpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Geometry.hpp" />
@@ -143,6 +145,7 @@
     <ClInclude Include="ViewerWin32.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GeometryBuffer.cpp" />
     <ClCompile Include="MatrixUtil.cpp" />
@@ -157,7 +160,9 @@
     <ResourceCompile Include="ViewerWin32.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="crate_texture.png" />
     <Image Include="small.ico" />
+    <Image Include="uv_test.png" />
     <Image Include="ViewerWin32.ico" />
   </ItemGroup>
   <ItemGroup>

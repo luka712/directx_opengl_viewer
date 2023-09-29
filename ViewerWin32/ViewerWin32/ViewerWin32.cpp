@@ -15,6 +15,7 @@
 #include "Geometry.hpp"
 #include "ConstantBuffer.hpp"
 #include "MatrixUtil.hpp"
+#include "Texture2D.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -47,7 +48,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	HWND windowHandle = CreateWindowEx(
 		0,                              // Optional window styles.
 		CLASS_NAME,                     // Window class
-		L"Learn to Program Windows",    // Window text
+		L"Obj Viewer",					// Window text
 		WS_OVERLAPPEDWINDOW,            // Window style
 
 		// Size and position
@@ -82,7 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::GeometryBuffer geometryBuffer;
-	geometryBuffer.Initialize(renderer.GetDevice(), geometry.positionVertices, geometry.indices, geometry.colorVertices);
+	geometryBuffer.Initialize(renderer.GetDevice(), geometry.positionVertices, geometry.indices, geometry.textureVertices);
 
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> projectionViewBuffer;
 	projectionViewBuffer.Initialize(renderer.GetDevice());
@@ -108,6 +109,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Viewer::MatrixUtil::Print(transformMatrix);
 
+	Viewer::Texture2D texture;
+	texture.Initialize(renderer.GetDevice(), "crate_texture.png");
+
 	// Main message loop:
 	while (true)
 	{
@@ -126,6 +130,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		shader.Use(renderer.GetDeviceContext());
 		shader.SetProjectionViewMatrix(renderer.GetDeviceContext(), projectionViewBuffer.GetBuffer());
 		shader.SetModelMatrix(renderer.GetDeviceContext(), modelBuffer.GetBuffer());
+		
+		// Pass texture to shader
+		ID3D11ShaderResourceView* textureView = texture.GetTextureView();
+		renderer.GetDeviceContext()->PSSetShaderResources(0, 1, &textureView);
+		ID3D11SamplerState* samplerState = texture.GetSamplerState();
+		renderer.GetDeviceContext()->PSSetSamplers(0, 1, &samplerState);
+
 		geometryBuffer.Draw(renderer.GetDeviceContext());
 
 		// PRESENT

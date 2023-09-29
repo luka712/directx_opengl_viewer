@@ -17,6 +17,14 @@ FetchContent_Declare(
     GIT_TAG release-2.28.3)
 FetchContent_MakeAvailable(SDL2)
 
+# SDL2 Image
+FetchContent_Declare(
+    SDL2_image
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+    GIT_TAG SDL2
+    )
+FetchContent_MakeAvailable(SDL2_image)
+
 # GLM 
 FetchContent_Declare(
     glm
@@ -43,18 +51,21 @@ if(TARGET SDL2::SDL2main)
 endif()
 
 # link libraries
-target_link_libraries(Viewer PRIVATE SDL2::SDL2-static Glad glm)
+target_link_libraries(Viewer PRIVATE SDL2::SDL2 SDL2_image Glad glm)
 
+include_directories(${CMAKE_BINARY_DIR}/_deps/sdl2_image-src/include)
 include_directories("headers")
 include_directories("vendored")
 
 
 if(WIN32)
-    # copy SDL2.dll to the output directory
+    # copy SDL2.dll, SDL2_image.dll to the output directory
     add_custom_command(TARGET Viewer POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:SDL2::SDL2>
-            $<TARGET_FILE_DIR:Viewer>)
+            $<TARGET_FILE:SDL2::SDL2> $<TARGET_FILE_DIR:Viewer>
+            $<TARGET_FILE:SDL2_image::SDL2_image> $<TARGET_FILE_DIR:Viewer>
+            )
 endif()
 
 file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})

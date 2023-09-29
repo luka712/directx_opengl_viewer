@@ -9,6 +9,7 @@ namespace Viewer
 		std::vector<uint16_t> indices;
 		std::vector<float> positionVertices;
 		std::vector<float> colorVertices;
+		std::vector<float> textureVertices;
 
 		/// <summary>
 		/// Creates the geometry for the quad.

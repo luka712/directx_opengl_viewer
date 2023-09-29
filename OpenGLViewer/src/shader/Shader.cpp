@@ -8,11 +8,12 @@ namespace Viewer
     Shader::Shader(std::string vertexPath, std::string fragmentPath)
         : m_vertexPath(vertexPath), m_fragmentPath(fragmentPath)
     {
+        m_programId = 0;
     }
 
     Shader::~Shader()
     {
-        glDeleteProgram(m_ID);
+        glDeleteProgram(m_programId);
     }
 
     bool Shader::Initialize()
@@ -47,17 +48,17 @@ namespace Viewer
             return false;
         }
 
-        m_ID = glCreateProgram();
-        glAttachShader(m_ID, vertexShader);
-        glAttachShader(m_ID, fragmentShader);
-        glLinkProgram(m_ID);
+        m_programId = glCreateProgram();
+        glAttachShader(m_programId, vertexShader);
+        glAttachShader(m_programId, fragmentShader);
+        glLinkProgram(m_programId);
 
         int success;
         char infoLog[512];
-        glGetProgramiv(m_ID, GL_LINK_STATUS, &success);
+        glGetProgramiv(m_programId, GL_LINK_STATUS, &success);
         if (!success)
         {
-            glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
+            glGetProgramInfoLog(m_programId, 512, NULL, infoLog);
             std::string error = "Failed to link shader program: " + std::string(infoLog);
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "OpenGL error", error.c_str(), nullptr);
             return false;
@@ -71,7 +72,7 @@ namespace Viewer
 
     void Shader::Use()
     {
-        glUseProgram(m_ID);
+        glUseProgram(m_programId);
     }
 
     unsigned int Shader::CreateShader(std::string filePath, unsigned int type)

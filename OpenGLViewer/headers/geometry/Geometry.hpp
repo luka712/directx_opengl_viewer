@@ -10,11 +10,18 @@ namespace Viewer
     {
         std::vector<uint16_t> indices;
         std::vector<float> positionVertices;
+        std::vector<float> colorVertices;
+        std::vector<float> textureVertices;
 
         /**
          * @brief Create a quad geometry.
          */
         static Geometry CreateQuadGeometry();
+
+        /**
+         * @brief Create a cube geometry.
+        */
+        static Geometry CreateCubeGeometry();
     };
 }
 
