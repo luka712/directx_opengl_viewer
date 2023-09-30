@@ -11,7 +11,7 @@ namespace Viewer
 
     void Texture2D::Initialize()
     {
-         glGenTextures(1, &m_textureID);
+        glGenTextures(1, &m_textureID);
         glBindTexture(GL_TEXTURE_2D, m_textureID);
 
         unsigned int format = GL_RGBA;

@@ -12,6 +12,7 @@ namespace Viewer
         std::vector<float> positionVertices;
         std::vector<float> colorVertices;
         std::vector<float> textureVertices;
+        std::vector<float> normalVertices;
 
         /**
          * @brief Create a quad geometry.

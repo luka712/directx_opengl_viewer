@@ -6,7 +6,8 @@ namespace Viewer
     void GeometryBuffer::Initialize(
     std::vector<float> &positionData, 
     std::vector<uint16_t> &indicesData, 
-    std::vector<float> &textureCoords)
+    std::vector<float> &textureCoords,
+    std::vector<float> &normalData)
     {
         m_indexCount = indicesData.size();
 
@@ -32,6 +33,13 @@ namespace Viewer
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+        // Normals(xyz)
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexNormalBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normalData.size(), normalData.data(), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
         glBindVertexArray(0);
     }
 
@@ -40,6 +48,7 @@ namespace Viewer
         glDeleteBuffers(1, &m_indexBuffer);
         glDeleteBuffers(1, &m_vertexPositionBuffer);
         glDeleteBuffers(1, &m_vertexTextureBuffer);
+        glDeleteBuffers(1, &m_vertexNormalBuffer);
         glDeleteVertexArrays(1, &m_vaoID);
     }
 

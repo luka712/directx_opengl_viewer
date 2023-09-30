@@ -58,6 +58,12 @@
     <Filter Include="Header Files\vendor">
       <UniqueIdentifier>{05b8be41-fd3b-4c1f-8fde-a5132e86bc3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Light">
+      <UniqueIdentifier>{65f89658-1df5-4929-b030-4d9d4f38d8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Material">
+      <UniqueIdentifier>{eb55408e-1f42-419e-9b9a-b72a1c0d29b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -104,6 +110,12 @@
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files\vendor</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientLight.hpp">
+      <Filter>Header Files\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.hpp">
+      <Filter>Header Files\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,8 +16,16 @@
 #include "ConstantBuffer.hpp"
 #include "MatrixUtil.hpp"
 #include "Texture2D.hpp"
+#include "DirectionalLight.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+Viewer::AmbientLight ambientLight = { 0.2f, DirectX::XMFLOAT3(1, 1, 1) };
+Viewer::DirectionalLight directionalLights[3] = {
+	{ DirectX::XMFLOAT3(0, -1, 0), 0.8f, DirectX::XMFLOAT3(1,1,1) },
+	{ DirectX::XMFLOAT3(-1, 0, 0), 0.8f, DirectX::XMFLOAT3(1,1,1) },
+	{ DirectX::XMFLOAT3(0, 0, 1), 0.1f, DirectX::XMFLOAT3(1,1,1) }
+};
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -83,7 +91,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::GeometryBuffer geometryBuffer;
-	geometryBuffer.Initialize(renderer.GetDevice(), geometry.positionVertices, geometry.indices, geometry.textureVertices);
+	geometryBuffer.Initialize(renderer.GetDevice(), geometry.positionVertices, geometry.indices, geometry.textureVertices, geometry.normalVertices);
 
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> projectionViewBuffer;
 	projectionViewBuffer.Initialize(renderer.GetDevice());
@@ -91,9 +99,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> modelBuffer;
 	modelBuffer.Initialize(renderer.GetDevice());
 
+	Viewer::ConstantBuffer<Viewer::AmbientLight> ambientLightBuffer;
+	ambientLightBuffer.Initialize(renderer.GetDevice());
+
+	Viewer::ConstantBuffer<Viewer::DirectionalLight> directionalLightBuffer;
+	directionalLightBuffer.Initialize(renderer.GetDevice(), 3);
+
 	MSG msg;
 
-    // DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixOrthographicOffCenterRH(-10, 10, -5, 5, 1, -1));
+	// DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixOrthographicOffCenterRH(-10, 10, -5, 5, 1, -1));
 	DirectX::XMVECTOR eyePosition = DirectX::XMVectorSet(3, 3, -3, 0);
 	DirectX::XMVECTOR focusPoint = DirectX::XMVectorSet(0, 0, 0, 0);
 	DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0, 1, 0, 0);
@@ -123,6 +137,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		projectionViewBuffer.Update(renderer.GetDeviceContext(), projectionViewMatrix);
 		modelBuffer.Update(renderer.GetDeviceContext(), transformMatrix);
+		ambientLightBuffer.Update(renderer.GetDeviceContext(), ambientLight);
+		directionalLightBuffer.Update(renderer.GetDeviceContext(), directionalLights, 3);
 
 		renderer.Begin();
 
@@ -130,7 +146,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		shader.Use(renderer.GetDeviceContext());
 		shader.SetProjectionViewMatrix(renderer.GetDeviceContext(), projectionViewBuffer.GetBuffer());
 		shader.SetModelMatrix(renderer.GetDeviceContext(), modelBuffer.GetBuffer());
-		
+		shader.SetAmbientLight(renderer.GetDeviceContext(), ambientLightBuffer.GetBuffer());
+		shader.SetDirectionalLights(renderer.GetDeviceContext(), directionalLightBuffer.GetBuffer());
+
 		// Pass texture to shader
 		ID3D11ShaderResourceView* textureView = texture.GetTextureView();
 		renderer.GetDeviceContext()->PSSetShaderResources(0, 1, &textureView);

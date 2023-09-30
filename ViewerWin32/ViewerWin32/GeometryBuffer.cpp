@@ -4,7 +4,8 @@
 bool Viewer::GeometryBuffer::Initialize(CComPtr<ID3D11Device> device,
 	std::vector<float>& positionData, 
 	std::vector<uint16_t>& indicesData,
-	std::vector<float>& texCoordsData)
+	std::vector<float>& texCoordsData,
+	std::vector<float>& normalData)
 {
 	// Create the index buffer
 	D3D11_BUFFER_DESC ibd = {};
@@ -48,7 +49,7 @@ bool Viewer::GeometryBuffer::Initialize(CComPtr<ID3D11Device> device,
 		return false;
 	}
 
-	// Create the color buffer
+	// Create the texure coords buffer
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = texCoordsData.size() * sizeof(float);
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -67,6 +68,25 @@ bool Viewer::GeometryBuffer::Initialize(CComPtr<ID3D11Device> device,
 		return false;
 	}
 
+	// Create the normal buffer
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = normalData.size() * sizeof(float);
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+
+	initData = {};
+	initData.pSysMem = normalData.data();
+
+	m_normalBuffer = nullptr;
+	hr = device->CreateBuffer(&bd, &initData, &m_normalBuffer);
+
+	if (FAILED(hr))
+	{
+		// Handle vertex buffer creation failure
+		MessageBoxW(nullptr, L"Failed to create normal vertex buffer", L"Error", MB_OK | MB_ICONERROR);
+		return false;
+	}
+
 
 	return true;
 }
@@ -79,10 +99,15 @@ void Viewer::GeometryBuffer::Use(CComPtr<ID3D11DeviceContext> deviceContext)
 	ID3D11Buffer* bufferPtr = m_vertexPositionBuffer.p; // to make the code more readable
 	deviceContext->IASetVertexBuffers(0, 1, &bufferPtr, &stride, &offset);
 
-	// we assume that the vertex buffer contains only color data (4 floats per vertex)
+	// we assume that the vertex buffer contains only tex coords data (2 floats per vertex)
 	stride = sizeof(float) * 2;
 	bufferPtr = m_texCoordsBuffer.p; // to make the code more readable
 	deviceContext->IASetVertexBuffers(1, 1, &bufferPtr, &stride, &offset);
+
+	// we assume that the vertex buffer contains only normal data (3 floats per vertex)
+	stride = sizeof(float) * 3;
+	bufferPtr = m_normalBuffer.p; // to make the code more readable
+	deviceContext->IASetVertexBuffers(2, 1, &bufferPtr, &stride, &offset);
 
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 }

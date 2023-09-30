@@ -2,8 +2,8 @@
 
 namespace Viewer
 {
-StandardMaterialShader::StandardMaterialShader()
-	: Shader("StandardMaterialVShader.hlsl", "StandardMaterialPShader.hlsl")
+	StandardMaterialShader::StandardMaterialShader()
+		: Shader("StandardMaterialVShader.hlsl", "StandardMaterialPShader.hlsl")
 	{
 	}
 
@@ -19,4 +19,15 @@ StandardMaterialShader::StandardMaterialShader()
 		deviceContext->VSSetConstantBuffers(1, 1, &buffer);
 	}
 
+	void StandardMaterialShader::SetAmbientLight(CComPtr<ID3D11DeviceContext> deviceContext, CComPtr<ID3D11Buffer> ambientLightBuffer)
+	{
+		ID3D11Buffer* buffer = ambientLightBuffer.p;
+		deviceContext->PSSetConstantBuffers(0, 1, &buffer);
+	}
+
+	void StandardMaterialShader::SetDirectionalLights(CComPtr<ID3D11DeviceContext> deviceContext, CComPtr<ID3D11Buffer> directionalLightsBuffer)
+	{
+		ID3D11Buffer* buffer = directionalLightsBuffer.p;
+		deviceContext->PSSetConstantBuffers(1, 1, &buffer);
+	}
 }

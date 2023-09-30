@@ -12,7 +12,7 @@ namespace Viewer
     public:
         ~GeometryBuffer();
 
-        void Initialize(std::vector<float> &positionVertices, std::vector<uint16_t> &indices, std::vector<float>&textureCoords);
+        void Initialize(std::vector<float> &positionVertices, std::vector<uint16_t> &indices, std::vector<float>&textureCoords, std::vector<float>&normalVertices);
 
         /**
          * @brief Bind the buffer to the current OpenGL context. Can be skipped if @ref Draw is called.
@@ -30,6 +30,7 @@ namespace Viewer
         unsigned int m_indexBuffer;
         unsigned int m_vertexPositionBuffer;
         unsigned int m_vertexTextureBuffer;
+        unsigned int m_vertexNormalBuffer;
         
         size_t m_indexCount;
     };

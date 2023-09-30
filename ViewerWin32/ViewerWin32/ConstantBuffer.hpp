@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include <atlbase.h> // Contains the declaration of CComPtr.
+#include "Win32ErrorUtil.hpp"
 
 namespace Viewer
 {
@@ -12,23 +13,37 @@ namespace Viewer
 
 		inline ID3D11Buffer* GetBuffer() { return m_buffer.p; }
 
-		bool Initialize(CComPtr<ID3D11Device> device)
+		bool Initialize(CComPtr<ID3D11Device> device, int length = 1)
 		{
 			CD3D11_BUFFER_DESC desc;
-			desc.ByteWidth = sizeof(T);
+			desc.ByteWidth = sizeof(T) * length;
 			desc.Usage = D3D11_USAGE_DEFAULT;
 			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			desc.CPUAccessFlags = 0;
 			desc.MiscFlags = 0;
 			desc.StructureByteStride = 0;
-			;
-			device->CreateBuffer(&desc, nullptr, &m_buffer);
+
+			HRESULT hr = device->CreateBuffer(&desc, nullptr, &m_buffer);
+
+			if (FAILED(hr))
+			{
+				// Handle vertex buffer creation failure
+				Win32ErrorUtil::DisplayLastErrorMessage();
+				MessageBoxW(nullptr, L"Failed to create constant buffer", L"Error", MB_OK | MB_ICONERROR);
+				return false;
+			}
+
 			return true;
 		}
 
 		void Update(CComPtr<ID3D11DeviceContext> deviceContext, T data)
 		{
 			deviceContext->UpdateSubresource(m_buffer, 0, nullptr, &data, 0, 0);
+		}
+
+		void Update(CComPtr<ID3D11DeviceContext> deviceContext, T* data, size_t count)
+		{
+			deviceContext->UpdateSubresource(m_buffer, 0, nullptr, data, sizeof(T), sizeof(T) * count);
 		}
 
 	private:
