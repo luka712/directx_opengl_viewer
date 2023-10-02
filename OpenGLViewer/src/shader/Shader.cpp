@@ -94,4 +94,16 @@ namespace Viewer
 
         return shader;
     }
+
+    int Shader::GetUniformLocation(const char *name)
+    {
+        int result = glGetUniformLocation(m_programId, name);
+        if (result == -1)
+        {
+            std::string msg = "Failed to get uniform location for " + std::string(name);
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "OpenGL error", msg.c_str(), nullptr);
+        }
+
+        return result;
+    }
 }

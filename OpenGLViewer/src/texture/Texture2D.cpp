@@ -9,6 +9,15 @@ namespace Viewer
         m_textureID = 0;
     }
 
+    Texture2D::Texture2D(ImageData& imgData)
+    {
+        m_data = imgData.data;
+		m_width = imgData.width;
+		m_height = imgData.height;
+		m_bytePerPixel = imgData.bytePerPixel;
+		m_textureID = 0;
+    }
+
     void Texture2D::Initialize()
     {
         glGenTextures(1, &m_textureID);

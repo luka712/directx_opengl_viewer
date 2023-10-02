@@ -15,8 +15,16 @@ namespace Viewer
 
 		bool Initialize(CComPtr<ID3D11Device> device, int length = 1)
 		{
+			size_t byteSize = sizeof(T) * length;
+
+			// align to 16 bytes
+			if (byteSize % 16 != 0)
+			{
+				byteSize += 16 - (byteSize % 16);
+			}
+
 			CD3D11_BUFFER_DESC desc;
-			desc.ByteWidth = sizeof(T) * length;
+			desc.ByteWidth = byteSize;
 			desc.Usage = D3D11_USAGE_DEFAULT;
 			desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			desc.CPUAccessFlags = 0;

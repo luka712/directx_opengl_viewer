@@ -1,11 +1,4 @@
-﻿  ViewerWin32.cpp
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(119,108): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(46,86): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(44,8): message : while compiling class template member function 'void Viewer::ConstantBuffer<Viewer::DirectionalLight>::Update(ATL::CComPtr<ID3D11DeviceContext>,T *,size_t)'
-          with
-          [
-              T=Viewer::DirectionalLight
-          ]
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(141,32): message : see the first reference to 'Viewer::ConstantBuffer<Viewer::DirectionalLight>::Update' in 'wWinMain'
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(105,51): message : see reference to class template instantiation 'Viewer::ConstantBuffer<Viewer::DirectionalLight>' being compiled
+﻿C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\StandardMaterialPShader.hlsl(113,14): warning X3078: 'i': loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+  
+  compilation object save succeeded; see C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\StandardMaterialPShader.cso
   ViewerWin32.vcxproj -> C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\ViewerWin32.exe

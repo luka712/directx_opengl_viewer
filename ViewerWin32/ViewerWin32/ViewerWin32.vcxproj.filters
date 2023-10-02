@@ -117,6 +117,12 @@
     <ClInclude Include="DirectionalLight.hpp">
       <Filter>Header Files\Light</Filter>
     </ClInclude>
+    <ClInclude Include="PointLight.hpp">
+      <Filter>Header Files\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.hpp">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -162,10 +168,13 @@
     <Image Include="ViewerWin32.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="crate_texture.png">
+    <Image Include="uv_test.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="uv_test.png">
+    <Image Include="crate_specular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="crate_texture.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

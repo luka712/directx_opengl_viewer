@@ -1,8 +1,6 @@
 // HelloTriangleD3D11.cpp : Defines the entry point for the application.
 //
 
-
-
 #include "framework.h"
 #include "ViewerWin32.h"
 #include <windows.h>
@@ -17,14 +15,25 @@
 #include "MatrixUtil.hpp"
 #include "Texture2D.hpp"
 #include "DirectionalLight.hpp"
+#include "PointLight.hpp"
+#include "Material.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-Viewer::AmbientLight ambientLight = { 0.2f, DirectX::XMFLOAT3(1, 1, 1) };
+Viewer::Material material = { 0.5f, 3.0f, 12.0f };
+
+Viewer::AmbientLight ambientLight = { 0.3f, DirectX::XMFLOAT3(1, 1, 1) };
 Viewer::DirectionalLight directionalLights[3] = {
-	{ DirectX::XMFLOAT3(0, -1, 0), 0.8f, DirectX::XMFLOAT3(1,1,1) },
-	{ DirectX::XMFLOAT3(-1, 0, 0), 0.8f, DirectX::XMFLOAT3(1,1,1) },
-	{ DirectX::XMFLOAT3(0, 0, 1), 0.1f, DirectX::XMFLOAT3(1,1,1) }
+	{ DirectX::XMFLOAT3(1, -1, 0), 1.0f, DirectX::XMFLOAT3(1,1,1) },
+	{ DirectX::XMFLOAT3(-1, 0, 0), 0.5f, DirectX::XMFLOAT3(1,1,1) },
+	{ DirectX::XMFLOAT3(1, 0, 0), 0.5f, DirectX::XMFLOAT3(1,1,1) }
+};
+Viewer::PointLight pointLights[5] = {
+	{ DirectX::XMFLOAT3(1, 0, 0), 0.0f, DirectX::XMFLOAT3(1,0,0) },
+	{ DirectX::XMFLOAT3(0, 1, 0), 0.0f, DirectX::XMFLOAT3(0,1,0) },
+	{ DirectX::XMFLOAT3(0, 0, 1), 0.0f, DirectX::XMFLOAT3(0,0,1) },
+	{ DirectX::XMFLOAT3(1, 1, 0), 0.0f, DirectX::XMFLOAT3(1,1,0) },
+	{ DirectX::XMFLOAT3(0, 1, 1), 0.0f, DirectX::XMFLOAT3(0,1,1) }
 };
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -91,7 +100,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::GeometryBuffer geometryBuffer;
-	geometryBuffer.Initialize(renderer.GetDevice(), geometry.positionVertices, geometry.indices, geometry.textureVertices, geometry.normalVertices);
+	geometryBuffer.Initialize(renderer.GetDevice(),
+		geometry.positionVertices,
+		geometry.indices,
+		geometry.textureVertices,
+		geometry.normalVertices,
+		geometry.colorVertices);
 
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> projectionViewBuffer;
 	projectionViewBuffer.Initialize(renderer.GetDevice());
@@ -99,11 +113,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> modelBuffer;
 	modelBuffer.Initialize(renderer.GetDevice());
 
+	Viewer::ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer;
+	normalMatrixBuffer.Initialize(renderer.GetDevice());
+
+	Viewer::ConstantBuffer<Viewer::Material> materialBuffer;
+	materialBuffer.Initialize(renderer.GetDevice());
+
 	Viewer::ConstantBuffer<Viewer::AmbientLight> ambientLightBuffer;
 	ambientLightBuffer.Initialize(renderer.GetDevice());
 
 	Viewer::ConstantBuffer<Viewer::DirectionalLight> directionalLightBuffer;
 	directionalLightBuffer.Initialize(renderer.GetDevice(), 3);
+
+	Viewer::ConstantBuffer<Viewer::PointLight> pointLightBuffer;
+	pointLightBuffer.Initialize(renderer.GetDevice(), 5);
+
+	Viewer::ConstantBuffer<DirectX::XMVECTOR> eyePositionBuffer;
+	eyePositionBuffer.Initialize(renderer.GetDevice());
+
 
 	MSG msg;
 
@@ -119,12 +146,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PI / 4.0, aspectRatio, 0.1, 1000);
 
 	DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(viewMatrix * projectionMatrix);
-	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(0, 0, 0));
+	DirectX::XMMATRIX modelMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(0, 0, 0));
+	DirectX::XMMATRIX normalMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, modelMatrix));
 
-	Viewer::MatrixUtil::Print(transformMatrix);
+	Viewer::MatrixUtil::Print(modelMatrix);
 
-	Viewer::Texture2D texture;
-	texture.Initialize(renderer.GetDevice(), "crate_texture.png");
+	Viewer::Texture2D diffuseTexture;
+	diffuseTexture.Initialize(renderer.GetDevice(), "crate_texture.png");
+
+	Viewer::Texture2D specularTexture;
+	specularTexture.Initialize(renderer.GetDevice(), "crate_specular.png");
 
 	// Main message loop:
 	while (true)
@@ -136,24 +167,36 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 
 		projectionViewBuffer.Update(renderer.GetDeviceContext(), projectionViewMatrix);
-		modelBuffer.Update(renderer.GetDeviceContext(), transformMatrix);
+		modelBuffer.Update(renderer.GetDeviceContext(), modelMatrix);
+		normalMatrixBuffer.Update(renderer.GetDeviceContext(), normalMatrix);
+		materialBuffer.Update(renderer.GetDeviceContext(), material);
 		ambientLightBuffer.Update(renderer.GetDeviceContext(), ambientLight);
 		directionalLightBuffer.Update(renderer.GetDeviceContext(), directionalLights, 3);
+		pointLightBuffer.Update(renderer.GetDeviceContext(), pointLights, 5);
+		eyePositionBuffer.Update(renderer.GetDeviceContext(), eyePosition);
 
 		renderer.Begin();
 
 		// DRAW
 		shader.Use(renderer.GetDeviceContext());
+
 		shader.SetProjectionViewMatrix(renderer.GetDeviceContext(), projectionViewBuffer.GetBuffer());
 		shader.SetModelMatrix(renderer.GetDeviceContext(), modelBuffer.GetBuffer());
+		shader.SetNormalMatrix(renderer.GetDeviceContext(), normalMatrixBuffer.GetBuffer());
+
+		// material
+		shader.SetMaterial(renderer.GetDeviceContext(), materialBuffer.GetBuffer());
+
+		// lights
 		shader.SetAmbientLight(renderer.GetDeviceContext(), ambientLightBuffer.GetBuffer());
 		shader.SetDirectionalLights(renderer.GetDeviceContext(), directionalLightBuffer.GetBuffer());
+		shader.SetPointLights(renderer.GetDeviceContext(), pointLightBuffer.GetBuffer());
 
 		// Pass texture to shader
-		ID3D11ShaderResourceView* textureView = texture.GetTextureView();
-		renderer.GetDeviceContext()->PSSetShaderResources(0, 1, &textureView);
-		ID3D11SamplerState* samplerState = texture.GetSamplerState();
-		renderer.GetDeviceContext()->PSSetSamplers(0, 1, &samplerState);
+		shader.SetDiffuseTexture(renderer.GetDeviceContext(), diffuseTexture);
+		shader.SetSpecularTexture(renderer.GetDeviceContext(), specularTexture);
+
+		shader.SetEyePosition(renderer.GetDeviceContext(), eyePositionBuffer.GetBuffer());
 
 		geometryBuffer.Draw(renderer.GetDeviceContext());
 

@@ -22,7 +22,18 @@ namespace Viewer
         std::string m_fragmentPath;
         unsigned int m_programId;
 
+        /**
+         * @brief Create a shader from a file.
+         * @param path The path to the shader file.
+         * @param type The type of the shader.
+        */
         unsigned int CreateShader(std::string path, unsigned int type);
+
+        /**
+         * @brief Get the location of a uniform variable.
+         * @param name The name of the uniform variable.
+        */
+        int GetUniformLocation(const char* name);
 
     };
 }

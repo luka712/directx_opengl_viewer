@@ -5,7 +5,8 @@ bool Viewer::GeometryBuffer::Initialize(CComPtr<ID3D11Device> device,
 	std::vector<float>& positionData, 
 	std::vector<uint16_t>& indicesData,
 	std::vector<float>& texCoordsData,
-	std::vector<float>& normalData)
+	std::vector<float>& normalData,
+	std::vector<float>& vertexColorData)
 {
 	// Create the index buffer
 	D3D11_BUFFER_DESC ibd = {};
@@ -87,6 +88,25 @@ bool Viewer::GeometryBuffer::Initialize(CComPtr<ID3D11Device> device,
 		return false;
 	}
 
+	// Create the vertex color buffer
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = vertexColorData.size() * sizeof(float);
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+
+	initData = {};
+	initData.pSysMem = vertexColorData.data();
+
+	m_vertexColorBuffer = nullptr;
+	hr = device->CreateBuffer(&bd, &initData, &m_vertexColorBuffer);
+
+	if (FAILED(hr))
+	{
+		// Handle vertex buffer creation failure
+		MessageBoxW(nullptr, L"Failed to create vertex color vertex buffer", L"Error", MB_OK | MB_ICONERROR);
+		return false;
+	}
+
 
 	return true;
 }
@@ -103,6 +123,11 @@ void Viewer::GeometryBuffer::Use(CComPtr<ID3D11DeviceContext> deviceContext)
 	stride = sizeof(float) * 2;
 	bufferPtr = m_texCoordsBuffer.p; // to make the code more readable
 	deviceContext->IASetVertexBuffers(1, 1, &bufferPtr, &stride, &offset);
+
+	// we assume that the vertex buffer contains only vertex color data (3 floats per vertex)
+	stride = sizeof(float) * 3;
+	bufferPtr = m_vertexColorBuffer.p; // to make the code more readable
+	deviceContext->IASetVertexBuffers(3, 1, &bufferPtr, &stride, &offset);
 
 	// we assume that the vertex buffer contains only normal data (3 floats per vertex)
 	stride = sizeof(float) * 3;

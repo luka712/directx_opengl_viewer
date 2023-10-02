@@ -130,6 +130,8 @@
   <ItemGroup>
     <ClInclude Include="AmbientLight.hpp" />
     <ClInclude Include="DirectionalLight.hpp" />
+    <ClInclude Include="Material.hpp" />
+    <ClInclude Include="PointLight.hpp" />
     <ClInclude Include="Texture2D.hpp" />
     <ClInclude Include="ConstantBuffer.hpp" />
     <ClInclude Include="stb_image.h" />
@@ -162,6 +164,7 @@
     <ResourceCompile Include="ViewerWin32.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="crate_specular.png" />
     <Image Include="crate_texture.png" />
     <Image Include="small.ico" />
     <Image Include="uv_test.png" />

@@ -24,6 +24,11 @@ namespace Viewer
             Texture2D(unsigned char* data, unsigned int width, unsigned int height, size_t bytePerPixel);
 
             /**
+             * @brief Create the texture filled with data. Initialize  
+             */
+            Texture2D(ImageData& imgData);
+
+            /**
              * Initialize the texture.
             */
             void Initialize();

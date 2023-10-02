@@ -15,7 +15,8 @@ namespace Viewer
 			std::vector<float>& positionData,
 			std::vector<uint16_t>& indicesData,
 			std::vector<float>& texCoordsData,
-			std::vector<float>& normalData);
+			std::vector<float>& normalData,
+			std::vector<float>& vertexColorData);
 
 		/// <summary>
 		/// Use is also called withing <see cref="Draw"/>. so there is no need to call it before. Can be called if <see cref="Draw"/> is not used.
@@ -34,6 +35,7 @@ namespace Viewer
 		CComPtr<ID3D11Buffer> m_texCoordsBuffer;
 		CComPtr<ID3D11Buffer> m_indexBuffer;
 		CComPtr<ID3D11Buffer> m_normalBuffer;
+		CComPtr<ID3D11Buffer> m_vertexColorBuffer;
 
 		size_t m_indexCount;
 	};
