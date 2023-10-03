@@ -1,30 +1,57 @@
 #include "geometry/Geometry.hpp"
 
-namespace Viewer 
+namespace Viewer
 {
-    Geometry Geometry::CreateQuadGeometry()
-    {
-        Geometry geometry;
+	Geometry Geometry::CreateQuadGeometry()
+	{
+		Geometry geometry;
 
-        geometry.positionVertices = 
-        {
-            // top left
-            -0.5f, 0.5f, 0.5f,
-            // top right
-            0.5f, 0.5f, 0.5f,
-            // bottom right 
-            0.5f, -0.5f, 0.5f,
-            // bottom left
-            -0.5f, -0.5f, 0.5f,
-        };
+		geometry.positionVertices =
+		{
+			// top left
+			-0.5f, 0.5f, 0.0f,
+			// top right
+			0.5f, 0.5f, 0.0f,
+			// bottom right 
+			0.5f, -0.5f, 0.0f,
+			// bottom left
+			-0.5f, -0.5f, 0.0f,
+		};
 
-        geometry.indices =
-        {
-            0, 1, 2, // first triangle
-            0, 2, 3, // second triangle
-        };
-        return geometry;
-    }
+		geometry.colorVertices = {
+			// top left
+			1.0, 1.0, 1.0, // white
+			// top right
+			1.0, 1.0, 1.0, // white
+			// bottom right
+			1.0, 1.0, 1.0, // white
+			// bottom left
+			1.0, 1.0, 1.0, // white
+		};
+
+		geometry.textureVertices = {
+			// top left
+			0.0, 1.0, // top left
+			1.0, 1.0, // top right
+			1.0, 0.0, // bottom right
+			0.0, 0.0, // bottom left
+		};
+
+		geometry.normalVertices = {
+			// top left
+			0.0, 0.0, -1.0, // top left
+			0.0, 0.0, -1.0, // top right
+			0.0, 0.0, -1.0, // bottom right
+			0.0, 0.0, -1.0, // bottom left
+		};
+
+		geometry.indices =
+		{
+			0, 1, 2, // first triangle
+			0, 2, 3, // second triangle
+		};
+		return geometry;
+	}
 
 	Geometry Geometry::CreateCubeGeometry()
 	{
@@ -89,18 +116,18 @@ namespace Viewer
 		};
 
 		geometry.textureVertices = {
-			  // Front
-			  0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-			  // Back
-			  0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-			  // Top
-			  0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-			  // Bottom
-			  0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-			  // Right
-			  0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
-			  // Left
-			  0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+			// Front
+			0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+			// Back
+			0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+			// Top
+			0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+			// Bottom
+			0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+			// Right
+			0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+			// Left
+			0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
 		};
 
 		geometry.indices = {
@@ -130,7 +157,7 @@ namespace Viewer
 		};
 
 		geometry.normalVertices = {
-			 // Front
+			// Front
 			0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,
 
 			// Back

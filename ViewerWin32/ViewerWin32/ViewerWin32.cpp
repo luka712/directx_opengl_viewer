@@ -16,11 +16,11 @@
 #include "Texture2D.hpp"
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
-#include "Material.hpp"
+#include "MaterialData.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-Viewer::Material material = { 0.5f, 3.0f, 12.0f };
+Viewer::MaterialData material = { 0.5f, 3.0f, 12.0f };
 
 Viewer::AmbientLight ambientLight = { 0.3f, DirectX::XMFLOAT3(1, 1, 1) };
 Viewer::DirectionalLight directionalLights[3] = {
@@ -116,7 +116,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer;
 	normalMatrixBuffer.Initialize(renderer.GetDevice());
 
-	Viewer::ConstantBuffer<Viewer::Material> materialBuffer;
+	Viewer::ConstantBuffer<Viewer::MaterialData> materialBuffer;
 	materialBuffer.Initialize(renderer.GetDevice());
 
 	Viewer::ConstantBuffer<Viewer::AmbientLight> ambientLightBuffer;

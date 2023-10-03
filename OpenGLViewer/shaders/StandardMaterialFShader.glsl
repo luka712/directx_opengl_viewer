@@ -1,4 +1,4 @@
-#version 400
+#version 450 core
 
 #define MAX_DIRECTIONAL_LIGHTS 3
 #define MAX_POINT_LIGHTS 5
@@ -10,8 +10,8 @@ in vec3 v_fragWorldPos;
 
 struct AmbientLight 
 {
-    float intensity;
     vec3 color;
+    float intensity;
 };
 
 struct DirectionalLight 
@@ -28,6 +28,22 @@ struct PointLight
     vec3 color;
 };
 
+
+layout (std140, binding = 4) uniform AmbientLightBuffer
+{
+    AmbientLight u_ambientLight;
+};
+
+layout(std140, binding = 5) uniform DirectionalLightsBuffer 
+{
+    DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
+};
+
+layout(std140, binding = 6) uniform PointLightsBuffer 
+{
+    PointLight u_pointLights[MAX_POINT_LIGHTS];
+};
+
 struct Material 
 {
     sampler2D diffuseTexture;
@@ -42,10 +58,6 @@ struct Material
 uniform Material u_material;
 
 uniform vec3 u_cameraPosition;
-
-uniform AmbientLight u_ambientLight;
-uniform DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
-uniform PointLight u_pointLights[MAX_POINT_LIGHTS];
 
 out vec4 outFragColor;
 
@@ -87,7 +99,7 @@ void main()
     vec3 directional = vec3(0.0);
     vec3 directionalSpec = vec3(0.0);
     vec3 n_normal = normalize(v_normal);
-    for (int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)
+    for (int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++) 
     {
         // Diffuse
         DirectionalLight light = u_directionalLights[i];
@@ -101,7 +113,6 @@ void main()
     for (int i = 0; i < MAX_POINT_LIGHTS; i++)
     {
         PointLight light = u_pointLights[i];
-       
         point += pointDiffuseLight(light, u_material, n_normal);
     }
 

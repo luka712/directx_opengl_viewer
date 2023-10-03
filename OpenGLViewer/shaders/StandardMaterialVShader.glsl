@@ -1,13 +1,13 @@
-#version 400 
+#version 450 core
 
 layout(location = 0) in vec3 a_position;
 layout(location = 1) in vec2 a_texCoord;
-layout(location = 2) in vec3 a_normal; // normal matrix is transposed inverse of model matrix, for non-uniform scaling
+layout(location = 2) in vec3 a_normal; 
 layout(location = 3) in vec3 a_color;
 
 uniform mat4 u_projectionViewMatrix;
 uniform mat4 u_modelMatrix;
-uniform mat3 u_normalMatrix;
+uniform mat3 u_normalMatrix; // normal matrix is transposed inverse of model matrix, for non-uniform scaling
 
 out vec2 v_texCoord;
 out vec3 v_normal;

@@ -33,25 +33,6 @@ namespace Viewer
 		m_specularCoefficientLocation = GetUniformLocation("u_material.specularCoefficient");
 		m_shininessLocation = GetUniformLocation("u_material.shininess");
 
-		// Ambient light
-		m_ambientLightIntensityLocation = GetUniformLocation("u_ambientLight.intensity");
-		m_ambientLightColorLocation = GetUniformLocation("u_ambientLight.color");
-
-		// Directional lights
-		for (size_t i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)
-		{
-			m_directionalLightDirectionLocation[i] = GetUniformLocation(("u_directionalLights[" + std::to_string(i) + "].direction").c_str());
-			m_directionalLightIntensityLocation[i] = GetUniformLocation(("u_directionalLights[" + std::to_string(i) + "].intensity").c_str());
-			m_directionalLightColorLocation[i] = GetUniformLocation(("u_directionalLights[" + std::to_string(i) + "].color").c_str());
-		}
-
-		// Point ligts
-		for (size_t i = 0; i < MAX_POINT_LIGHTS; i++)
-		{
-			m_pointLightPositionLocation[i] = GetUniformLocation(("u_pointLights[" + std::to_string(i) + "].position").c_str());
-			m_pointLightIntensityLocation[i] = GetUniformLocation(("u_pointLights[" + std::to_string(i) + "].intensity").c_str());
-			m_pointLightColorLocation[i] = GetUniformLocation(("u_pointLights[" + std::to_string(i) + "].color").c_str());
-		}
 
 		return true;
 	}
@@ -71,38 +52,19 @@ namespace Viewer
 		glUniformMatrix4fv(m_viewProjectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(viewProjectionMatrix));
 	}
 
-	void StandardMaterialShader::SetAmbientLight(float intensity, const glm::vec3 &color)
+	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
 	{
-		glUniform1f(m_ambientLightIntensityLocation, intensity);
-		glUniform3fv(m_ambientLightColorLocation, 1, glm::value_ptr(color));
+		glBindBufferBase(GL_UNIFORM_BUFFER, 4, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetDirectionalLight(size_t index, const glm::vec3 &direction, float intensity, const glm::vec3 &color)
+	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
 	{
-		if (index >= MAX_DIRECTIONAL_LIGHTS)
-		{
-			std::string msg = "Directional light index " + std::to_string(index) + " is out of range.";
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", msg.c_str(), nullptr);
-			return;
-		}
-
-		glUniform3fv(m_directionalLightDirectionLocation[index], 1, glm::value_ptr(direction));
-		glUniform1f(m_directionalLightIntensityLocation[index], intensity);
-		glUniform3fv(m_directionalLightColorLocation[index], 1, glm::value_ptr(color));
+		glBindBufferBase(GL_UNIFORM_BUFFER, 5, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetPointLight(size_t index, const glm::vec3 &position, float intensity, const glm::vec3 &color)
+	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
 	{
-		if (index >= MAX_POINT_LIGHTS)
-		{
-			std::string msg = "Point light index " + std::to_string(index) + " is out of range.";
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", msg.c_str(), nullptr);
-			return;
-		}
-
-		glUniform3fv(m_pointLightPositionLocation[index], 1, glm::value_ptr(position));
-		glUniform1f(m_pointLightIntensityLocation[index], intensity);
-		glUniform3fv(m_pointLightColorLocation[index], 1, glm::value_ptr(color));
+		glBindBufferBase(GL_UNIFORM_BUFFER, 6, uniformBuffer.GetBufferID());
 	}
 
 	void StandardMaterialShader::SetDiffuseTexture(Texture2D &texture)

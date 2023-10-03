@@ -4,6 +4,10 @@
 
 #include "shader/Shader.hpp"
 #include <glm/glm.hpp>
+#include "buffer/UniformBuffer.hpp"
+#include "light/AmbientLight.hpp"
+#include "light/DirectionalLight.hpp"
+#include "light/PointLight.hpp"
 
 #define MAX_DIRECTIONAL_LIGHTS 3
 #define MAX_POINT_LIGHTS 5
@@ -29,23 +33,16 @@ namespace Viewer
         void SetProjectionViewMatrix(const glm::mat4 &projectionViewMatrix);
 
         /// @brief Sets the values of the ambient light.
-        /// @param intensity - The intensity of the light.
-        /// @param color - The color of the light.
-        void SetAmbientLight(float intensity, const glm::vec3 &color);
+        /// @param ambientLightBuffer - The buffer containing the values of the ambient light.
+        void SetAmbientLight(UniformBuffer<AmbientLight> &ambientLightBuffer);
 
         /// @brief Sets the values of the directional light.
-        /// @param index - The index of the light.
-        /// @param direction - The direction of the light.
-        /// @param intensity - The intensity of the light.
-        /// @param color - The color of the light.
-        void SetDirectionalLight(size_t index, const glm::vec3 &direction, float intensity, const glm::vec3 &color);
+        /// @param directionalLightsBuffer - The buffer containing the values of the directional lights.
+        void SetDirectionalLights(UniformBuffer<DirectionalLight> &directionalLightsBuffer);
 
         /// @brief Sets the values of the point light.
-        /// @param index - The index of the light.
-        /// @param position - The position of the light.
-        /// @param intensity - The intensity of the light.
-        /// @param color - The color of the light.
-        void SetPointLight(size_t index, const glm::vec3 &position, float intensity, const glm::vec3 &color);
+        /// @param pointLightsBuffer - The buffer containing the values of the point lights.
+        void SetPointLights(UniformBuffer<PointLight> &pointLightsBuffer);
 
         /// @brief Sets the diffuse texture.
         /// @param texture - The texture.
@@ -84,21 +81,6 @@ namespace Viewer
         int m_diffuseCoefficientLocation;
         int m_specularCoefficientLocation;
         int m_shininessLocation;
-
-
-        // Ambient light
-        int m_ambientLightIntensityLocation;
-        int m_ambientLightColorLocation;
-
-        // Directional lights
-        int m_directionalLightDirectionLocation[MAX_DIRECTIONAL_LIGHTS];
-        int m_directionalLightIntensityLocation[MAX_DIRECTIONAL_LIGHTS];
-        int m_directionalLightColorLocation[MAX_DIRECTIONAL_LIGHTS];
-        
-        // Point lights
-        int m_pointLightPositionLocation[MAX_POINT_LIGHTS];
-        int m_pointLightIntensityLocation[MAX_POINT_LIGHTS];
-        int m_pointLightColorLocation[MAX_POINT_LIGHTS];
     };
 }
 

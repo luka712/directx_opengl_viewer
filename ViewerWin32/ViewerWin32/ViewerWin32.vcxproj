@@ -130,7 +130,7 @@
   <ItemGroup>
     <ClInclude Include="AmbientLight.hpp" />
     <ClInclude Include="DirectionalLight.hpp" />
-    <ClInclude Include="Material.hpp" />
+    <ClInclude Include="MaterialData.hpp" />
     <ClInclude Include="PointLight.hpp" />
     <ClInclude Include="Texture2D.hpp" />
     <ClInclude Include="ConstantBuffer.hpp" />

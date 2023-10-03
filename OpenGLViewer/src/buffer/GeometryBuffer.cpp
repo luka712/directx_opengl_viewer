@@ -15,6 +15,8 @@ namespace Viewer
 		glGenVertexArrays(1, &m_vaoID);
 		glGenBuffers(1, &m_vertexPositionBuffer);
 		glGenBuffers(1, &m_vertexTextureBuffer);
+		glGenBuffers(1, &m_vertexNormalBuffer);
+		glGenBuffers(1, &m_vertexColorBuffer);
 		glGenBuffers(1, &m_indexBuffer);
 
 		glBindVertexArray(m_vaoID);

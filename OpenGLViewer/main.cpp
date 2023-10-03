@@ -11,10 +11,14 @@
 #include "light/AmbientLight.hpp"
 #include "light/DirectionalLight.hpp"
 #include "light/PointLight.hpp"
+#include "material/MaterialData.hpp"
+#include "buffer/UniformBuffer.hpp"
 
 using namespace Viewer;
 
-Viewer::AmbientLight ambientLight = { 0.3f, glm::vec3(1, 1, 1) };
+Viewer::MaterialData material = { 0.5f, 3.0f, 12.0f };
+
+Viewer::AmbientLight ambientLight = { glm::vec3(1, 1, 1), 0.6f };
 Viewer::DirectionalLight directionalLights[3] = {
 	{ glm::vec3(1, -1, 0), 1.0f, glm::vec3(1, 1, 1) },
 	{ glm::vec3(-1, 0, 0), 0.5f, glm::vec3(1, 1, 1) },
@@ -35,7 +39,12 @@ int main(int argc, char* args[])
 
 	unsigned int clientWidth = 1280;
 	unsigned int clientHeight = 720;
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+
 	SDL_Window* window = SDL_CreateWindow("OBJ Viewer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, clientWidth, clientHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+
 
 	Renderer renderer(*window);
 	if (!renderer.Initialize(clientWidth, clientHeight))
@@ -72,6 +81,15 @@ int main(int argc, char* args[])
 	Texture2D specularTexture(*specularImgData);
 	specularTexture.Initialize();
 
+	Viewer::UniformBuffer<Viewer::AmbientLight> ambientLightBuffer;
+	ambientLightBuffer.Initialize(&ambientLight);
+
+	Viewer::UniformBuffer<Viewer::DirectionalLight> directionalLightBuffer;
+	directionalLightBuffer.Initialize(directionalLights, 3);
+
+	Viewer::UniformBuffer<Viewer::PointLight> pointLightBuffer;
+	pointLightBuffer.Initialize(&pointLights[0], 5);
+
 	while (true)
 	{
 		SDL_Event Event;
@@ -98,23 +116,17 @@ int main(int argc, char* args[])
 		// material 
 		shader.SetDiffuseTexture(diffuseTexture);
 		shader.SetSpecularTexture(specularTexture);
-		shader.SetDiffuseCoefficient(0.5);
-		shader.SetSpecularCoefficient(3.0);
-		shader.SetShininess(12.0);
+		shader.SetDiffuseCoefficient(material.DiffuseCoefficient);
+		shader.SetSpecularCoefficient(material.SpecularCoefficient);
+		shader.SetShininess(material.Shininess);
 
 		shader.SetCameraPosition(eyePosition);
 
 		// lights 
-		shader.SetAmbientLight(ambientLight.Intensity, ambientLight.Color);
-		for (size_t i = 0; i < 3; i++)
-		{
-			shader.SetDirectionalLight(i, directionalLights[i].Direction, directionalLights[i].Intensity, directionalLights[i].Color);
-		}
-		for(size_t i = 0; i < 5; i++)
-		{
-			shader.SetPointLight(i, pointLights[i].Position, pointLights[i].Intensity, pointLights[i].Color);
-		}
-
+		shader.SetAmbientLight(ambientLightBuffer);
+		shader.SetDirectionalLights(directionalLightBuffer);
+		shader.SetPointLights(pointLightBuffer);
+		
 		geometryBuffer.Draw();
 
 		renderer.End();

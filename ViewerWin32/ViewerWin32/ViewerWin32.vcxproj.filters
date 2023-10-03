@@ -120,7 +120,7 @@
     <ClInclude Include="PointLight.hpp">
       <Filter>Header Files\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Material.hpp">
+    <ClInclude Include="MaterialData.hpp">
       <Filter>Header Files\Material</Filter>
     </ClInclude>
   </ItemGroup>

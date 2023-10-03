@@ -7,11 +7,11 @@ namespace Viewer
 {
     struct AmbientLight 
     {
-        /// @brief The intensity of the light.
-        float Intensity;
-
         /// @brief The color of the light.
         glm::vec3 Color;
+
+        /// @brief The intensity of the light.
+        float Intensity;
     };
 }
 

@@ -16,6 +16,8 @@ namespace Viewer
 
         /// @brief The color of the light.
         glm::vec3 Color;
+
+        float _padding;
     };
 }
 
