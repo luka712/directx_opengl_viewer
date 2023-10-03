@@ -13,10 +13,9 @@
 #include "light/PointLight.hpp"
 #include "material/MaterialData.hpp"
 #include "buffer/UniformBuffer.hpp"
+#include "material/StandardMaterial.hpp"
 
 using namespace Viewer;
-
-Viewer::MaterialData material = { 0.5f, 3.0f, 12.0f };
 
 Viewer::AmbientLight ambientLight = { glm::vec3(1, 1, 1), 0.6f };
 Viewer::DirectionalLight directionalLights[3] = {
@@ -51,8 +50,7 @@ int main(int argc, char* args[])
 	{
 		return -1;
 	}
-	StandardMaterialShader shader;
-	shader.Initialize();
+
 
 	Geometry geometry = Geometry::CreateCubeGeometry();
 	GeometryBuffer geometryBuffer;
@@ -73,6 +71,7 @@ int main(int argc, char* args[])
 	glm::mat3x3 normalMatrix = glm::transpose(glm::inverse(glm::mat3x3(modelMatrix)));
 
 
+
 	ImageData* imgData = ImageLoader::LoadImage("assets/crate_texture.png");
 	Texture2D diffuseTexture(imgData->data, imgData->width, imgData->height, imgData->bytePerPixel);
 	diffuseTexture.Initialize();
@@ -80,6 +79,15 @@ int main(int argc, char* args[])
 	ImageData* specularImgData = ImageLoader::LoadImage("assets/crate_specular.png");
 	Texture2D specularTexture(*specularImgData);
 	specularTexture.Initialize();
+
+	StandardMaterial material;
+	material.Initialize();
+	material.DiffuseTexture = &diffuseTexture;
+	material.SpecularTexture = &specularTexture;
+	material.DiffuseCoefficient = 0.5;
+	material.SpecularCoefficient = 3.0;
+	material.Shininess = 12.0;
+
 
 	Viewer::UniformBuffer<Viewer::AmbientLight> ambientLightBuffer;
 	ambientLightBuffer.Initialize(&ambientLight);
@@ -89,6 +97,7 @@ int main(int argc, char* args[])
 
 	Viewer::UniformBuffer<Viewer::PointLight> pointLightBuffer;
 	pointLightBuffer.Initialize(&pointLights[0], 5);
+
 
 	while (true)
 	{
@@ -106,27 +115,13 @@ int main(int argc, char* args[])
 		renderer.Begin();
 
 		// Draw
-		shader.Use();
+		material.Use();
 
-		// matrices
-		shader.SetProjectionViewMatrix(projectionViewMatrix);
-		shader.SetModelMatrix(modelMatrix);
-		shader.SetNormalMatrix(normalMatrix);
+		material.UpdateSelfProperties();
+		material.UpdateCameraProperties(projectionViewMatrix, eyePosition);
+		material.UpdateTranformProperties(modelMatrix, normalMatrix);
+		material.UpdateLights(ambientLightBuffer, directionalLightBuffer, pointLightBuffer);
 
-		// material 
-		shader.SetDiffuseTexture(diffuseTexture);
-		shader.SetSpecularTexture(specularTexture);
-		shader.SetDiffuseCoefficient(material.DiffuseCoefficient);
-		shader.SetSpecularCoefficient(material.SpecularCoefficient);
-		shader.SetShininess(material.Shininess);
-
-		shader.SetCameraPosition(eyePosition);
-
-		// lights 
-		shader.SetAmbientLight(ambientLightBuffer);
-		shader.SetDirectionalLights(directionalLightBuffer);
-		shader.SetPointLights(pointLightBuffer);
-		
 		geometryBuffer.Draw();
 
 		renderer.End();

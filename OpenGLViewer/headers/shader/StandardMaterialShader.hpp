@@ -8,6 +8,7 @@
 #include "light/AmbientLight.hpp"
 #include "light/DirectionalLight.hpp"
 #include "light/PointLight.hpp"
+#include "material/MaterialData.hpp"
 
 #define MAX_DIRECTIONAL_LIGHTS 3
 #define MAX_POINT_LIGHTS 5
@@ -52,17 +53,9 @@ namespace Viewer
         /// @param texture - The texture.
         void SetSpecularTexture(Texture2D &texture);
 
-        /// @brief Sets the diffuse coefficient. Diffuse coefficient tells how much of the diffuse light is reflected.
-        /// @param diffuseCoefficient - The diffuse coefficient.
-        void SetDiffuseCoefficient(float diffuseCoefficient);
-
-        /// @brief Sets the specular coefficient. Specular coefficient tells how much of the specular light is reflected.
-        /// @param specularCoefficient - The specular coefficient.
-        void SetSpecularCoefficient(float specularCoefficient);
-
-        /// @brief Sets the shininess. The shininess tells how much the specular light is spread.
-        /// @param shininess - The shininess.
-        void SetShininess(float shininess);
+        /// @brief Sets the material.
+        /// @param materialDataBuffer - The buffer containing the material data.
+        void SetMaterial(UniformBuffer<MaterialData> &materialDataBuffer);
 
         /// @brief Sets the camera position.
         /// @param cameraPosition - The camera position.

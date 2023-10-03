@@ -16,25 +16,23 @@ namespace Viewer
             unsigned char* m_data;
             unsigned int m_width;
             unsigned int m_height;
-
         public:
-            /**
-             * @brief Create the texture filled with data. Initialize  
-            */
+
+            /// @brief Create the texture filled with data. 
             Texture2D(unsigned char* data, unsigned int width, unsigned int height, size_t bytePerPixel);
 
-            /**
-             * @brief Create the texture filled with data. Initialize  
-             */
+            
+            /// @brief Create the texture filled with data.   
             Texture2D(ImageData& imgData);
 
-            /**
-             * Initialize the texture.
-            */
+            /// @brief Initialize the texture.
             void Initialize();
 
             void Bind();
             void Unbind();
+
+            /// @brief Gets the empty texture.
+            static Texture2D* GetEmptyTexture();
 
     };
 }

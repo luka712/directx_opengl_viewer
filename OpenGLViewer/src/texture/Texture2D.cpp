@@ -51,4 +51,17 @@ namespace Viewer
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    Texture2D* Texture2D::GetEmptyTexture()
+    {
+        static Texture2D* sm_emptyTexture = nullptr;
+        if (sm_emptyTexture == nullptr)
+        {
+            unsigned char data[] = { 255, 255, 255, 255 };
+            sm_emptyTexture = new Texture2D(data, 1, 1, 4);
+            sm_emptyTexture->Initialize();
+        }
+
+        return sm_emptyTexture;
+    }
+
 }

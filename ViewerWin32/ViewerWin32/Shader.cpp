@@ -3,9 +3,12 @@
 namespace Viewer
 {
 
-	Shader::Shader(std::string vertexShaderFilename, std::string fragmentShaderFilename)
-		: m_vertexShaderFilename(vertexShaderFilename)
-		, m_fragmentShaderFilename(fragmentShaderFilename)
+	Shader::Shader(
+		CComPtr<ID3D11Device> device,
+		CComPtr<ID3D11DeviceContext> deviceContext,
+		std::string vertexShaderFilename,
+		std::string fragmentShaderFilename)
+		: m_device(device), m_deviceContext(deviceContext), m_vertexShaderFilename(vertexShaderFilename), m_fragmentShaderFilename(fragmentShaderFilename)
 	{
 	}
 
@@ -16,7 +19,7 @@ namespace Viewer
 		m_inputLayout.Release();
 	}
 
-	bool Shader::Initialize(CComPtr<ID3D11Device> device)
+	bool Shader::Initialize()
 	{
 
 		// Compile the vertex shader from a file
@@ -39,7 +42,7 @@ namespace Viewer
 		}
 
 		// Create the vertex shader from the compiled bytecode
-		HRESULT hr = device->CreateVertexShader(
+		HRESULT hr = m_device->CreateVertexShader(
 			vertexShaderBlob->GetBufferPointer(),
 			vertexShaderBlob->GetBufferSize(),
 			nullptr,
@@ -54,7 +57,7 @@ namespace Viewer
 		}
 
 		// Create the pixel shader from the compiled bytecode
-		hr = device->CreatePixelShader(
+		hr = m_device->CreatePixelShader(
 			pixelShaderBlob->GetBufferPointer(),
 			pixelShaderBlob->GetBufferSize(),
 			nullptr,
@@ -79,7 +82,7 @@ namespace Viewer
 		UINT numElements = ARRAYSIZE(layout);
 
 		// Create the input layout
-		hr = device->CreateInputLayout(
+		hr = m_device->CreateInputLayout(
 			layout,
 			numElements,
 			vertexShaderBlob->GetBufferPointer(),
@@ -97,12 +100,12 @@ namespace Viewer
 		return true;
 	}
 
-	void Shader::Use(CComPtr<ID3D11DeviceContext> deviceContext)
+	void Shader::Use()
 	{
-		deviceContext->IASetInputLayout(m_inputLayout);
+		m_deviceContext->IASetInputLayout(m_inputLayout);
 
-		deviceContext->VSSetShader(m_vertexShader, nullptr, 0);
-		deviceContext->PSSetShader(m_pixelShader, nullptr, 0);
+		m_deviceContext->VSSetShader(m_vertexShader, nullptr, 0);
+		m_deviceContext->PSSetShader(m_pixelShader, nullptr, 0);
 	}
 
 	// Compile a shader from a file and return the compiled bytecode

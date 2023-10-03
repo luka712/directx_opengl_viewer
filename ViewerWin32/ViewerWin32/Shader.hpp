@@ -10,7 +10,10 @@ namespace Viewer
 {
 	class Shader
 	{
-	private:
+	protected:
+		CComPtr<ID3D11Device> m_device;
+		CComPtr<ID3D11DeviceContext> m_deviceContext;
+
 		std::string m_vertexShaderFilename;
 		std::string m_fragmentShaderFilename;
 
@@ -27,11 +30,12 @@ namespace Viewer
 		CComPtr<ID3DBlob> CompileShaderFromFile(std::string fileName, std::string shaderModel);
 
 	public:
-		Shader(std::string vertexShaderFilename, std::string fragmentShaderFilename);
+		Shader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext,
+			std::string vertexShaderFilename, std::string fragmentShaderFilename);
 		~Shader();
 
-		bool Initialize(CComPtr<ID3D11Device> device);
-		void Use(CComPtr<ID3D11DeviceContext> deviceContext);
+		bool Initialize();
+		void Use();
 
 	};
 }

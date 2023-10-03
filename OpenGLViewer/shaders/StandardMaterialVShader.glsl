@@ -6,6 +6,7 @@ layout(location = 2) in vec3 a_normal;
 layout(location = 3) in vec3 a_color;
 
 uniform mat4 u_projectionViewMatrix;
+
 uniform mat4 u_modelMatrix;
 uniform mat3 u_normalMatrix; // normal matrix is transposed inverse of model matrix, for non-uniform scaling
 

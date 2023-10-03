@@ -17,10 +17,10 @@
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
 #include "MaterialData.hpp"
+#include "ImageLoader.hpp"
+#include "StandardMaterial.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-Viewer::MaterialData material = { 0.5f, 3.0f, 12.0f };
 
 Viewer::AmbientLight ambientLight = { 0.3f, DirectX::XMFLOAT3(1, 1, 1) };
 Viewer::DirectionalLight directionalLights[3] = {
@@ -42,8 +42,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ int       nCmdShow)
 {
 
-	unsigned int width = 1280;
-	unsigned int height = 720;
+	unsigned int Width = 1280;
+	unsigned int Height = 720;
 
 	// Initialize COM
 	HRESULT hr = CoInitialize(nullptr);
@@ -69,7 +69,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		WS_OVERLAPPEDWINDOW,            // Window style
 
 		// Size and position
-		CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+		CW_USEDEFAULT, CW_USEDEFAULT, Width, Height,
 
 		NULL,       // Parent window    
 		NULL,       // Menu
@@ -89,15 +89,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	Viewer::Renderer renderer;
-	bool rendererInitialized = renderer.Initialize(windowHandle, width, height);
+	bool rendererInitialized = renderer.Initialize(windowHandle, Width, Height);
 	if (!rendererInitialized)
 	{
 		return FALSE;
 	}
 
-	Viewer::StandardMaterialShader shader;
-	shader.Initialize(renderer.GetDevice());
+	Viewer::ImageLoader imageLoader;
+	Viewer::ImageData* imageData = imageLoader.Load("crate_texture.png");
+	Viewer::Texture2D diffuseTexture(renderer.GetDevice());
+	diffuseTexture.Initialize(imageData->Data, imageData->Width, imageData->Height);
+	delete imageData;
 
+	Viewer::ImageData* imageData2 = imageLoader.Load("crate_specular.png");
+	Viewer::Texture2D specularTexture(renderer.GetDevice());
+	specularTexture.Initialize(imageData2->Data, imageData2->Width, imageData2->Height);
+	delete imageData2;
+
+	Viewer::StandardMaterial material(renderer.GetDevice(), renderer.GetDeviceContext());
+	material.Initialize();
+	material.DiffuseTexture = &diffuseTexture;
+	material.SpecularTexture = &specularTexture;
+	material.DiffuseCoefficient = 0.5f;
+	material.SpecularCoefficient = 3.0f;
+	material.Shininess = 12.0f;
+	
 	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::GeometryBuffer geometryBuffer;
 	geometryBuffer.Initialize(renderer.GetDevice(),
@@ -107,29 +123,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		geometry.normalVertices,
 		geometry.colorVertices);
 
-	Viewer::ConstantBuffer<DirectX::XMMATRIX> projectionViewBuffer;
-	projectionViewBuffer.Initialize(renderer.GetDevice());
+	Viewer::ConstantBuffer<DirectX::XMMATRIX> projectionViewBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
+	projectionViewBuffer.Initialize();
 
-	Viewer::ConstantBuffer<DirectX::XMMATRIX> modelBuffer;
-	modelBuffer.Initialize(renderer.GetDevice());
+	Viewer::ConstantBuffer<DirectX::XMMATRIX> modelBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
+	modelBuffer.Initialize();
 
-	Viewer::ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer;
-	normalMatrixBuffer.Initialize(renderer.GetDevice());
+	Viewer::ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
+	normalMatrixBuffer.Initialize();
 
-	Viewer::ConstantBuffer<Viewer::MaterialData> materialBuffer;
-	materialBuffer.Initialize(renderer.GetDevice());
 
-	Viewer::ConstantBuffer<Viewer::AmbientLight> ambientLightBuffer;
-	ambientLightBuffer.Initialize(renderer.GetDevice());
 
-	Viewer::ConstantBuffer<Viewer::DirectionalLight> directionalLightBuffer;
-	directionalLightBuffer.Initialize(renderer.GetDevice(), 3);
+	Viewer::ConstantBuffer<Viewer::AmbientLight> ambientLightBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
+	ambientLightBuffer.Initialize();
 
-	Viewer::ConstantBuffer<Viewer::PointLight> pointLightBuffer;
-	pointLightBuffer.Initialize(renderer.GetDevice(), 5);
+	Viewer::ConstantBuffer<Viewer::DirectionalLight> directionalLightBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
+	directionalLightBuffer.Initialize(3);
 
-	Viewer::ConstantBuffer<DirectX::XMVECTOR> eyePositionBuffer;
-	eyePositionBuffer.Initialize(renderer.GetDevice());
+	Viewer::ConstantBuffer<Viewer::PointLight> pointLightBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
+	pointLightBuffer.Initialize(5);
+
+	Viewer::ConstantBuffer<DirectX::XMVECTOR> eyePositionBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
+	eyePositionBuffer.Initialize();
 
 
 	MSG msg;
@@ -142,7 +157,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtRH(eyePosition, focusPoint, upDirection);
 
-	float aspectRatio = (float)width / (float)height;
+	float aspectRatio = (float)Width / (float)Height;
 	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PI / 4.0, aspectRatio, 0.1, 1000);
 
 	DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(viewMatrix * projectionMatrix);
@@ -151,11 +166,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Viewer::MatrixUtil::Print(modelMatrix);
 
-	Viewer::Texture2D diffuseTexture;
-	diffuseTexture.Initialize(renderer.GetDevice(), "crate_texture.png");
 
-	Viewer::Texture2D specularTexture;
-	specularTexture.Initialize(renderer.GetDevice(), "crate_specular.png");
+
+
 
 	// Main message loop:
 	while (true)
@@ -166,37 +179,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
-		projectionViewBuffer.Update(renderer.GetDeviceContext(), projectionViewMatrix);
-		modelBuffer.Update(renderer.GetDeviceContext(), modelMatrix);
-		normalMatrixBuffer.Update(renderer.GetDeviceContext(), normalMatrix);
-		materialBuffer.Update(renderer.GetDeviceContext(), material);
-		ambientLightBuffer.Update(renderer.GetDeviceContext(), ambientLight);
-		directionalLightBuffer.Update(renderer.GetDeviceContext(), directionalLights, 3);
-		pointLightBuffer.Update(renderer.GetDeviceContext(), pointLights, 5);
-		eyePositionBuffer.Update(renderer.GetDeviceContext(), eyePosition);
+		projectionViewBuffer.Update( projectionViewMatrix);
+		modelBuffer.Update( modelMatrix);
+		normalMatrixBuffer.Update( normalMatrix);
+		ambientLightBuffer.Update( ambientLight);
+		directionalLightBuffer.Update( directionalLights, 3);
+		pointLightBuffer.Update( pointLights, 5);
+		eyePositionBuffer.Update( eyePosition);
 
 		renderer.Begin();
 
 		// DRAW
-		shader.Use(renderer.GetDeviceContext());
+		material.Use();
 
-		shader.SetProjectionViewMatrix(renderer.GetDeviceContext(), projectionViewBuffer.GetBuffer());
-		shader.SetModelMatrix(renderer.GetDeviceContext(), modelBuffer.GetBuffer());
-		shader.SetNormalMatrix(renderer.GetDeviceContext(), normalMatrixBuffer.GetBuffer());
-
-		// material
-		shader.SetMaterial(renderer.GetDeviceContext(), materialBuffer.GetBuffer());
-
-		// lights
-		shader.SetAmbientLight(renderer.GetDeviceContext(), ambientLightBuffer.GetBuffer());
-		shader.SetDirectionalLights(renderer.GetDeviceContext(), directionalLightBuffer.GetBuffer());
-		shader.SetPointLights(renderer.GetDeviceContext(), pointLightBuffer.GetBuffer());
-
-		// Pass texture to shader
-		shader.SetDiffuseTexture(renderer.GetDeviceContext(), diffuseTexture);
-		shader.SetSpecularTexture(renderer.GetDeviceContext(), specularTexture);
-
-		shader.SetEyePosition(renderer.GetDeviceContext(), eyePositionBuffer.GetBuffer());
+		material.UpdateSelfProperties();
+		material.UpdateCameraProperties(projectionViewBuffer, eyePositionBuffer);
+		material.UpdateTransformProperties(modelBuffer, normalMatrixBuffer);
+		material.UpdateLightsProperties(ambientLightBuffer, directionalLightBuffer, pointLightBuffer);
 
 		geometryBuffer.Draw(renderer.GetDeviceContext());
 

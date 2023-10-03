@@ -9,13 +9,40 @@ namespace Viewer
 		geometry.positionVertices =
 		{
 			// top left
-			-0.5f, 0.5f, 0.5f,
+			-0.5f, 0.5f, 0.0f,
 			// top right
-			0.5f, 0.5f, 0.5f,
+			0.5f, 0.5f, 0.0f,
 			// bottom right 
-			0.5f, -0.5f, 0.5f,
+			0.5f, -0.5f, 0.0f,
 			// bottom left
-			-0.5f, -0.5f, 0.5f,
+			-0.5f, -0.5f, 0.0f,
+		};
+
+		geometry.colorVertices = {
+			// top left
+			1.0, 1.0, 1.0, // white
+			// top right
+			1.0, 1.0, 1.0, // white
+			// bottom right
+			1.0, 1.0, 1.0, // white
+			// bottom left
+			1.0, 1.0, 1.0, // white
+		};
+
+		geometry.textureVertices = {
+			// top left
+			0.0, 1.0, // top left
+			1.0, 1.0, // top right
+			1.0, 0.0, // bottom right
+			0.0, 0.0, // bottom left
+		};
+
+		geometry.normalVertices = {
+			// top left
+			0.0, 0.0, -1.0, // top left
+			0.0, 0.0, -1.0, // top right
+			0.0, 0.0, -1.0, // bottom right
+			0.0, 0.0, -1.0, // bottom left
 		};
 
 		geometry.indices =

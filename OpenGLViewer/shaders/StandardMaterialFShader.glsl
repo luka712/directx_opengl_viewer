@@ -28,26 +28,8 @@ struct PointLight
     vec3 color;
 };
 
-
-layout (std140, binding = 4) uniform AmbientLightBuffer
-{
-    AmbientLight u_ambientLight;
-};
-
-layout(std140, binding = 5) uniform DirectionalLightsBuffer 
-{
-    DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
-};
-
-layout(std140, binding = 6) uniform PointLightsBuffer 
-{
-    PointLight u_pointLights[MAX_POINT_LIGHTS];
-};
-
 struct Material 
 {
-    sampler2D diffuseTexture;
-    sampler2D specularTexture;
     // how much of the diffuse color is reflected
     float diffuseCoefficient;
     // how much of the specular color is reflected
@@ -55,7 +37,28 @@ struct Material
     float shininess;
 };
 
-uniform Material u_material;
+layout (std140, binding = 0) uniform AmbientLightBuffer
+{
+    AmbientLight u_ambientLight;
+};
+
+layout(std140, binding = 1) uniform DirectionalLightsBuffer 
+{
+    DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
+};
+
+layout(std140, binding = 2) uniform PointLightsBuffer 
+{
+    PointLight u_pointLights[MAX_POINT_LIGHTS];
+};
+
+layout(std140, binding = 3) uniform MaterialBuffer 
+{
+    Material u_material;
+};
+
+uniform sampler2D u_diffuseTexture;
+uniform sampler2D u_specularTexture;
 
 uniform vec3 u_cameraPosition;
 
@@ -120,8 +123,8 @@ void main()
     vec3 lightAmount = ambient + directional + point;
     vec3 specularAmount = directionalSpec;
 
-    vec3 diffuseColor = texture(u_material.diffuseTexture, v_texCoord).rgb * lightAmount * v_color;
-    vec3 specularColor = texture(u_material.specularTexture, v_texCoord).rgb * specularAmount * v_color;
+    vec3 diffuseColor = texture(u_diffuseTexture, v_texCoord).rgb * lightAmount * v_color;
+    vec3 specularColor = texture(u_specularTexture, v_texCoord).rgb * specularAmount * v_color;
 
     outFragColor = vec4(diffuseColor + specularColor, 1.0);
 }

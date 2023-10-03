@@ -130,8 +130,10 @@
   <ItemGroup>
     <ClInclude Include="AmbientLight.hpp" />
     <ClInclude Include="DirectionalLight.hpp" />
+    <ClInclude Include="ImageLoader.hpp" />
     <ClInclude Include="MaterialData.hpp" />
     <ClInclude Include="PointLight.hpp" />
+    <ClInclude Include="StandardMaterial.hpp" />
     <ClInclude Include="Texture2D.hpp" />
     <ClInclude Include="ConstantBuffer.hpp" />
     <ClInclude Include="stb_image.h" />
@@ -149,6 +151,8 @@
     <ClInclude Include="ViewerWin32.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ImageLoader.cpp" />
+    <ClCompile Include="StandardMaterial.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GeometryBuffer.cpp" />

@@ -27,12 +27,8 @@ namespace Viewer
 		m_cameraPositionLocation = GetUniformLocation("u_cameraPosition");
 
 		// material
-		m_diffuseTextureLocation = GetUniformLocation("u_material.diffuseTexture");
-		m_specularTextureLocation = GetUniformLocation("u_material.specularTexture");
-		m_diffuseCoefficientLocation = GetUniformLocation("u_material.diffuseCoefficient");
-		m_specularCoefficientLocation = GetUniformLocation("u_material.specularCoefficient");
-		m_shininessLocation = GetUniformLocation("u_material.shininess");
-
+		m_diffuseTextureLocation = GetUniformLocation("u_diffuseTexture");
+		m_specularTextureLocation = GetUniformLocation("u_specularTexture");
 
 		return true;
 	}
@@ -54,18 +50,24 @@ namespace Viewer
 
 	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
 	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, 4, uniformBuffer.GetBufferID());
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer.GetBufferID());
 	}
 
 	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
 	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, 5, uniformBuffer.GetBufferID());
+		glBindBufferBase(GL_UNIFORM_BUFFER, 1, uniformBuffer.GetBufferID());
 	}
 
 	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
 	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, 6, uniformBuffer.GetBufferID());
+		glBindBufferBase(GL_UNIFORM_BUFFER, 2, uniformBuffer.GetBufferID());
 	}
+
+	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, 3, uniformBuffer.GetBufferID());
+	}
+
 
 	void StandardMaterialShader::SetDiffuseTexture(Texture2D &texture)
 	{
@@ -80,21 +82,6 @@ namespace Viewer
 	{
 		glActiveTexture(GL_TEXTURE1);
 		texture.Bind();
-	}
-
-	void StandardMaterialShader::SetDiffuseCoefficient(float diffuseCoefficient)
-	{
-		glUniform1f(m_diffuseCoefficientLocation, diffuseCoefficient);
-	}
-
-	void StandardMaterialShader::SetSpecularCoefficient(float specularCoefficient)
-	{
-		glUniform1f(m_specularCoefficientLocation, specularCoefficient);
-	}
-
-	void StandardMaterialShader::SetShininess(float shininess)
-	{
-		glUniform1f(m_shininessLocation, shininess);
 	}
 
 	void StandardMaterialShader::SetCameraPosition(const glm::vec3 &cameraPosition)

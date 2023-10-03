@@ -1,44 +1,15 @@
 #include "Texture2D.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 namespace Viewer
 {
-	void Texture2D::Initialize(CComPtr<ID3D11Device> device, std::string filePath)
+
+	Texture2D::Texture2D(CComPtr<ID3D11Device> device)
+		: m_device(device)
 	{
-		// load and create texture
-		int width, height, nrChannels;
-		unsigned char* stbiData = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
+	}
 
-		if (stbiData == nullptr)
-		{
-			// Handle texture loading failure
-			MessageBoxW(nullptr, L"Failed to load image", L"Error", MB_OK | MB_ICONERROR);
-			return;
-		}
-
-		size_t textureByteSize = width * height * 4;
-		unsigned char* textureData = (unsigned char*)malloc(textureByteSize);
-		// directx does not support 3 channel textures, therefore move to 4 channel
-		if (nrChannels == 3)
-		{
-			size_t i = 0;
-			for (size_t j = 0; j < width * height * 3; j += 3)
-			{
-				textureData[i] = stbiData[j];
-				textureData[i + 1] = stbiData[j + 1];
-				textureData[i + 2] = stbiData[j + 2];
-				textureData[i + 3] = 255;
-				i += 4;
-			}
-		}
-		else
-		{
-			// can be just copied
-			memcpy(textureData, stbiData, width * height * 4);
-		}
-
+	void Texture2D::Initialize(unsigned char* data, unsigned int width, unsigned int height)
+	{
 		D3D11_TEXTURE2D_DESC textureDesc = {};
 		textureDesc.Width = width;
 		textureDesc.Height = height;
@@ -53,15 +24,16 @@ namespace Viewer
 		textureDesc.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA initData = {};
-		initData.pSysMem = textureData;
+		initData.pSysMem = data;
 		initData.SysMemPitch = width * 4;
 		initData.SysMemSlicePitch = 0;
 
-		HRESULT hr = device->CreateTexture2D(&textureDesc, &initData, &m_texture.p);
+		HRESULT hr = m_device->CreateTexture2D(&textureDesc, &initData, &m_texture.p);
 
 		if (FAILED(hr))
 		{
 			// Handle texture creation failure
+			
 			MessageBoxW(nullptr, L"Failed to create texture", L"Error", MB_OK | MB_ICONERROR);
 			return;
 		}
@@ -73,7 +45,7 @@ namespace Viewer
 		srvDesc.Texture2D.MipLevels = 1;
 		srvDesc.Texture2D.MostDetailedMip = 0;
 
-		hr = device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureView.p);
+		hr = m_device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureView.p);
 
 		if (FAILED(hr))
 		{
@@ -91,8 +63,7 @@ namespace Viewer
 		samplerDesc.MinLOD = 0;
 		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		ID3D11SamplerState* pSamplerState = m_samplerState.p;
-		hr = device->CreateSamplerState(&samplerDesc, &pSamplerState);
+		hr = m_device->CreateSamplerState(&samplerDesc, &m_samplerState.p);
 
 		if (FAILED(hr))
 		{
@@ -100,8 +71,5 @@ namespace Viewer
 			MessageBoxW(nullptr, L"Failed to create sampler", L"Error", MB_OK | MB_ICONERROR);
 			return;
 		}
-
-		free(textureData);
-		stbi_image_free(stbiData);
 	}
 }

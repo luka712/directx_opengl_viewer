@@ -4,20 +4,21 @@
 namespace Viewer
 {
 
-	bool Renderer::Initialize(HWND windowHandle, unsigned int width, unsigned int height)
+	bool Renderer::Initialize(HWND windowHandle, unsigned int Width, unsigned int Height)
 	{
 		// Create the device, device context, and swap chain
 		// Define your swap chain and device creation parameters
 		DXGI_SWAP_CHAIN_DESC sd = {};
 		sd.BufferCount = 1;
-		sd.BufferDesc.Width = width;
-		sd.BufferDesc.Height = height;
+		sd.BufferDesc.Width = Width;
+		sd.BufferDesc.Height = Height;
 		sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		sd.OutputWindow = windowHandle;
 		sd.SampleDesc.Count = 1;
 		sd.Windowed = TRUE;
-
+		sd.Flags = D3D11_CREATE_DEVICE_DEBUG;
+		
 		// Create the Direct3D 11 device and swap chain
 		HRESULT hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
@@ -59,7 +60,7 @@ namespace Viewer
 			return false;
 		}
 
-		if (!ConfigureDepthStencil(width, height))
+		if (!ConfigureDepthStencil(Width, Height))
 		{
 			MessageBoxW(nullptr, L"Failed to configure depth stencil", L"Error", MB_OK | MB_ICONERROR);
 			return false;
@@ -74,8 +75,8 @@ namespace Viewer
 		CD3D11_VIEWPORT viewport = CD3D11_VIEWPORT(
 			0.0f,
 			0.0f,
-			static_cast<float>(width),
-			static_cast<float>(height)
+			static_cast<float>(Width),
+			static_cast<float>(Height)
 		);
 		m_deviceContext->RSSetViewports(1, &viewport);
 
@@ -122,12 +123,12 @@ namespace Viewer
 		m_swapChain->Present(0, 0);
 	}
 
-	bool Renderer::ConfigureDepthStencil(unsigned int width, unsigned int height)
+	bool Renderer::ConfigureDepthStencil(unsigned int Width, unsigned int Height)
 	{
 		m_depthStencilTexture = nullptr;
 		D3D11_TEXTURE2D_DESC descDepth;
-		descDepth.Width = width;
-		descDepth.Height = height;
+		descDepth.Width = Width;
+		descDepth.Height = Height;
 		descDepth.MipLevels = 1;
 		descDepth.ArraySize = 1;
 		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;

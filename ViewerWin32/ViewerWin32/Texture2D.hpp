@@ -3,13 +3,16 @@
 #include <d3d11.h>
 #include <string>
 #include <atlbase.h> // Contains the declaration of CComPtr.
+#include "ImageLoader.hpp"
 
 namespace Viewer
 {
 	class Texture2D
 	{
 	public:
-		void Initialize(CComPtr<ID3D11Device> device, std::string filePath);
+		Texture2D(CComPtr<ID3D11Device> device);
+
+		void Initialize(unsigned char* Data, unsigned int Width, unsigned int Height);
 
 		/// <summary>
 		/// Gets the texture.
@@ -28,9 +31,10 @@ namespace Viewer
 		ID3D11SamplerState* GetSamplerState() { return m_samplerState; }
 
 	private:
+		CComPtr<ID3D11Device> m_device;
+
 		CComPtr<ID3D11Texture2D> m_texture;
 		CComPtr<ID3D11ShaderResourceView> m_textureView;
 		CComPtr<ID3D11SamplerState> m_samplerState;
-
 	};
 }

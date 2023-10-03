@@ -10,10 +10,14 @@ namespace Viewer
 	class ConstantBuffer
 	{
 	public:
+		ConstantBuffer(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext)
+			: m_device(device), m_deviceContext(deviceContext)
+		{
+		}
 
 		inline ID3D11Buffer* GetBuffer() { return m_buffer.p; }
 
-		bool Initialize(CComPtr<ID3D11Device> device, int length = 1)
+		bool Initialize(int length = 1)
 		{
 			size_t byteSize = sizeof(T) * length;
 
@@ -31,7 +35,7 @@ namespace Viewer
 			desc.MiscFlags = 0;
 			desc.StructureByteStride = 0;
 
-			HRESULT hr = device->CreateBuffer(&desc, nullptr, &m_buffer);
+			HRESULT hr = m_device->CreateBuffer(&desc, nullptr, &m_buffer);
 
 			if (FAILED(hr))
 			{
@@ -44,17 +48,20 @@ namespace Viewer
 			return true;
 		}
 
-		void Update(CComPtr<ID3D11DeviceContext> deviceContext, T data)
+		void Update(T Data)
 		{
-			deviceContext->UpdateSubresource(m_buffer, 0, nullptr, &data, 0, 0);
+			m_deviceContext->UpdateSubresource(m_buffer, 0, nullptr, &Data, 0, 0);
 		}
 
-		void Update(CComPtr<ID3D11DeviceContext> deviceContext, T* data, size_t count)
+		void Update(T* Data, size_t count)
 		{
-			deviceContext->UpdateSubresource(m_buffer, 0, nullptr, data, sizeof(T), sizeof(T) * count);
+			m_deviceContext->UpdateSubresource(m_buffer, 0, nullptr, Data, sizeof(T), sizeof(T) * count);
 		}
 
 	private:
+		CComPtr<ID3D11Device> m_device;
+		CComPtr<ID3D11DeviceContext> m_deviceContext;
+
 		CComPtr<ID3D11Buffer> m_buffer;
 
 	};

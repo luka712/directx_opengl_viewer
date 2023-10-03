@@ -64,6 +64,15 @@
     <Filter Include="Header Files\Material">
       <UniqueIdentifier>{eb55408e-1f42-419e-9b9a-b72a1c0d29b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Loaders">
+      <UniqueIdentifier>{5f0e038e-c98e-4474-ba9e-2ddfe8fe616f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Loaders">
+      <UniqueIdentifier>{12f52a00-9899-4bb8-bb5e-670bc44a0f93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Material">
+      <UniqueIdentifier>{f6e2d4ec-77b4-40fa-b7bc-9da93c4a4e08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -123,6 +132,12 @@
     <ClInclude Include="MaterialData.hpp">
       <Filter>Header Files\Material</Filter>
     </ClInclude>
+    <ClInclude Include="ImageLoader.hpp">
+      <Filter>Header Files\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardMaterial.hpp">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -149,11 +164,17 @@
     <ClCompile Include="MatrixUtil.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="Win32ErrorUtil.cpp">
-      <Filter>Source Files\Util</Filter>
-    </ClCompile>
     <ClCompile Include="Texture2D.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageLoader.cpp">
+      <Filter>Source Files\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardMaterial.cpp">
+      <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32ErrorUtil.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

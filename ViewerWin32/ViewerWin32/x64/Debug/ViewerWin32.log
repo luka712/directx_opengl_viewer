@@ -1,15 +1,2 @@
-﻿  ViewerWin32.cpp
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(146,108): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(27,21): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(16,8): message : while compiling class template member function 'bool Viewer::ConstantBuffer<DirectX::XMVECTOR>::Initialize(ATL::CComPtr<ID3D11Device>,int)'
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(132,30): message : see the first reference to 'Viewer::ConstantBuffer<DirectX::XMVECTOR>::Initialize' in 'wWinMain'
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(131,44): message : see reference to class template instantiation 'Viewer::ConstantBuffer<DirectX::XMVECTOR>' being compiled
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(54,86): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(52,8): message : while compiling class template member function 'void Viewer::ConstantBuffer<Viewer::PointLight>::Update(ATL::CComPtr<ID3D11DeviceContext>,T *,size_t)'
-          with
-          [
-              T=Viewer::PointLight
-          ]
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(175,26): message : see the first reference to 'Viewer::ConstantBuffer<Viewer::PointLight>::Update' in 'wWinMain'
-C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(128,45): message : see reference to class template instantiation 'Viewer::ConstantBuffer<Viewer::PointLight>' being compiled
+﻿  Texture2D.cpp
   ViewerWin32.vcxproj -> C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\ViewerWin32.exe

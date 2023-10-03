@@ -11,7 +11,7 @@ namespace Viewer
 	class Renderer
 	{
 	public:
-		bool Initialize(HWND windowHandle, unsigned int width, unsigned int height);
+		bool Initialize(HWND windowHandle, unsigned int Width, unsigned int Height);
 		void Begin();
 		void End();
 
@@ -54,6 +54,6 @@ namespace Viewer
 
 		DirectX::XMVECTOR m_clearColor = DirectX::XMVectorSet(1.0f, 0.71f, 0.76f, 1.0f);
 
-		bool ConfigureDepthStencil(unsigned int width, unsigned int height);
+		bool ConfigureDepthStencil(unsigned int Width, unsigned int Height);
 	};
 }

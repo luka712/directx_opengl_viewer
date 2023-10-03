@@ -7,6 +7,12 @@ struct PS_INPUT
     float3 fragWorldPos : VPOS;
 };
 
+struct AmbientLight
+{
+    float Intensity;
+    float3 Color;
+};
+
 struct DirectionalLight
 {
     float3 Direction;
@@ -23,12 +29,6 @@ struct PointLight
     float _padding;
 };
 
-sampler s_diffuseSampler : register(s0);
-Texture2D<float4> s_diffuseTexture : register(t0);
-
-sampler s_specularSampler : register(s1);
-Texture2D<float4> s_specularTexture : register(t1);
-
 struct Material
 {
     float DiffuseCoefficient;
@@ -36,11 +36,12 @@ struct Material
     float Shininess;
 };
 
-struct AmbientLight
-{
-    float Intensity;
-    float3 Color;
-};
+
+sampler s_diffuseSampler : register(s0);
+Texture2D<float4> s_diffuseTexture : register(t0);
+
+sampler s_specularSampler : register(s1);
+Texture2D<float4> s_specularTexture : register(t1);
 
 
 cbuffer MaterialBuffer : register(b0)
