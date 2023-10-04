@@ -35,7 +35,7 @@ namespace Viewer
 			desc.MiscFlags = 0;
 			desc.StructureByteStride = 0;
 
-			HRESULT hr = m_device->CreateBuffer(&desc, nullptr, &m_buffer);
+			HRESULT hr = m_device->CreateBuffer(&desc, nullptr, &m_buffer.p);
 
 			if (FAILED(hr))
 			{

@@ -3,6 +3,9 @@
 ##### Generate build files
 cmake . -B build 
 
+##### Build
+cmake --build build
+
 ###### Windows
 go to build and find ```Viewer.sln```. Open it and build project
 

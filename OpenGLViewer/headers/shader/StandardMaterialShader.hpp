@@ -9,6 +9,7 @@
 #include "light/DirectionalLight.hpp"
 #include "light/PointLight.hpp"
 #include "material/MaterialData.hpp"
+#include "camera/Camera.hpp"
 
 #define MAX_DIRECTIONAL_LIGHTS 3
 #define MAX_POINT_LIGHTS 5
@@ -29,9 +30,9 @@ namespace Viewer
         /// @param normalMatrix - The normal matrix.
         void SetNormalMatrix(const glm::mat3 &normalMatrix);
 
-        /// @brief Sets the projection view matrix.
-        /// @param projectionViewMatrix - The projection view matrix.
-        void SetProjectionViewMatrix(const glm::mat4 &projectionViewMatrix);
+        /// @brief Sets the values of the camera.
+        /// @param cameraBuffer - The buffer containing the values of the camera.
+        void SetCamera(UniformBuffer<CameraData> &cameraBuffer);
 
         /// @brief Sets the values of the ambient light.
         /// @param ambientLightBuffer - The buffer containing the values of the ambient light.
@@ -57,16 +58,9 @@ namespace Viewer
         /// @param materialDataBuffer - The buffer containing the material data.
         void SetMaterial(UniformBuffer<MaterialData> &materialDataBuffer);
 
-        /// @brief Sets the camera position.
-        /// @param cameraPosition - The camera position.
-        void SetCameraPosition(const glm::vec3 &cameraPosition);
-
     private:
         int m_modelMatrixLocation;
         int m_normalMatrixLocation;
-        int m_viewProjectionMatrixLocation;
-
-        int m_cameraPositionLocation;
 
         // Material
         int m_diffuseTextureLocation;

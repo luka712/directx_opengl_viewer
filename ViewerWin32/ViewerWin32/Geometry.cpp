@@ -79,40 +79,40 @@ namespace Viewer
 
 		geometry.colorVertices = {
 			// Left face 
-			0.0, 0.0, 1.0, // blue
-			0.0, 0.0, 1.0, // blue
-			0.0, 0.0, 1.0, // blue
-			0.0, 0.0, 1.0, // blue
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
 
-			// Right face
-			1.0, 0.0, 0.0, // red
-			1.0, 0.0, 0.0, // red
-			1.0, 0.0, 0.0, // red
-			1.0, 0.0, 0.0, // red
+		// Right face
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
 
-			// Top face
-			0.0, 1.0, 0.0, // green
-			0.0, 1.0, 0.0, // green
-			0.0, 1.0, 0.0, // green
-			0.0, 1.0, 0.0, // green
+		// Top face
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
 
-			// Bottom face
-			1.0, 1.0, 0.0, // yellow
-			1.0, 1.0, 0.0, // yellow
-			1.0, 1.0, 0.0, // yellow
-			1.0, 1.0, 0.0, // yellow
+		// Bottom face
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
 
-			// Front face
-			0.0, 1.0, 1.0, // cyan
-			0.0, 1.0, 1.0, // cyan
-			0.0, 1.0, 1.0, // cyan
-			0.0, 1.0, 1.0, // cyan
+		// Front face
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
 
-			// Back face
-			1.0, 0.0, 1.0, // magenta
-			1.0, 0.0, 1.0, // magenta
-			1.0, 0.0, 1.0, // magenta
-			1.0, 0.0, 1.0, // magenta
+		// Back face
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
+		1, 1, 1,
 		};
 
 		geometry.textureVertices = {

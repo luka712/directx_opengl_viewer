@@ -73,6 +73,18 @@
     <Filter Include="Source Files\Material">
       <UniqueIdentifier>{f6e2d4ec-77b4-40fa-b7bc-9da93c4a4e08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Camera">
+      <UniqueIdentifier>{7e1549f4-8447-440c-892c-76a8a89a659b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Camera">
+      <UniqueIdentifier>{23969e1c-a673-4fb0-ba9c-5af179e92ef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{49a19bc5-7133-4256-9518-a1f4ad9eeb1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{c541beac-46e1-43a2-972b-1c2d292a90a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +150,15 @@
     <ClInclude Include="StandardMaterial.hpp">
       <Filter>Header Files\Material</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseState.hpp">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitCamera.hpp">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -175,6 +196,15 @@
     </ClCompile>
     <ClCompile Include="Win32ErrorUtil.cpp">
       <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseState.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -129,9 +129,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AmbientLight.hpp" />
+    <ClInclude Include="Camera.hpp" />
     <ClInclude Include="DirectionalLight.hpp" />
     <ClInclude Include="ImageLoader.hpp" />
     <ClInclude Include="MaterialData.hpp" />
+    <ClInclude Include="MouseState.hpp" />
+    <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="PointLight.hpp" />
     <ClInclude Include="StandardMaterial.hpp" />
     <ClInclude Include="Texture2D.hpp" />
@@ -151,7 +154,10 @@
     <ClInclude Include="ViewerWin32.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
+    <ClCompile Include="MouseState.cpp" />
+    <ClCompile Include="OrbitCamera.cpp" />
     <ClCompile Include="StandardMaterial.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Geometry.cpp" />

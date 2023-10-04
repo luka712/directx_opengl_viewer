@@ -8,6 +8,7 @@
 #include "AmbientLight.hpp"
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
+#include "Camera.hpp"
 
 namespace Viewer
 {
@@ -48,7 +49,7 @@ namespace Viewer
 		/// <summary>
 		/// Updates the properties of the camera.
 		/// </summary>
-		void UpdateCameraProperties(ConstantBuffer<DirectX::XMMATRIX> projectionViewMatrixBuffer, ConstantBuffer<DirectX::XMVECTOR> eyePositionBuffer);
+		void UpdateCameraProperties(Camera& camera);
 
 		/// <summary>
 		/// Update the properties of the transform.

@@ -19,12 +19,8 @@ namespace Viewer
 		}
 
 		// matrices
-		m_viewProjectionMatrixLocation = GetUniformLocation("u_projectionViewMatrix");
 		m_modelMatrixLocation = GetUniformLocation("u_modelMatrix");
 		m_normalMatrixLocation = GetUniformLocation("u_normalMatrix");
-
-		// camera
-		m_cameraPositionLocation = GetUniformLocation("u_cameraPosition");
 
 		// material
 		m_diffuseTextureLocation = GetUniformLocation("u_diffuseTexture");
@@ -43,29 +39,29 @@ namespace Viewer
 		glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, glm::value_ptr(normalMatrix));
 	}
 
-	void StandardMaterialShader::SetProjectionViewMatrix(const glm::mat4 &viewProjectionMatrix)
-	{
-		glUniformMatrix4fv(m_viewProjectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(viewProjectionMatrix));
-	}
-
-	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
+	void StandardMaterialShader::SetCamera(UniformBuffer<CameraData> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
+	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
+	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, uniformBuffer.GetBufferID());
+	}
+
+	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, 4, uniformBuffer.GetBufferID());
 	}
 
 
@@ -84,8 +80,4 @@ namespace Viewer
 		texture.Bind();
 	}
 
-	void StandardMaterialShader::SetCameraPosition(const glm::vec3 &cameraPosition)
-	{
-		glUniform3fv(m_cameraPositionLocation, 1, glm::value_ptr(cameraPosition));
-	}
 }

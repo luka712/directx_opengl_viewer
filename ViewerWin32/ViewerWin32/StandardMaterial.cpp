@@ -58,10 +58,9 @@ namespace Viewer
 		m_materialBuffer->Update(materialData);
 		m_materialShader->SetMaterial(*m_materialBuffer);
 	}
-	void StandardMaterial::UpdateCameraProperties(ConstantBuffer<DirectX::XMMATRIX> projectionViewMatrixBuffer, ConstantBuffer<DirectX::XMVECTOR> eyePositionBuffer)
+	void StandardMaterial::UpdateCameraProperties(Camera& camera)
 	{
-		m_materialShader->SetProjectionViewMatrix(projectionViewMatrixBuffer.GetBuffer());
-		m_materialShader->SetEyePosition(eyePositionBuffer.GetBuffer());
+		m_materialShader->SetCamera(camera.GetCameraBuffer()->GetBuffer());
 	}
 
 	void StandardMaterial::UpdateTransformProperties(ConstantBuffer<DirectX::XMMATRIX> worldMatrixBuffer, ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer)

@@ -14,23 +14,24 @@
 #include "material/MaterialData.hpp"
 #include "buffer/UniformBuffer.hpp"
 #include "material/StandardMaterial.hpp"
+#include "camera/Camera.hpp"
+#include "camera/OrbitCamera.hpp"
 
 using namespace Viewer;
 
 Viewer::AmbientLight ambientLight = { glm::vec3(1, 1, 1), 0.6f };
 Viewer::DirectionalLight directionalLights[3] = {
-	{ glm::vec3(1, -1, 0), 1.0f, glm::vec3(1, 1, 1) },
-	{ glm::vec3(-1, 0, 0), 0.5f, glm::vec3(1, 1, 1) },
-	{ glm::vec3(1, 0, 0), 0.5f, glm::vec3(1, 1, 1) },
+	{glm::vec3(1, -1, 0), 1.0f, glm::vec3(1, 1, 1)},
+	{glm::vec3(-1, 0, 0), 0.5f, glm::vec3(1, 1, 1)},
+	{glm::vec3(1, 0, 0), 0.5f, glm::vec3(1, 1, 1)},
 };
 Viewer::PointLight pointLights[5] = {
-	{ glm::vec3(1, 0, 0), 0.0f, glm::vec3(1, 0, 0) },
-	{ glm::vec3(0, 1, 0), 0.0f, glm::vec3(0, 1, 0) },
-	{ glm::vec3(0, 0, 1), 0.0f, glm::vec3(0, 0, 1)  },
-	{ glm::vec3(1, 1, 0), 0.0f, glm::vec3(1, 1, 0)  },
-	{ glm::vec3(0, 1, 1), 0.0f, glm::vec3(0, 1, 1)  },	
+	{glm::vec3(1, 0, 0), 0.0f, glm::vec3(1, 0, 0)},
+	{glm::vec3(0, 1, 0), 0.0f, glm::vec3(0, 1, 0)},
+	{glm::vec3(0, 0, 1), 0.0f, glm::vec3(0, 0, 1)},
+	{glm::vec3(1, 1, 0), 0.0f, glm::vec3(1, 1, 0)},
+	{glm::vec3(0, 1, 1), 0.0f, glm::vec3(0, 1, 1)},
 };
-
 
 int main(int argc, char* args[])
 {
@@ -44,33 +45,19 @@ int main(int argc, char* args[])
 
 	SDL_Window* window = SDL_CreateWindow("OBJ Viewer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, clientWidth, clientHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
-
 	Renderer renderer(*window);
 	if (!renderer.Initialize(clientWidth, clientHeight))
 	{
 		return -1;
 	}
 
-
 	Geometry geometry = Geometry::CreateCubeGeometry();
 	GeometryBuffer geometryBuffer;
 	geometryBuffer.Initialize(geometry.positionVertices, geometry.indices, geometry.textureVertices, geometry.normalVertices, geometry.colorVertices);
 
-	glm::vec3 eyePosition = glm::vec3(3, 3, -3);
-	glm::vec3 lookAtPosition = glm::vec3(0, 0, 0);
-	glm::vec3 upVector = glm::vec3(0, 1, 0);
-
-	glm::mat4x4 viewMatrix = glm::lookAt(eyePosition, lookAtPosition, upVector);
-	float aspectRatio = (float)clientWidth / (float)clientHeight;
-	glm::mat4x4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
-
-	glm::mat4x4 projectionViewMatrix = projectionMatrix * viewMatrix;
-
 	// glm::mat4x4 projectionViewMatrix = glm::ortho(-10.0, 10.0, -5.0, 5.0, -1.0, 1.0);
 	glm::mat4x4 modelMatrix = glm::mat4x4(1.0f);
 	glm::mat3x3 normalMatrix = glm::transpose(glm::inverse(glm::mat3x3(modelMatrix)));
-
-
 
 	ImageData* imgData = ImageLoader::LoadImage("assets/crate_texture.png");
 	Texture2D diffuseTexture(imgData->data, imgData->width, imgData->height, imgData->bytePerPixel);
@@ -88,7 +75,6 @@ int main(int argc, char* args[])
 	material.SpecularCoefficient = 3.0;
 	material.Shininess = 12.0;
 
-
 	Viewer::UniformBuffer<Viewer::AmbientLight> ambientLightBuffer;
 	ambientLightBuffer.Initialize(&ambientLight);
 
@@ -98,10 +84,19 @@ int main(int argc, char* args[])
 	Viewer::UniformBuffer<Viewer::PointLight> pointLightBuffer;
 	pointLightBuffer.Initialize(&pointLights[0], 5);
 
+	OrbitCamera camera(float(clientWidth) / clientHeight);
+	camera.Initialize();
+
+
+	MouseState mouseState;
+
 
 	while (true)
 	{
+		mouseState.ResetDeltas();
 		SDL_Event Event;
+
+
 		while (SDL_PollEvent(&Event))
 		{
 			switch (Event.type)
@@ -109,8 +104,46 @@ int main(int argc, char* args[])
 			case SDL_QUIT:
 				return 0;
 				break;
+				// Mouse events
+			case SDL_MOUSEWHEEL:
+				mouseState.DeltaWheelY = Event.wheel.y;
+				break;
+			case SDL_MOUSEMOTION:
+				mouseState.DeltaX = Event.motion.xrel;
+				mouseState.DeltaY = Event.motion.yrel;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				switch (Event.button.button)
+				{
+				case SDL_BUTTON_LEFT:
+					mouseState.LeftButton = true;
+					break;
+				case SDL_BUTTON_RIGHT:
+					mouseState.RightButton = true;
+					break;
+				case SDL_BUTTON_MIDDLE:
+					mouseState.MiddleButton = true;
+					break;
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				switch (Event.button.button)
+				{
+				case SDL_BUTTON_LEFT:
+					mouseState.LeftButton = false;
+					break;
+				case SDL_BUTTON_RIGHT:
+					mouseState.RightButton = false;
+					break;
+				case SDL_BUTTON_MIDDLE:
+					mouseState.MiddleButton = false;
+					break;
+				}
+				break;
 			}
 		}
+
+		camera.Update(mouseState);
 
 		renderer.Begin();
 
@@ -118,9 +151,9 @@ int main(int argc, char* args[])
 		material.Use();
 
 		material.UpdateSelfProperties();
-		material.UpdateCameraProperties(projectionViewMatrix, eyePosition);
+		material.UpdateCameraProperties(camera);
 		material.UpdateTranformProperties(modelMatrix, normalMatrix);
-		material.UpdateLights(ambientLightBuffer, directionalLightBuffer, pointLightBuffer);
+		material.UpdateLightsProperties(ambientLightBuffer, directionalLightBuffer, pointLightBuffer);
 
 		geometryBuffer.Draw();
 

@@ -4,6 +4,8 @@
 #include "framework.h"
 #include "ViewerWin32.h"
 #include <windows.h>
+#include <Windowsx.h>
+#include <Winuser.h>
 #include <combaseapi.h>
 #include <d3d11.h>
 #include <string>
@@ -19,8 +21,12 @@
 #include "MaterialData.hpp"
 #include "ImageLoader.hpp"
 #include "StandardMaterial.hpp"
+#include "Camera.hpp"
+#include "OrbitCamera.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+Viewer::MouseState g_mouseState;
 
 Viewer::AmbientLight ambientLight = { 0.3f, DirectX::XMFLOAT3(1, 1, 1) };
 Viewer::DirectionalLight directionalLights[3] = {
@@ -113,7 +119,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	material.DiffuseCoefficient = 0.5f;
 	material.SpecularCoefficient = 3.0f;
 	material.Shininess = 12.0f;
-	
+
 	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::GeometryBuffer geometryBuffer;
 	geometryBuffer.Initialize(renderer.GetDevice(),
@@ -123,8 +129,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		geometry.normalVertices,
 		geometry.colorVertices);
 
-	Viewer::ConstantBuffer<DirectX::XMMATRIX> projectionViewBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
-	projectionViewBuffer.Initialize();
 
 	Viewer::ConstantBuffer<DirectX::XMMATRIX> modelBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
 	modelBuffer.Initialize();
@@ -143,24 +147,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Viewer::ConstantBuffer<Viewer::PointLight> pointLightBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
 	pointLightBuffer.Initialize(5);
 
-	Viewer::ConstantBuffer<DirectX::XMVECTOR> eyePositionBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
-	eyePositionBuffer.Initialize();
-
 
 	MSG msg;
 
-	// DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixOrthographicOffCenterRH(-10, 10, -5, 5, 1, -1));
-	DirectX::XMVECTOR eyePosition = DirectX::XMVectorSet(3, 3, -3, 0);
-	DirectX::XMVECTOR focusPoint = DirectX::XMVectorSet(0, 0, 0, 0);
-	DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0, 1, 0, 0);
-
-
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtRH(eyePosition, focusPoint, upDirection);
-
-	float aspectRatio = (float)Width / (float)Height;
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PI / 4.0, aspectRatio, 0.1, 1000);
-
-	DirectX::XMMATRIX projectionViewMatrix = DirectX::XMMatrixTranspose(viewMatrix * projectionMatrix);
 	DirectX::XMMATRIX modelMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(0, 0, 0));
 	DirectX::XMMATRIX normalMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, modelMatrix));
 
@@ -168,24 +157,29 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 
+	float aspectRatio = (float)Width / (float)Height;
+	Viewer::OrbitCamera camera(renderer.GetDevice(), renderer.GetDeviceContext(), aspectRatio);
+	camera.Initialize();
 
 
 	// Main message loop:
 	while (true)
 	{
+		g_mouseState.ResetDeltas();
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 
-		projectionViewBuffer.Update( projectionViewMatrix);
-		modelBuffer.Update( modelMatrix);
-		normalMatrixBuffer.Update( normalMatrix);
-		ambientLightBuffer.Update( ambientLight);
-		directionalLightBuffer.Update( directionalLights, 3);
-		pointLightBuffer.Update( pointLights, 5);
-		eyePositionBuffer.Update( eyePosition);
+		camera.Update(g_mouseState);
+
+
+		modelBuffer.Update(modelMatrix);
+		normalMatrixBuffer.Update(normalMatrix);
+		ambientLightBuffer.Update(ambientLight);
+		directionalLightBuffer.Update(directionalLights, 3);
+		pointLightBuffer.Update(pointLights, 5);
 
 		renderer.Begin();
 
@@ -193,7 +187,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		material.Use();
 
 		material.UpdateSelfProperties();
-		material.UpdateCameraProperties(projectionViewBuffer, eyePositionBuffer);
+		material.UpdateCameraProperties(camera);
 		material.UpdateTransformProperties(modelBuffer, normalMatrixBuffer);
 		material.UpdateLightsProperties(ambientLightBuffer, directionalLightBuffer, pointLightBuffer);
 
@@ -220,8 +214,31 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		return 0;
 
+	// wheel scroll
+	case WM_MOUSEWHEEL:
+		g_mouseState.DeltaWheelY = GET_WHEEL_DELTA_WPARAM(wParam);
+		return 0;		
+
+	// Left button down/up
+	case WM_LBUTTONDOWN :
+		g_mouseState.LeftButton = true;
+		return 0;
+	case WM_LBUTTONUP:
+		g_mouseState.LeftButton = false;
+		return 0;
+
+	// Mouse move
+	case WM_MOUSEMOVE:
+		
+		g_mouseState.X = GET_X_LPARAM(lParam);
+		g_mouseState.Y = GET_Y_LPARAM(lParam);
+		g_mouseState.DeltaX = g_mouseState.X - g_mouseState.LastX;
+		g_mouseState.DeltaY = g_mouseState.Y - g_mouseState.LastY;
+		g_mouseState.LastX = g_mouseState.X;
+		g_mouseState.LastY = g_mouseState.Y;
+		return 0;
+
 	case WM_PAINT:
-	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwnd, &ps);
 
@@ -230,8 +247,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
 
 		EndPaint(hwnd, &ps);
-	}
-	return 0;
+		return 0;
+
 
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);

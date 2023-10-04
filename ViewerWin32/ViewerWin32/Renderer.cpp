@@ -17,7 +17,7 @@ namespace Viewer
 		sd.OutputWindow = windowHandle;
 		sd.SampleDesc.Count = 1;
 		sd.Windowed = TRUE;
-		sd.Flags = D3D11_CREATE_DEVICE_DEBUG;
+		sd.Flags = D3D11_CREATE_DEVICE_DEBUG; 
 		
 		// Create the Direct3D 11 device and swap chain
 		HRESULT hr = D3D11CreateDeviceAndSwapChain(

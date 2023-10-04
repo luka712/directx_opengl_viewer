@@ -7,6 +7,7 @@ in vec2 v_texCoord;
 in vec3 v_normal;
 in vec3 v_color;
 in vec3 v_fragWorldPos;
+in vec3 v_eyePosition; // camera position
 
 struct AmbientLight 
 {
@@ -37,22 +38,22 @@ struct Material
     float shininess;
 };
 
-layout (std140, binding = 0) uniform AmbientLightBuffer
+layout (std140, binding = 1) uniform AmbientLightBuffer
 {
     AmbientLight u_ambientLight;
 };
 
-layout(std140, binding = 1) uniform DirectionalLightsBuffer 
+layout(std140, binding = 2) uniform DirectionalLightsBuffer 
 {
     DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
 };
 
-layout(std140, binding = 2) uniform PointLightsBuffer 
+layout(std140, binding = 3) uniform PointLightsBuffer 
 {
     PointLight u_pointLights[MAX_POINT_LIGHTS];
 };
 
-layout(std140, binding = 3) uniform MaterialBuffer 
+layout(std140, binding = 4) uniform MaterialBuffer 
 {
     Material u_material;
 };
@@ -60,7 +61,6 @@ layout(std140, binding = 3) uniform MaterialBuffer
 uniform sampler2D u_diffuseTexture;
 uniform sampler2D u_specularTexture;
 
-uniform vec3 u_cameraPosition;
 
 out vec4 outFragColor;
 
@@ -78,7 +78,7 @@ vec3 directionalDiffuseLight(DirectionalLight light, Material material, vec3 nor
 vec3 directionalSpecularLight(DirectionalLight light, Material material, vec3 normal)
 {
     vec3 lightDir = normalize(-light.direction);
-    vec3 viewDir = normalize(u_cameraPosition - v_fragWorldPos);
+    vec3 viewDir = normalize(v_eyePosition - v_fragWorldPos);
     vec3 halfwayDir= normalize(lightDir + viewDir);
     // find specular intensity
     float spec = max(dot(normal, halfwayDir), 0.0);

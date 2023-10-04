@@ -27,7 +27,8 @@ namespace Viewer
 		DirectionalLight(const glm::vec3& direction, float intensity, const glm::vec3& color) :
 			Direction(direction),
 			Intensity(intensity),
-			Color(color)
+			Color(color),
+			_padding(0.0f)
 		{
 		}
     };

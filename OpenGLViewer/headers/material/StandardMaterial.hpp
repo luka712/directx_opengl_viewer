@@ -38,7 +38,7 @@ namespace Viewer
         void UpdateSelfProperties();
 
         /// @brief Updates the properties related to the camera.
-        void UpdateCameraProperties(glm::mat4x4& projectionMatrix, glm::vec3& cameraPosition);
+        void UpdateCameraProperties(Camera& camera);
 
         /// @brief  Updates the properties related to the transform.
         void UpdateTranformProperties(glm::mat4x4& modelMatrix, glm::mat3x3& normalMatrix);

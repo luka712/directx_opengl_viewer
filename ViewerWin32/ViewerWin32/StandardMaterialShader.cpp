@@ -7,11 +7,9 @@ namespace Viewer
 	{
 	}
 
-
-
-	void StandardMaterialShader::SetProjectionViewMatrix(CComPtr<ID3D11Buffer> viewMatrixBuffer)
+	void StandardMaterialShader::SetCamera(CComPtr<ID3D11Buffer> cameraBuffer)
 	{
-		ID3D11Buffer* buffer = viewMatrixBuffer.p;
+		ID3D11Buffer* buffer = cameraBuffer.p;
 		m_deviceContext->VSSetConstantBuffers(0, 1, &buffer);
 	}
 
@@ -50,11 +48,6 @@ namespace Viewer
 		m_deviceContext->PSSetConstantBuffers(3, 1, &buffer);
 	}
 
-	void StandardMaterialShader::SetEyePosition(CComPtr<ID3D11Buffer> eyePositionBuffer)
-	{
-		ID3D11Buffer* buffer = eyePositionBuffer.p;
-		m_deviceContext->PSSetConstantBuffers(4, 1, &buffer);
-	}
 
 	void StandardMaterialShader::SetDiffuseTexture(Texture2D* texture)
 	{

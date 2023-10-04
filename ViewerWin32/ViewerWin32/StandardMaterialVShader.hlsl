@@ -2,6 +2,7 @@
 cbuffer CameraConstantBuffer : register(b0)
 {
     matrix ProjectionViewMatrix;
+    float3 EyePosition;
 }
 
 cbuffer ModelConstantBuffer : register(b1)
@@ -29,6 +30,7 @@ struct PS_INPUT
     float3 normal : NORMAL;
     float3 color: COLOR;
     float3 fragWorldPos : VPOS;
+    float3 eyePosition: EYEPOS;
 };
 
 PS_INPUT main(VS_INPUT input) 
@@ -41,5 +43,6 @@ PS_INPUT main(VS_INPUT input)
     output.normal = mul(input.normal, (float3x3)NormalMatrix);
     output.color = input.color;
     output.fragWorldPos = worldPos.xyz;
+    output.eyePosition = EyePosition;
     return output;
 }

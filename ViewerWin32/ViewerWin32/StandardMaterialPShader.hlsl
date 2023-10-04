@@ -5,6 +5,7 @@ struct PS_INPUT
     float3 normal : NORMAL;
     float3 color: COLOR;
     float3 fragWorldPos : VPOS;
+    float3 eyePosition: EYEPOS;
 };
 
 struct AmbientLight
@@ -64,11 +65,6 @@ cbuffer PointLightBuffer : register(b3)
     PointLight PointLights[5];
 }
 
-cbuffer EyePositionBuffer : register(b4)
-{
-    float3 c_eyePosition;
-}
-
 
 float3 ambientLight(AmbientLight light, Material material)
 {
@@ -84,7 +80,7 @@ float3 directionalLight(DirectionalLight light, Material material, float3 normal
 float3 directionalSpecularLight(DirectionalLight light, Material material, float3 normal, PS_INPUT input)
 {
     float3 lightDirection = normalize(-light.Direction);
-    float3 viewDir = normalize(c_eyePosition - input.fragWorldPos);
+    float3 viewDir = normalize(input.eyePosition - input.fragWorldPos);
     float3 halfwayDir = normalize(lightDirection + viewDir);
     // find specular intensity
     float spec = max(dot(normal, halfwayDir), 0.0);

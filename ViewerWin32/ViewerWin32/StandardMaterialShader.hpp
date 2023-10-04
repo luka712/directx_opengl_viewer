@@ -6,6 +6,7 @@
 #include "Texture2D.hpp"
 #include "ConstantBuffer.hpp"
 #include "MaterialData.hpp"
+#include "Camera.hpp"
 
 namespace Viewer
 {
@@ -21,8 +22,12 @@ namespace Viewer
 		/// </summary>
 		void SetNormalMatrix(CComPtr<ID3D11Buffer> normalMatrixBuffer);
 
-		void SetProjectionViewMatrix(CComPtr<ID3D11Buffer>  viewMatrixBuffer);
-
+		/// <summary>
+		/// Sets the camera buffer.
+		/// It contains the projection view matrix and the eye position.
+		/// </summary>
+		/// <param name="cameraBuffer"></param>
+		void SetCamera(CComPtr<ID3D11Buffer>  cameraBuffer);
 
 		/// <summary>
 		/// Sets the material for the shader
@@ -54,10 +59,5 @@ namespace Viewer
 		/// Sets the specular texture for the shader
 		/// </summary>
 		void SetSpecularTexture(Texture2D* texture);
-
-		/// <summary>
-		/// Sets the eye position for the shader
-		/// </summary>
-		void SetEyePosition(CComPtr<ID3D11Buffer> eyePositionBuffer);
 	};
 }
