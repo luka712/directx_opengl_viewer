@@ -8,10 +8,6 @@ cbuffer CameraConstantBuffer : register(b0)
 cbuffer ModelConstantBuffer : register(b1)
 {
     matrix ModelMatrix;
-}
-
-cbuffer NormalConstantBuffer : register(b2)
-{
     matrix NormalMatrix;
 }
 

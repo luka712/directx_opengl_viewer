@@ -6,20 +6,9 @@ namespace Viewer
 {
 	struct MouseState
 	{
-		MouseState()
-		{
-			LeftButton = false;
-			RightButton = false;
-			MiddleButton = false;
-			ResetDeltas();
-		}
+		MouseState();
 
-		void ResetDeltas()
-		{
-			DeltaWheelY = 0;
-			DeltaX = 0;
-			DeltaY = 0;
-		}
+		void ResetDeltas();
 
 		// @brief The change of the x position of the mouse.
 		int DeltaX;
@@ -33,8 +22,7 @@ namespace Viewer
 		bool LeftButton;
 		bool RightButton;
 		bool MiddleButton;
-
 	};
 }
 
-#endif 
+#endif

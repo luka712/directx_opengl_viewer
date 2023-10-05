@@ -21,12 +21,9 @@ namespace Viewer
 		/// </summary>
 		DirectX::XMFLOAT3 Color;
 
-		DirectionalLight(DirectX::XMFLOAT3 direction, float intensity, DirectX::XMFLOAT3 color) :
-			Direction(direction),
-			Intensity(intensity),
-			Color(color)
-		{
-		}
+		DirectionalLight(DirectX::XMFLOAT3 direction, float intensity, DirectX::XMFLOAT3 color);
+
+		DirectionalLight();
 
 	private:
 			/// <summary>

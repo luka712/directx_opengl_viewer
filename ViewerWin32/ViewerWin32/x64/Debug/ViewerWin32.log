@@ -1,2 +1,13 @@
-﻿  Geometry.cpp
+﻿  Transform.cpp
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(58,88): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(56,8): message : while compiling class template member function 'void Viewer::ConstantBuffer<DirectX::XMMATRIX>::Update(T *,size_t)'
+          with
+          [
+              T=DirectX::XMMATRIX
+          ]
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\Transform.cpp(36,18): message : see the first reference to 'Viewer::ConstantBuffer<DirectX::XMMATRIX>::Update' in 'Viewer::Transform::Update'
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\Transform.hpp(32,37): message : see reference to class template instantiation 'Viewer::ConstantBuffer<DirectX::XMMATRIX>' being compiled
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(31,21): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ConstantBuffer.hpp(20,8): message : while compiling class template member function 'bool Viewer::ConstantBuffer<DirectX::XMMATRIX>::Initialize(int)'
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\Transform.cpp(17,22): message : see the first reference to 'Viewer::ConstantBuffer<DirectX::XMMATRIX>::Initialize' in 'Viewer::Transform::Initialize'
   ViewerWin32.vcxproj -> C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\ViewerWin32.exe

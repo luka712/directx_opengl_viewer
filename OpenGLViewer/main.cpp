@@ -6,32 +6,20 @@
 #include <glm/glm.hpp>
 #include "geometry/Geometry.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "loaders/ImageLoader.hpp"
 #include "texture/Texture2D.hpp"
-#include "light/AmbientLight.hpp"
-#include "light/DirectionalLight.hpp"
-#include "light/PointLight.hpp"
+#include "scene/SceneLights.hpp"
 #include "material/MaterialData.hpp"
 #include "buffer/UniformBuffer.hpp"
 #include "material/StandardMaterial.hpp"
 #include "camera/Camera.hpp"
 #include "camera/OrbitCamera.hpp"
+#include "loaders/TextureLoader.hpp"
+#include "scene/SceneLights.hpp"
+#include "transform/Transform.hpp"
 
 using namespace Viewer;
 
-Viewer::AmbientLight ambientLight = { glm::vec3(1, 1, 1), 0.6f };
-Viewer::DirectionalLight directionalLights[3] = {
-	{glm::vec3(1, -1, 0), 1.0f, glm::vec3(1, 1, 1)},
-	{glm::vec3(-1, 0, 0), 0.5f, glm::vec3(1, 1, 1)},
-	{glm::vec3(1, 0, 0), 0.5f, glm::vec3(1, 1, 1)},
-};
-Viewer::PointLight pointLights[5] = {
-	{glm::vec3(1, 0, 0), 0.0f, glm::vec3(1, 0, 0)},
-	{glm::vec3(0, 1, 0), 0.0f, glm::vec3(0, 1, 0)},
-	{glm::vec3(0, 0, 1), 0.0f, glm::vec3(0, 0, 1)},
-	{glm::vec3(1, 1, 0), 0.0f, glm::vec3(1, 1, 0)},
-	{glm::vec3(0, 1, 1), 0.0f, glm::vec3(0, 1, 1)},
-};
+Viewer::TextureLoader g_texutureLoader;
 
 int main(int argc, char* args[])
 {
@@ -52,50 +40,54 @@ int main(int argc, char* args[])
 	}
 
 	Geometry geometry = Geometry::CreateCubeGeometry();
-	GeometryBuffer geometryBuffer;
-	geometryBuffer.Initialize(geometry.positionVertices, geometry.indices, geometry.textureVertices, geometry.normalVertices, geometry.colorVertices);
+	GeometryBuffer createGeometryBuffer;
+	createGeometryBuffer.Initialize(geometry.positionVertices, geometry.indices, geometry.textureVertices, geometry.normalVertices, geometry.colorVertices);
+
+	Geometry floorGeometry = Geometry::CreateQuadGeometry();
+	GeometryBuffer floorGeometryBuffer;
+	floorGeometryBuffer.Initialize(floorGeometry.positionVertices, floorGeometry.indices, floorGeometry.textureVertices, floorGeometry.normalVertices, floorGeometry.colorVertices);
 
 	// glm::mat4x4 projectionViewMatrix = glm::ortho(-10.0, 10.0, -5.0, 5.0, -1.0, 1.0);
-	glm::mat4x4 modelMatrix = glm::mat4x4(1.0f);
-	glm::mat3x3 normalMatrix = glm::transpose(glm::inverse(glm::mat3x3(modelMatrix)));
 
-	ImageData* imgData = ImageLoader::LoadImage("assets/crate_texture.png");
-	Texture2D diffuseTexture(imgData->data, imgData->width, imgData->height, imgData->bytePerPixel);
-	diffuseTexture.Initialize();
 
-	ImageData* specularImgData = ImageLoader::LoadImage("assets/crate_specular.png");
-	Texture2D specularTexture(*specularImgData);
-	specularTexture.Initialize();
+	StandardMaterial crateMaterial;
+	crateMaterial.Initialize();
+	crateMaterial.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/crate_texture.png");
+	crateMaterial.SpecularTexture = g_texutureLoader.LoadFromImg("assets/crate_specular.png");
+	crateMaterial.DiffuseCoefficient = 0.5;
+	crateMaterial.SpecularCoefficient = 3.0;
+	crateMaterial.Shininess = 12.0;
 
-	StandardMaterial material;
-	material.Initialize();
-	material.DiffuseTexture = &diffuseTexture;
-	material.SpecularTexture = &specularTexture;
-	material.DiffuseCoefficient = 0.5;
-	material.SpecularCoefficient = 3.0;
-	material.Shininess = 12.0;
+	StandardMaterial floorMaterial;
+	floorMaterial.Initialize();
+	floorMaterial.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/wood_diffuse.png");
+	floorMaterial.SpecularTexture = g_texutureLoader.LoadFromImg("assets/wood_specular.png");
+	floorMaterial.DiffuseCoefficient = 0.5;
+	floorMaterial.SpecularCoefficient = 3.0;
+	floorMaterial.Shininess = 24.0;
 
-	Viewer::UniformBuffer<Viewer::AmbientLight> ambientLightBuffer;
-	ambientLightBuffer.Initialize(&ambientLight);
+	SceneLights sceneLights;
+	sceneLights.Initialize();
 
-	Viewer::UniformBuffer<Viewer::DirectionalLight> directionalLightBuffer;
-	directionalLightBuffer.Initialize(directionalLights, 3);
+	Transform transform;
+	transform.Initialize();
 
-	Viewer::UniformBuffer<Viewer::PointLight> pointLightBuffer;
-	pointLightBuffer.Initialize(&pointLights[0], 5);
+	Transform floorTransform;
+	floorTransform.Initialize();
+	floorTransform.Position.y = -0.5;
+	floorTransform.Scale.x = 10;
+	floorTransform.Scale.y = 10;
+	floorTransform.Rotation.x = 90;
 
 	OrbitCamera camera(float(clientWidth) / clientHeight);
 	camera.Initialize();
 
-
 	MouseState mouseState;
-
 
 	while (true)
 	{
 		mouseState.ResetDeltas();
 		SDL_Event Event;
-
 
 		while (SDL_PollEvent(&Event))
 		{
@@ -144,18 +136,37 @@ int main(int argc, char* args[])
 		}
 
 		camera.Update(mouseState);
+		sceneLights.Update();
+		transform.Update();
+		floorTransform.Update();
 
 		renderer.Begin();
 
 		// Draw
-		material.Use();
+		crateMaterial.Use();
 
-		material.UpdateSelfProperties();
-		material.UpdateCameraProperties(camera);
-		material.UpdateTranformProperties(modelMatrix, normalMatrix);
-		material.UpdateLightsProperties(ambientLightBuffer, directionalLightBuffer, pointLightBuffer);
+		crateMaterial.UpdateSelfProperties();
+		crateMaterial.UpdateCameraProperties(camera);
+		crateMaterial.UpdateTranformProperties(transform);
+		crateMaterial.UpdateLightsProperties(
+			sceneLights.GetAmbientLightBuffer(),
+			sceneLights.GetDirectionalLightsBuffer(),
+			sceneLights.GetPointLightsBuffer());
 
-		geometryBuffer.Draw();
+		createGeometryBuffer.Draw();
+
+		// floor
+		floorMaterial.Use();
+
+		floorMaterial.UpdateSelfProperties();
+		floorMaterial.UpdateCameraProperties(camera);
+		floorMaterial.UpdateTranformProperties(floorTransform);
+		floorMaterial.UpdateLightsProperties(
+			sceneLights.GetAmbientLightBuffer(),
+			sceneLights.GetDirectionalLightsBuffer(),
+			sceneLights.GetPointLightsBuffer());
+
+		floorGeometryBuffer.Draw();
 
 		renderer.End();
 

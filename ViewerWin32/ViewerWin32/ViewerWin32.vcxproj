@@ -136,10 +136,12 @@
     <ClInclude Include="MouseState.hpp" />
     <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="PointLight.hpp" />
+    <ClInclude Include="SceneLights.hpp" />
     <ClInclude Include="StandardMaterial.hpp" />
     <ClInclude Include="Texture2D.hpp" />
     <ClInclude Include="ConstantBuffer.hpp" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Win32ErrorUtil.hpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Geometry.hpp" />
@@ -155,9 +157,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="OrbitCamera.cpp" />
+    <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="SceneLights.cpp" />
     <ClCompile Include="StandardMaterial.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -166,6 +171,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="StandardMaterialShader.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIControl.cpp" />
     <ClCompile Include="ViewerWin32.cpp" />
     <ClCompile Include="Win32ErrorUtil.cpp" />
@@ -179,6 +185,8 @@
     <Image Include="small.ico" />
     <Image Include="uv_test.png" />
     <Image Include="ViewerWin32.ico" />
+    <Image Include="wood_diffuse.png" />
+    <Image Include="wood_specular.png" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="StandardMaterialPShader.hlsl">

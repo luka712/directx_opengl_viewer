@@ -13,16 +13,10 @@ namespace Viewer
 		m_deviceContext->VSSetConstantBuffers(0, 1, &buffer);
 	}
 
-	void StandardMaterialShader::SetModelMatrix(CComPtr<ID3D11Buffer>  modelMatrixBuffer)
+	void StandardMaterialShader::SetTransform(CComPtr<ID3D11Buffer> transformBuffer)
 	{
-		ID3D11Buffer* buffer = modelMatrixBuffer.p;
+		ID3D11Buffer* buffer = transformBuffer.p;
 		m_deviceContext->VSSetConstantBuffers(1, 1, &buffer);
-	}
-
-	void StandardMaterialShader::SetNormalMatrix(CComPtr<ID3D11Buffer> normalMatrixBuffer)
-	{
-		ID3D11Buffer* buffer = normalMatrixBuffer.p;
-		m_deviceContext->VSSetConstantBuffers(2, 1, &buffer);
 	}
 
 	void StandardMaterialShader::SetMaterial(ConstantBuffer<MaterialData>& buffer)

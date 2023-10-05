@@ -9,6 +9,7 @@
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
 #include "Camera.hpp"
+#include "Transform.hpp"
 
 namespace Viewer
 {
@@ -54,7 +55,7 @@ namespace Viewer
 		/// <summary>
 		/// Update the properties of the transform.
 		/// </summary>
-		void UpdateTransformProperties(ConstantBuffer<DirectX::XMMATRIX> worldMatrixBuffer, ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer);
+		void UpdateTransformProperties(Transform& transform);
 
 		/// <summary>
 		/// Update the properties of the lights.

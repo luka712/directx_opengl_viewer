@@ -8,6 +8,8 @@ namespace Viewer
 {
     struct PointLight
     {
+        PointLight();
+
         /// @brief The position of the light.
         glm::vec3 Position;
 

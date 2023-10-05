@@ -4,6 +4,7 @@
 
 #include "shader/StandardMaterialShader.hpp"
 #include "buffer/UniformBuffer.hpp"
+#include "transform/Transform.hpp"
 
 namespace Viewer
 {
@@ -41,7 +42,7 @@ namespace Viewer
         void UpdateCameraProperties(Camera& camera);
 
         /// @brief  Updates the properties related to the transform.
-        void UpdateTranformProperties(glm::mat4x4& modelMatrix, glm::mat3x3& normalMatrix);
+        void UpdateTranformProperties(Transform& transform);
 
         /// @brief Update the properties related to the lights.
         void UpdateLightsProperties(

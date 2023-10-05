@@ -38,22 +38,22 @@ struct Material
     float shininess;
 };
 
-layout (std140, binding = 1) uniform AmbientLightBuffer
+layout (std140, binding = 2) uniform AmbientLightBuffer
 {
     AmbientLight u_ambientLight;
 };
 
-layout(std140, binding = 2) uniform DirectionalLightsBuffer 
+layout(std140, binding = 3) uniform DirectionalLightsBuffer 
 {
     DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
 };
 
-layout(std140, binding = 3) uniform PointLightsBuffer 
+layout(std140, binding = 4) uniform PointLightsBuffer 
 {
     PointLight u_pointLights[MAX_POINT_LIGHTS];
 };
 
-layout(std140, binding = 4) uniform MaterialBuffer 
+layout(std140, binding = 5) uniform MaterialBuffer 
 {
     Material u_material;
 };
@@ -79,7 +79,7 @@ vec3 directionalSpecularLight(DirectionalLight light, Material material, vec3 no
 {
     vec3 lightDir = normalize(-light.direction);
     vec3 viewDir = normalize(v_eyePosition - v_fragWorldPos);
-    vec3 halfwayDir= normalize(lightDir + viewDir);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
     // find specular intensity
     float spec = max(dot(normal, halfwayDir), 0.0);
     // calculate final specular color, higher the shininess the more focused the specular highlight is

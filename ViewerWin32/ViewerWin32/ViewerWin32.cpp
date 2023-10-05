@@ -16,31 +16,18 @@
 #include "ConstantBuffer.hpp"
 #include "MatrixUtil.hpp"
 #include "Texture2D.hpp"
-#include "DirectionalLight.hpp"
-#include "PointLight.hpp"
 #include "MaterialData.hpp"
 #include "ImageLoader.hpp"
 #include "StandardMaterial.hpp"
 #include "Camera.hpp"
 #include "OrbitCamera.hpp"
+#include "SceneLights.hpp"
+#include "Transform.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 Viewer::MouseState g_mouseState;
 
-Viewer::AmbientLight ambientLight = { 0.3f, DirectX::XMFLOAT3(1, 1, 1) };
-Viewer::DirectionalLight directionalLights[3] = {
-	{ DirectX::XMFLOAT3(1, -1, 0), 1.0f, DirectX::XMFLOAT3(1,1,1) },
-	{ DirectX::XMFLOAT3(-1, 0, 0), 0.5f, DirectX::XMFLOAT3(1,1,1) },
-	{ DirectX::XMFLOAT3(1, 0, 0), 0.5f, DirectX::XMFLOAT3(1,1,1) }
-};
-Viewer::PointLight pointLights[5] = {
-	{ DirectX::XMFLOAT3(1, 0, 0), 0.0f, DirectX::XMFLOAT3(1,0,0) },
-	{ DirectX::XMFLOAT3(0, 1, 0), 0.0f, DirectX::XMFLOAT3(0,1,0) },
-	{ DirectX::XMFLOAT3(0, 0, 1), 0.0f, DirectX::XMFLOAT3(0,0,1) },
-	{ DirectX::XMFLOAT3(1, 1, 0), 0.0f, DirectX::XMFLOAT3(1,1,0) },
-	{ DirectX::XMFLOAT3(0, 1, 1), 0.0f, DirectX::XMFLOAT3(0,1,1) }
-};
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -101,6 +88,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
+	// TOOD: MOVE TO TEXTURE LOADER
 	Viewer::ImageLoader imageLoader;
 	Viewer::ImageData* imageData = imageLoader.Load("crate_texture.png");
 	Viewer::Texture2D diffuseTexture(renderer.GetDevice());
@@ -112,6 +100,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	specularTexture.Initialize(imageData2->Data, imageData2->Width, imageData2->Height);
 	delete imageData2;
 
+	Viewer::ImageData* imageData3 = imageLoader.Load("wood_diffuse.png");
+	Viewer::Texture2D woodDiffuseTexture(renderer.GetDevice());
+	woodDiffuseTexture.Initialize(imageData3->Data, imageData3->Width, imageData3->Height);
+	delete imageData3;
+
+	Viewer::ImageData* imageData4 = imageLoader.Load("wood_specular.png");
+	Viewer::Texture2D woodSpecularTexture(renderer.GetDevice());
+	woodSpecularTexture.Initialize(imageData4->Data, imageData4->Width, imageData4->Height);
+	delete imageData4;
+
 	Viewer::StandardMaterial material(renderer.GetDevice(), renderer.GetDeviceContext());
 	material.Initialize();
 	material.DiffuseTexture = &diffuseTexture;
@@ -119,6 +117,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	material.DiffuseCoefficient = 0.5f;
 	material.SpecularCoefficient = 3.0f;
 	material.Shininess = 12.0f;
+
+	Viewer::StandardMaterial floorMaterial(renderer.GetDevice(), renderer.GetDeviceContext());
+	floorMaterial.Initialize();
+	floorMaterial.DiffuseTexture = &woodDiffuseTexture;
+	floorMaterial.SpecularTexture = &woodSpecularTexture;
+	floorMaterial.DiffuseCoefficient = 0.5f;
+	floorMaterial.SpecularCoefficient = 3.0f;
+	floorMaterial.Shininess = 24.0f;
 
 	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::GeometryBuffer geometryBuffer;
@@ -129,32 +135,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		geometry.normalVertices,
 		geometry.colorVertices);
 
+	Viewer::Geometry floorGeometry = Viewer::Geometry::CreateQuadGeometry();
+	Viewer::GeometryBuffer floorGeometryBuffer;
+	floorGeometryBuffer.Initialize(renderer.GetDevice(),
+				floorGeometry.positionVertices,
+				floorGeometry.indices,
+				floorGeometry.textureVertices,
+				floorGeometry.normalVertices,
+				floorGeometry.colorVertices);
 
-	Viewer::ConstantBuffer<DirectX::XMMATRIX> modelBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
-	modelBuffer.Initialize();
 
-	Viewer::ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
-	normalMatrixBuffer.Initialize();
+	Viewer::Transform transform(renderer.GetDevice(), renderer.GetDeviceContext());
+	transform.Initialize();
+
+	Viewer::Transform floorTransform(renderer.GetDevice(), renderer.GetDeviceContext());
+	floorTransform.Initialize();
+	floorTransform.Position.y = -0.5;
+	floorTransform.Scale.x = 10;
+	floorTransform.Scale.y = 10;
+	floorTransform.Rotation.x = 90;
 
 
-
-	Viewer::ConstantBuffer<Viewer::AmbientLight> ambientLightBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
-	ambientLightBuffer.Initialize();
-
-	Viewer::ConstantBuffer<Viewer::DirectionalLight> directionalLightBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
-	directionalLightBuffer.Initialize(3);
-
-	Viewer::ConstantBuffer<Viewer::PointLight> pointLightBuffer(renderer.GetDevice(), renderer.GetDeviceContext());
-	pointLightBuffer.Initialize(5);
-
+	Viewer::SceneLights sceneLights(renderer.GetDevice(), renderer.GetDeviceContext());
+	sceneLights.Initialize();
 
 	MSG msg;
-
-	DirectX::XMMATRIX modelMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(0, 0, 0));
-	DirectX::XMMATRIX normalMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, modelMatrix));
-
-	Viewer::MatrixUtil::Print(modelMatrix);
-
 
 
 	float aspectRatio = (float)Width / (float)Height;
@@ -173,13 +178,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 
 		camera.Update(g_mouseState);
-
-
-		modelBuffer.Update(modelMatrix);
-		normalMatrixBuffer.Update(normalMatrix);
-		ambientLightBuffer.Update(ambientLight);
-		directionalLightBuffer.Update(directionalLights, 3);
-		pointLightBuffer.Update(pointLights, 5);
+		sceneLights.Update();
+		transform.Update();
+		floorTransform.Update();
+		
 
 		renderer.Begin();
 
@@ -188,10 +190,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		material.UpdateSelfProperties();
 		material.UpdateCameraProperties(camera);
-		material.UpdateTransformProperties(modelBuffer, normalMatrixBuffer);
-		material.UpdateLightsProperties(ambientLightBuffer, directionalLightBuffer, pointLightBuffer);
+		material.UpdateTransformProperties(transform);
+		material.UpdateLightsProperties(
+			sceneLights.GetAmbientLightBuffer(), 
+			sceneLights.GetDirectionalLightsBuffer(), 
+			sceneLights.GetPointLightsBuffer());
 
 		geometryBuffer.Draw(renderer.GetDeviceContext());
+
+		// DRAW
+		floorMaterial.Use();
+
+		floorMaterial.UpdateSelfProperties();
+		floorMaterial.UpdateCameraProperties(camera);
+		floorMaterial.UpdateTransformProperties(floorTransform);
+		floorMaterial.UpdateLightsProperties(
+			sceneLights.GetAmbientLightBuffer(),
+			sceneLights.GetDirectionalLightsBuffer(),
+			sceneLights.GetPointLightsBuffer());
+
+		floorGeometryBuffer.Draw(renderer.GetDeviceContext());
 
 		// PRESENT
 		renderer.End();

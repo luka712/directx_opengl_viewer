@@ -65,10 +65,9 @@ namespace Viewer
 		m_materialShader->SetCamera(camera.GetCameraBuffer());
 	}
 
-	void StandardMaterial::UpdateTranformProperties(glm::mat4x4& modelMatrix, glm::mat3x3& normalMatrix)
+	void StandardMaterial::UpdateTranformProperties(Transform& transform)
 	{
-		m_materialShader->SetModelMatrix(modelMatrix);
-		m_materialShader->SetNormalMatrix(normalMatrix);
+		m_materialShader->SetTransform(transform.GetTransformBuffer());
 	}
 
 	void StandardMaterial::UpdateLightsProperties(

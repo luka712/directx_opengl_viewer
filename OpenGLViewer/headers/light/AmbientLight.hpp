@@ -12,6 +12,8 @@ namespace Viewer
 
         /// @brief The intensity of the light.
         float Intensity;
+
+        AmbientLight();
     };
 }
 

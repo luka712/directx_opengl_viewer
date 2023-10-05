@@ -22,13 +22,9 @@ namespace Viewer
         StandardMaterialShader();
         bool Initialize();
 
-        /// @brief Sets the model matrix.
-        /// @param modelMatrix - The model matrix.
-        void SetModelMatrix(const glm::mat4 &modelMatrix);
-
-        /// @brief Sets the normal matrix.
-        /// @param normalMatrix - The normal matrix.
-        void SetNormalMatrix(const glm::mat3 &normalMatrix);
+        /// @brief Sets the transform matrices.
+        /// @param transformBuffer - The transform buffer
+        void SetTransform(UniformBuffer<glm::mat4> &transformBuffer);
 
         /// @brief Sets the values of the camera.
         /// @param cameraBuffer - The buffer containing the values of the camera.
@@ -59,15 +55,9 @@ namespace Viewer
         void SetMaterial(UniformBuffer<MaterialData> &materialDataBuffer);
 
     private:
-        int m_modelMatrixLocation;
-        int m_normalMatrixLocation;
-
         // Material
         int m_diffuseTextureLocation;
         int m_specularTextureLocation;
-        int m_diffuseCoefficientLocation;
-        int m_specularCoefficientLocation;
-        int m_shininessLocation;
     };
 }
 

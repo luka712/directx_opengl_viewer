@@ -17,11 +17,6 @@ namespace Viewer
 		{
 			return false;
 		}
-
-		// matrices
-		m_modelMatrixLocation = GetUniformLocation("u_modelMatrix");
-		m_normalMatrixLocation = GetUniformLocation("u_normalMatrix");
-
 		// material
 		m_diffuseTextureLocation = GetUniformLocation("u_diffuseTexture");
 		m_specularTextureLocation = GetUniformLocation("u_specularTexture");
@@ -29,39 +24,36 @@ namespace Viewer
 		return true;
 	}
 
-	void StandardMaterialShader::SetModelMatrix(const glm::mat4 &modelMatrix)
-	{
-		glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-	}
-
-	void StandardMaterialShader::SetNormalMatrix(const glm::mat3 &normalMatrix)
-	{
-		glUniformMatrix3fv(m_normalMatrixLocation, 1, GL_FALSE, glm::value_ptr(normalMatrix));
-	}
+	
 
 	void StandardMaterialShader::SetCamera(UniformBuffer<CameraData> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
+	void StandardMaterialShader::SetTransform(UniformBuffer<glm::mat4> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
+	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
+	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 4, uniformBuffer.GetBufferID());
+	}
+
+	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, 5, uniformBuffer.GetBufferID());
 	}
 
 

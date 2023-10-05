@@ -11,11 +11,11 @@ layout (std140, binding = 0) uniform CameraBuffer
     uniform vec3 u_eyePosition;
 };
 
-
-
-
-uniform mat4 u_modelMatrix;
-uniform mat3 u_normalMatrix; // normal matrix is transposed inverse of model matrix, for non-uniform scaling
+layout (std140, binding = 1) uniform ModelBuffer 
+{
+    uniform mat4 u_modelMatrix;
+    uniform mat4 u_normalMatrix; // normal matrix is transposed inverse of model matrix, for non-uniform scaling
+};
 
 out vec2 v_texCoord;
 out vec3 v_normal;
@@ -28,7 +28,7 @@ void main()
     mat4 modelViewProjectionMatrix = u_projectionViewMatrix * u_modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(a_position, 1.0);
     v_texCoord = a_texCoord;
-    v_normal = u_normalMatrix * a_normal;
+    v_normal = mat3(u_normalMatrix) * a_normal;
     v_color = a_color;
     v_fragWorldPos = vec3(u_modelMatrix * vec4(a_position, 1.0));
     v_eyePosition = u_eyePosition;

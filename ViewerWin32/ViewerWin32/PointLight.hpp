@@ -21,12 +21,9 @@ namespace Viewer
 		/// </summary>
 		DirectX::XMFLOAT3 Color;
 
-		PointLight(DirectX::XMFLOAT3 pos, float intensity, DirectX::XMFLOAT3 color) :
-			Position(pos),
-			Intensity(intensity),
-			Color(color)
-		{
-		}
+		PointLight(DirectX::XMFLOAT3 pos, float intensity, DirectX::XMFLOAT3 color);
+
+		PointLight();
 
 	private:
 		/// <summary>

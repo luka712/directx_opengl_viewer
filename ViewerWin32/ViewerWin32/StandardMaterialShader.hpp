@@ -16,11 +16,10 @@ namespace Viewer
 	public:
 		StandardMaterialShader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext);
 
-		void SetModelMatrix(CComPtr<ID3D11Buffer> modelMatrixBuffer);
 		/// <summary>
-		/// Sets the normal matrix for the shader
+		/// Sets the model matrix buffers 
 		/// </summary>
-		void SetNormalMatrix(CComPtr<ID3D11Buffer> normalMatrixBuffer);
+		void SetTransform(CComPtr<ID3D11Buffer> transformBuffer);
 
 		/// <summary>
 		/// Sets the camera buffer.

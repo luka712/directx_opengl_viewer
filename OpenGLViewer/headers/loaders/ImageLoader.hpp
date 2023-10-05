@@ -19,7 +19,7 @@ namespace Viewer
     class ImageLoader final
     {
     public:
-        static ImageData* LoadImage(std::string path);
+        ImageData* LoadImage(std::string path);
     };
 }
 

@@ -24,13 +24,10 @@ namespace Viewer
 		/// @param direction The direction of the light.
 		/// @param intensity The intensity of the light.
 		/// @param color The color of the light.
-		DirectionalLight(const glm::vec3& direction, float intensity, const glm::vec3& color) :
-			Direction(direction),
-			Intensity(intensity),
-			Color(color),
-			_padding(0.0f)
-		{
-		}
+		DirectionalLight(const glm::vec3& direction, float intensity, const glm::vec3& color);
+
+		/// @brief Constructor.
+		DirectionalLight();
     };
 }
 

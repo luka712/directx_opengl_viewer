@@ -63,10 +63,9 @@ namespace Viewer
 		m_materialShader->SetCamera(camera.GetCameraBuffer()->GetBuffer());
 	}
 
-	void StandardMaterial::UpdateTransformProperties(ConstantBuffer<DirectX::XMMATRIX> worldMatrixBuffer, ConstantBuffer<DirectX::XMMATRIX> normalMatrixBuffer)
+	void StandardMaterial::UpdateTransformProperties(Transform& transform)
 	{
-		m_materialShader->SetModelMatrix(worldMatrixBuffer.GetBuffer());
-		m_materialShader->SetNormalMatrix(normalMatrixBuffer.GetBuffer());
+		m_materialShader->SetTransform(transform.GetBuffer().GetBuffer());
 	}
 
 	void StandardMaterial::UpdateLightsProperties(ConstantBuffer<AmbientLight> ambientLightBuffer, ConstantBuffer<DirectionalLight> directionalLightBuffer, ConstantBuffer<PointLight> pointLightBuffer)
