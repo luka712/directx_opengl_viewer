@@ -130,17 +130,22 @@
   <ItemGroup>
     <ClInclude Include="AmbientLight.hpp" />
     <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="CubeTexture.hpp" />
     <ClInclude Include="DirectionalLight.hpp" />
     <ClInclude Include="ImageLoader.hpp" />
     <ClInclude Include="MaterialData.hpp" />
+    <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="MouseState.hpp" />
     <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="PointLight.hpp" />
     <ClInclude Include="SceneLights.hpp" />
+    <ClInclude Include="Skybox.hpp" />
+    <ClInclude Include="SkyboxShader.hpp" />
     <ClInclude Include="StandardMaterial.hpp" />
     <ClInclude Include="Texture2D.hpp" />
     <ClInclude Include="ConstantBuffer.hpp" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="TextureLoader.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Win32ErrorUtil.hpp" />
     <ClInclude Include="framework.h" />
@@ -157,12 +162,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CubeTexture.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="OrbitCamera.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="SceneLights.cpp" />
+    <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="SkyboxShader.cpp" />
     <ClCompile Include="StandardMaterial.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -171,6 +180,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="StandardMaterialShader.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIControl.cpp" />
     <ClCompile Include="ViewerWin32.cpp" />
@@ -180,22 +190,35 @@
     <ResourceCompile Include="ViewerWin32.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="back.jpg" />
+    <Image Include="bottom.jpg" />
     <Image Include="crate_specular.png" />
     <Image Include="crate_texture.png" />
+    <Image Include="front.jpg" />
+    <Image Include="left.jpg" />
+    <Image Include="right.jpg" />
     <Image Include="small.ico" />
+    <Image Include="top.jpg" />
     <Image Include="uv_test.png" />
     <Image Include="ViewerWin32.ico" />
     <Image Include="wood_diffuse.png" />
     <Image Include="wood_specular.png" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="StandardMaterialPShader.hlsl">
+    <FxCompile Include="SkyboxPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="StandardMaterialVShader.hlsl">
+    <FxCompile Include="SkyboxVS.hlsl" />
+    <FxCompile Include="StandardMaterialPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="StandardMaterialVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

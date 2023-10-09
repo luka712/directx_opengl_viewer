@@ -38,6 +38,7 @@ namespace Viewer
         unsigned int m_vertexColorBuffer;
         
         size_t m_indexCount;
+        size_t m_verticesCount;
     };
 }
 

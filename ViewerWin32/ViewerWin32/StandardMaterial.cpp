@@ -8,11 +8,13 @@ namespace Viewer
 	{
 		m_materialShader = new StandardMaterialShader(device, deviceContext);
 		m_materialBuffer = new ConstantBuffer<MaterialData>(device, deviceContext);
+		m_textureTillingBuffer = new ConstantBuffer<DirectX::XMFLOAT2>(device, deviceContext);
 		DiffuseTexture = nullptr;
 		SpecularTexture = nullptr;
 		DiffuseCoefficient = 1.0f;
 		SpecularCoefficient = 1.0f;
 		Shininess = 12.0f;
+		TextureTilling = DirectX::XMFLOAT2(1.0f, 1.0f);
 	}
 
 	StandardMaterial::~StandardMaterial()
@@ -29,6 +31,7 @@ namespace Viewer
 
 		m_materialShader->Initialize();
 		m_materialBuffer->Initialize();
+		m_textureTillingBuffer->Initialize();
 	}
 
 	void StandardMaterial::Use()
@@ -57,6 +60,10 @@ namespace Viewer
 		materialData.Shininess = Shininess;
 		m_materialBuffer->Update(materialData);
 		m_materialShader->SetMaterial(*m_materialBuffer);
+
+		// set texture tilling.
+		m_textureTillingBuffer->Update(TextureTilling);	
+		m_materialShader->SetTextureTilling(m_textureTillingBuffer->GetBuffer());
 	}
 	void StandardMaterial::UpdateCameraProperties(Camera& camera)
 	{
@@ -68,11 +75,11 @@ namespace Viewer
 		m_materialShader->SetTransform(transform.GetBuffer().GetBuffer());
 	}
 
-	void StandardMaterial::UpdateLightsProperties(ConstantBuffer<AmbientLight> ambientLightBuffer, ConstantBuffer<DirectionalLight> directionalLightBuffer, ConstantBuffer<PointLight> pointLightBuffer)
+	void StandardMaterial::UpdateLightsProperties(SceneLights& sceneLights)
 	{
-		m_materialShader->SetAmbientLight(ambientLightBuffer.GetBuffer());
-		m_materialShader->SetDirectionalLights(directionalLightBuffer.GetBuffer());
-		m_materialShader->SetPointLights(pointLightBuffer.GetBuffer());
+		m_materialShader->SetAmbientLight(sceneLights.GetAmbientLightBuffer().GetBuffer());
+		m_materialShader->SetDirectionalLights(sceneLights.GetDirectionalLightsBuffer().GetBuffer());
+		m_materialShader->SetPointLights(sceneLights.GetPointLightsBuffer().GetBuffer());
 	}
 }
 

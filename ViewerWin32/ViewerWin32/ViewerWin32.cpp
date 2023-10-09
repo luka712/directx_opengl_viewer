@@ -23,6 +23,10 @@
 #include "OrbitCamera.hpp"
 #include "SceneLights.hpp"
 #include "Transform.hpp"
+#include "TextureLoader.hpp"
+#include "Mesh.hpp"
+#include "CubeTexture.hpp"
+#include "Skybox.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -88,73 +92,40 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	// TOOD: MOVE TO TEXTURE LOADER
-	Viewer::ImageLoader imageLoader;
-	Viewer::ImageData* imageData = imageLoader.Load("crate_texture.png");
-	Viewer::Texture2D diffuseTexture(renderer.GetDevice());
-	diffuseTexture.Initialize(imageData->Data, imageData->Width, imageData->Height);
-	delete imageData;
+	Viewer::TextureLoader texLoader(renderer.GetDevice());
 
-	Viewer::ImageData* imageData2 = imageLoader.Load("crate_specular.png");
-	Viewer::Texture2D specularTexture(renderer.GetDevice());
-	specularTexture.Initialize(imageData2->Data, imageData2->Width, imageData2->Height);
-	delete imageData2;
+	Viewer::Geometry cubeGeometry = Viewer::Geometry::CreateCubeGeometry();
+	Viewer::Mesh cubeMesh(renderer.GetDevice(), renderer.GetDeviceContext(), cubeGeometry);
+	cubeMesh.Initialize();
+	cubeMesh.Material.DiffuseTexture = texLoader.LoadFromImg("crate_texture.png");
+	cubeMesh.Material.SpecularTexture = texLoader.LoadFromImg("crate_specular.png");
+	cubeMesh.Material.DiffuseCoefficient = 0.5f;
+	cubeMesh.Material.SpecularCoefficient = 3.0f;
+	cubeMesh.Material.Shininess = 12.0f;
 
-	Viewer::ImageData* imageData3 = imageLoader.Load("wood_diffuse.png");
-	Viewer::Texture2D woodDiffuseTexture(renderer.GetDevice());
-	woodDiffuseTexture.Initialize(imageData3->Data, imageData3->Width, imageData3->Height);
-	delete imageData3;
-
-	Viewer::ImageData* imageData4 = imageLoader.Load("wood_specular.png");
-	Viewer::Texture2D woodSpecularTexture(renderer.GetDevice());
-	woodSpecularTexture.Initialize(imageData4->Data, imageData4->Width, imageData4->Height);
-	delete imageData4;
-
-	Viewer::StandardMaterial material(renderer.GetDevice(), renderer.GetDeviceContext());
-	material.Initialize();
-	material.DiffuseTexture = &diffuseTexture;
-	material.SpecularTexture = &specularTexture;
-	material.DiffuseCoefficient = 0.5f;
-	material.SpecularCoefficient = 3.0f;
-	material.Shininess = 12.0f;
-
-	Viewer::StandardMaterial floorMaterial(renderer.GetDevice(), renderer.GetDeviceContext());
-	floorMaterial.Initialize();
-	floorMaterial.DiffuseTexture = &woodDiffuseTexture;
-	floorMaterial.SpecularTexture = &woodSpecularTexture;
-	floorMaterial.DiffuseCoefficient = 0.5f;
-	floorMaterial.SpecularCoefficient = 3.0f;
-	floorMaterial.Shininess = 24.0f;
-
-	Viewer::Geometry geometry = Viewer::Geometry::CreateCubeGeometry();
-	Viewer::GeometryBuffer geometryBuffer;
-	geometryBuffer.Initialize(renderer.GetDevice(),
-		geometry.positionVertices,
-		geometry.indices,
-		geometry.textureVertices,
-		geometry.normalVertices,
-		geometry.colorVertices);
 
 	Viewer::Geometry floorGeometry = Viewer::Geometry::CreateQuadGeometry();
-	Viewer::GeometryBuffer floorGeometryBuffer;
-	floorGeometryBuffer.Initialize(renderer.GetDevice(),
-				floorGeometry.positionVertices,
-				floorGeometry.indices,
-				floorGeometry.textureVertices,
-				floorGeometry.normalVertices,
-				floorGeometry.colorVertices);
+	Viewer::Mesh floorMesh(renderer.GetDevice(), renderer.GetDeviceContext(), floorGeometry);
+	floorMesh.Initialize();
+	floorMesh.Material.DiffuseTexture = texLoader.LoadFromImg("wood_diffuse.png");
+	floorMesh.Material.SpecularTexture = texLoader.LoadFromImg("wood_specular.png");
+	floorMesh.Material.DiffuseCoefficient = 0.5f;
+	floorMesh.Material.SpecularCoefficient = 3.0f;
+	floorMesh.Material.Shininess = 24.0f;
+	floorMesh.Material.TextureTilling = DirectX::XMFLOAT2(5.0f, 5.0f);
+	floorMesh.Transform.Position.y = -0.5;
+	floorMesh.Transform.Scale.x = 10;
+	floorMesh.Transform.Scale.y = 10;
+	floorMesh.Transform.Rotation.x = 90;
 
-
-	Viewer::Transform transform(renderer.GetDevice(), renderer.GetDeviceContext());
-	transform.Initialize();
-
-	Viewer::Transform floorTransform(renderer.GetDevice(), renderer.GetDeviceContext());
-	floorTransform.Initialize();
-	floorTransform.Position.y = -0.5;
-	floorTransform.Scale.x = 10;
-	floorTransform.Scale.y = 10;
-	floorTransform.Rotation.x = 90;
-
+	Viewer::Skybox skybox(renderer.GetDevice(), renderer.GetDeviceContext(), renderer);
+	skybox.SkyTexture = texLoader.LoadFromImg("right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"front.jpg",
+		"back.jpg");
+	skybox.Initialize();
 
 	Viewer::SceneLights sceneLights(renderer.GetDevice(), renderer.GetDeviceContext());
 	sceneLights.Initialize();
@@ -177,39 +148,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
-		camera.Update(g_mouseState);
 		sceneLights.Update();
-		transform.Update();
-		floorTransform.Update();
-		
+		camera.Update(g_mouseState);
+		floorMesh.Update();
+		cubeMesh.Update();
 
 		renderer.Begin();
 
 		// DRAW
-		material.Use();
-
-		material.UpdateSelfProperties();
-		material.UpdateCameraProperties(camera);
-		material.UpdateTransformProperties(transform);
-		material.UpdateLightsProperties(
-			sceneLights.GetAmbientLightBuffer(), 
-			sceneLights.GetDirectionalLightsBuffer(), 
-			sceneLights.GetPointLightsBuffer());
-
-		geometryBuffer.Draw(renderer.GetDeviceContext());
-
-		// DRAW
-		floorMaterial.Use();
-
-		floorMaterial.UpdateSelfProperties();
-		floorMaterial.UpdateCameraProperties(camera);
-		floorMaterial.UpdateTransformProperties(floorTransform);
-		floorMaterial.UpdateLightsProperties(
-			sceneLights.GetAmbientLightBuffer(),
-			sceneLights.GetDirectionalLightsBuffer(),
-			sceneLights.GetPointLightsBuffer());
-
-		floorGeometryBuffer.Draw(renderer.GetDeviceContext());
+		skybox.Draw(camera);
+		cubeMesh.Draw(camera, sceneLights);
+		floorMesh.Draw(camera, sceneLights);
 
 		// PRESENT
 		renderer.End();
@@ -232,22 +181,22 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		return 0;
 
-	// wheel scroll
+		// wheel scroll
 	case WM_MOUSEWHEEL:
 		g_mouseState.DeltaWheelY = GET_WHEEL_DELTA_WPARAM(wParam);
-		return 0;		
+		return 0;
 
-	// Left button down/up
-	case WM_LBUTTONDOWN :
+		// Left button down/up
+	case WM_LBUTTONDOWN:
 		g_mouseState.LeftButton = true;
 		return 0;
 	case WM_LBUTTONUP:
 		g_mouseState.LeftButton = false;
 		return 0;
 
-	// Mouse move
+		// Mouse move
 	case WM_MOUSEMOVE:
-		
+
 		g_mouseState.X = GET_X_LPARAM(lParam);
 		g_mouseState.Y = GET_Y_LPARAM(lParam);
 		g_mouseState.DeltaX = g_mouseState.X - g_mouseState.LastX;

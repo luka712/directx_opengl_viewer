@@ -4,13 +4,15 @@
 #include <d3dcompiler.h>
 #include <string>
 #include <atlbase.h> // Contains the declaration of CComPtr.
-
+#include <vector>
 
 namespace Viewer
 {
+	
 	class Shader
 	{
 	protected:
+		int m_layout;
 		CComPtr<ID3D11Device> m_device;
 		CComPtr<ID3D11DeviceContext> m_deviceContext;
 
@@ -33,6 +35,17 @@ namespace Viewer
 		Shader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext,
 			std::string vertexShaderFilename, std::string fragmentShaderFilename);
 		~Shader();
+
+		/// <summary>
+		/// Gets the input layout.
+		/// By default
+		///  position: float3
+		///  texcoord: float2
+		///  normal: float3
+		///  color: float3
+		/// </summary>
+		/// <returns></returns>
+		virtual std::vector<D3D11_INPUT_ELEMENT_DESC> GetInputLayout();
 
 		bool Initialize();
 		void Use();

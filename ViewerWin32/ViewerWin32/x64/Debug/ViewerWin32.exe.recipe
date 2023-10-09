@@ -7,10 +7,16 @@
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\StandardMaterialPShader.cso</FullPath>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\SkyboxPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\StandardMaterialVShader.cso</FullPath>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\SkyboxVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\StandardMaterialPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\StandardMaterialVS.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

@@ -29,6 +29,13 @@ namespace Viewer
 		void SetCamera(CComPtr<ID3D11Buffer>  cameraBuffer);
 
 		/// <summary>
+		/// Sets the texture tilling.
+		/// Texture tilling is used to repeat the texture on the object. Normal value is 1,1.
+		/// </summary>
+		/// <param name="textureTillingBuffer"></param>
+		void SetTextureTilling(CComPtr<ID3D11Buffer> textureTillingBuffer);
+
+		/// <summary>
 		/// Sets the material for the shader
 		/// </summary>
 		void SetMaterial(ConstantBuffer<MaterialData>& buffer);

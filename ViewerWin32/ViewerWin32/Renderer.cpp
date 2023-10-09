@@ -93,15 +93,15 @@ namespace Viewer
 		raster_desc.MultisampleEnable = false;
 		raster_desc.AntialiasedLineEnable = false;
 
-		CComPtr<ID3D11RasterizerState> raster_state;
-		hr = m_device->CreateRasterizerState(&raster_desc, &raster_state.p);
+		m_rasterizerState = nullptr;
+		hr = m_device->CreateRasterizerState(&raster_desc, &m_rasterizerState.p);
 
 		if (FAILED(hr))
 		{
 			MessageBoxW(nullptr, L"Failed to create rasterizer state", L"Error", MB_OK | MB_ICONERROR);
 			return false;
 		}
-		m_deviceContext->RSSetState(raster_state);
+
 
 	
 
@@ -110,6 +110,9 @@ namespace Viewer
 
 	void Renderer::Begin()
 	{
+		// Raster state 
+		m_deviceContext->RSSetState(m_rasterizerState);
+
 		// CLEAR COLOR
 		m_deviceContext->ClearRenderTargetView(m_renderTargetView, m_clearColor.m128_f32);
 
@@ -121,6 +124,11 @@ namespace Viewer
 	{
 		// present
 		m_swapChain->Present(0, 0);
+	}
+
+	void Renderer::ResetRasterizerState()
+	{
+m_deviceContext->RSSetState(m_rasterizerState);
 	}
 
 	bool Renderer::ConfigureDepthStencil(unsigned int Width, unsigned int Height)

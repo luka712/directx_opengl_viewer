@@ -3,7 +3,7 @@
 namespace Viewer
 {
 	StandardMaterialShader::StandardMaterialShader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext)
-		: Shader(device, deviceContext, "StandardMaterialVShader.hlsl", "StandardMaterialPShader.hlsl")
+		: Shader(device, deviceContext, "StandardMaterialVS.hlsl", "StandardMaterialPS.hlsl")
 	{
 	}
 
@@ -17,6 +17,12 @@ namespace Viewer
 	{
 		ID3D11Buffer* buffer = transformBuffer.p;
 		m_deviceContext->VSSetConstantBuffers(1, 1, &buffer);
+	}
+
+	void StandardMaterialShader::SetTextureTilling(CComPtr<ID3D11Buffer> textureTillingBuffer)
+	{
+		ID3D11Buffer* buffer = textureTillingBuffer.p;
+		m_deviceContext->VSSetConstantBuffers(2, 1, &buffer);
 	}
 
 	void StandardMaterialShader::SetMaterial(ConstantBuffer<MaterialData>& buffer)

@@ -14,7 +14,7 @@ namespace Viewer
 	{
 		Color = { 1.0f, 1.0f, 1.0f };
 		Position = { 0.0f, 3.0f, 0.0f };
-		Intensity = 0.3f;
+		Intensity = 0.0f;
 	}
 
 }

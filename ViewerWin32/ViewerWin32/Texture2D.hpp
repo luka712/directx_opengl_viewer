@@ -1,7 +1,6 @@
 #pragma once
 
 #include <d3d11.h>
-#include <string>
 #include <atlbase.h> // Contains the declaration of CComPtr.
 #include "ImageLoader.hpp"
 

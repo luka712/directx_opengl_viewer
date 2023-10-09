@@ -100,6 +100,18 @@
     <Filter Include="Source Files\Transform">
       <UniqueIdentifier>{22793fda-e9ee-4601-ae31-38b6f48a44c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Mesh">
+      <UniqueIdentifier>{6a0713a8-9999-4980-8555-08a1ee512114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mesh">
+      <UniqueIdentifier>{c952f7da-6d19-4994-8b51-f9bdb77ba2c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Skybox">
+      <UniqueIdentifier>{1dd92446-ce78-4d45-bb6d-fe93d0d504ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Skybox">
+      <UniqueIdentifier>{f4a3cfa8-c54e-4e25-8c9f-ab4e1a4be9a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -180,6 +192,21 @@
     <ClInclude Include="Transform.hpp">
       <Filter>Header Files\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="TextureLoader.hpp">
+      <Filter>Header Files\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.hpp">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeTexture.hpp">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyboxShader.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.hpp">
+      <Filter>Header Files\Skybox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -239,6 +266,21 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\Transform</Filter>
     </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Source Files\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeTexture.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyboxShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files\Skybox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerWin32.rc">
@@ -267,12 +309,36 @@
     <Image Include="wood_diffuse.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="right.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="left.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="front.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="bottom.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="back.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="top.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="StandardMaterialVShader.hlsl">
+    <FxCompile Include="StandardMaterialVS.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
-    <FxCompile Include="StandardMaterialPShader.hlsl">
+    <FxCompile Include="StandardMaterialPS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyboxVS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyboxPS.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>

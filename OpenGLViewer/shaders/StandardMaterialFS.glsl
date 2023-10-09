@@ -38,22 +38,22 @@ struct Material
     float shininess;
 };
 
-layout (std140, binding = 2) uniform AmbientLightBuffer
+layout (std140, binding = 3) uniform AmbientLightBuffer
 {
     AmbientLight u_ambientLight;
 };
 
-layout(std140, binding = 3) uniform DirectionalLightsBuffer 
+layout(std140, binding = 4) uniform DirectionalLightsBuffer 
 {
     DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
 };
 
-layout(std140, binding = 4) uniform PointLightsBuffer 
+layout(std140, binding = 5) uniform PointLightsBuffer 
 {
     PointLight u_pointLights[MAX_POINT_LIGHTS];
 };
 
-layout(std140, binding = 5) uniform MaterialBuffer 
+layout(std140, binding = 6) uniform MaterialBuffer 
 {
     Material u_material;
 };

@@ -19,6 +19,17 @@ namespace Viewer
 		m_inputLayout.Release();
 	}
 
+	std::vector<D3D11_INPUT_ELEMENT_DESC> Shader::GetInputLayout()
+	{
+		return 
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD"  , 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR"  , 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		};
+	}
+
 	bool Shader::Initialize()
 	{
 
@@ -71,20 +82,12 @@ namespace Viewer
 			return false;
 		}
 
-		D3D11_INPUT_ELEMENT_DESC layout[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD"  , 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{ "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{ "COLOR"  , 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-		};
-
-		UINT numElements = ARRAYSIZE(layout);
+		std::vector<D3D11_INPUT_ELEMENT_DESC> layout = GetInputLayout();
 
 		// Create the input layout
 		hr = m_device->CreateInputLayout(
-			layout,
-			numElements,
+			layout.data(),
+			layout.size(),
 			vertexShaderBlob->GetBufferPointer(),
 			vertexShaderBlob->GetBufferSize(),
 			&m_inputLayout

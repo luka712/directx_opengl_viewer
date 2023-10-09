@@ -15,6 +15,8 @@ namespace Viewer
 		void Begin();
 		void End();
 
+		void ResetRasterizerState();
+
 		inline CComPtr<ID3D11Device> GetDevice() { return m_device; }
 		inline CComPtr<ID3D11DeviceContext> GetDeviceContext() { return m_deviceContext; }
 

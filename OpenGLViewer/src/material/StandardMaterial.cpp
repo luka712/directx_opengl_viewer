@@ -7,13 +7,14 @@ namespace Viewer
 	{
 		m_materialShader = new StandardMaterialShader();
 		m_materialBuffer = new UniformBuffer<MaterialData>();
+		m_textureTillingBuffer = new UniformBuffer<glm::vec2>();
 
 		DiffuseTexture = nullptr;
 		SpecularTexture = nullptr;
 		DiffuseCoefficient = 1.0f;
 		SpecularCoefficient = 1.0f;
 		Shininess = 32.0f;
-
+		TextureTilling = glm::vec2(1.0f, 1.0f);
 	}
 
 	StandardMaterial::~StandardMaterial()
@@ -25,7 +26,9 @@ namespace Viewer
 	{
 		m_materialShader->Initialize();
 		MaterialData materialData;
-		m_materialBuffer->Initialize(&materialData, 1);
+		m_materialBuffer->Initialize(&materialData);
+
+		m_textureTillingBuffer->Initialize(&TextureTilling);
 	}
 
 	void StandardMaterial::Use()
@@ -58,6 +61,10 @@ namespace Viewer
 		data.Shininess = Shininess;
 		m_materialBuffer->Update(&data);
 		m_materialShader->SetMaterial(*m_materialBuffer);
+
+		// update tilling.
+		m_textureTillingBuffer->Update(&TextureTilling);
+		m_materialShader->SetTextureTilling(*m_textureTillingBuffer);
 	}
 
 	void StandardMaterial::UpdateCameraProperties(Camera& camera)
@@ -65,18 +72,15 @@ namespace Viewer
 		m_materialShader->SetCamera(camera.GetCameraBuffer());
 	}
 
-	void StandardMaterial::UpdateTranformProperties(Transform& transform)
+	void StandardMaterial::UpdateTransformProperties(Transform& transform)
 	{
 		m_materialShader->SetTransform(transform.GetTransformBuffer());
 	}
 
-	void StandardMaterial::UpdateLightsProperties(
-		UniformBuffer<AmbientLight>& ambientLightBuffer,
-		UniformBuffer<DirectionalLight>& directionalLightsBuffer,
-		UniformBuffer<PointLight>& pointLightsBuffer)
+	void StandardMaterial::UpdateLightsProperties(SceneLights& sceneLights)
 	{
-		m_materialShader->SetAmbientLight(ambientLightBuffer);
-		m_materialShader->SetDirectionalLights(directionalLightsBuffer);
-		m_materialShader->SetPointLights(pointLightsBuffer);
+		m_materialShader->SetAmbientLight(sceneLights.GetAmbientLightBuffer());
+		m_materialShader->SetDirectionalLights(sceneLights.GetDirectionalLightsBuffer());
+		m_materialShader->SetPointLights(sceneLights.GetPointLightsBuffer());
 	}
 }

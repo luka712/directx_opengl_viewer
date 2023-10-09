@@ -23,6 +23,11 @@ namespace Viewer
          * @brief Create a cube geometry.
         */
         static Geometry CreateCubeGeometry();
+
+        /**
+         * @brief Create a skybox geometry.
+        */
+        static Geometry CreateSkyboxGeometry();
     };
 }
 

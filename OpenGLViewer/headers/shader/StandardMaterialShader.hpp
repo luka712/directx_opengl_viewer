@@ -30,6 +30,10 @@ namespace Viewer
         /// @param cameraBuffer - The buffer containing the values of the camera.
         void SetCamera(UniformBuffer<CameraData> &cameraBuffer);
 
+        /// @brief Sets the texture tilling.
+        /// @param textureTillingBuffer The buffer containing the texture tilling.
+        void SetTextureTilling(UniformBuffer<glm::vec2> &textureTillingBuffer);
+
         /// @brief Sets the values of the ambient light.
         /// @param ambientLightBuffer - The buffer containing the values of the ambient light.
         void SetAmbientLight(UniformBuffer<AmbientLight> &ambientLightBuffer);

@@ -5,7 +5,7 @@
 namespace Viewer
 {
 	StandardMaterialShader::StandardMaterialShader()
-		: Shader("shaders/StandardMaterialVShader.glsl", "shaders/StandardMaterialFShader.glsl")
+		: Shader("shaders/StandardMaterialVS.glsl", "shaders/StandardMaterialFS.glsl")
 	{
 	}
 
@@ -36,24 +36,29 @@ namespace Viewer
 		glBindBufferBase(GL_UNIFORM_BUFFER, 1, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
+	void StandardMaterialShader::SetTextureTilling(UniformBuffer<glm::vec2>& uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 2, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
+	void StandardMaterialShader::SetAmbientLight(UniformBuffer<AmbientLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 3, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
+	void StandardMaterialShader::SetDirectionalLights(UniformBuffer<DirectionalLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 4, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	void StandardMaterialShader::SetPointLights(UniformBuffer<PointLight> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 5, uniformBuffer.GetBufferID());
+	}
+
+	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, 6, uniformBuffer.GetBufferID());
 	}
 
 

@@ -22,5 +22,11 @@ namespace Viewer
 		/// </summary>
 		/// <returns></returns>
 		static Geometry CreateCubeGeometry();
+
+		/// <summary>
+		/// Creates the geometry for the skybox.
+		/// </summary>
+		/// <returns></returns>
+		static Geometry CreateSkyboxGeometry();
 	};
 }

@@ -5,9 +5,7 @@
 #include "Texture2D.hpp"
 #include <atlbase.h>
 #include "ConstantBuffer.hpp"
-#include "AmbientLight.hpp"
-#include "DirectionalLight.hpp"
-#include "PointLight.hpp"
+#include "SceneLights.hpp"
 #include "Camera.hpp"
 #include "Transform.hpp"
 
@@ -21,6 +19,8 @@ namespace Viewer
 
 		StandardMaterialShader* m_materialShader;
 		ConstantBuffer<MaterialData> *m_materialBuffer;
+
+		ConstantBuffer<DirectX::XMFLOAT2> *m_textureTillingBuffer;
 
 		/// <summary>
 		/// To be used if no texture(Diffuse or Specular) is specified.
@@ -37,6 +37,7 @@ namespace Viewer
 		float DiffuseCoefficient;
 		float SpecularCoefficient;
 		float Shininess;
+		DirectX::XMFLOAT2 TextureTilling;
 
 		void Initialize();
 
@@ -60,7 +61,6 @@ namespace Viewer
 		/// <summary>
 		/// Update the properties of the lights.
 		/// </summary>
-		void UpdateLightsProperties(ConstantBuffer<AmbientLight> ambientLightBuffer, ConstantBuffer<DirectionalLight> directionalLightBuffer,
-			ConstantBuffer<PointLight> pointLightBuffer);
+		void UpdateLightsProperties(SceneLights& sceneLights);
 	};
 }

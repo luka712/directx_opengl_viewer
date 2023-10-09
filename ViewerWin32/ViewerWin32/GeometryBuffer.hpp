@@ -11,7 +11,9 @@ namespace Viewer
 	class GeometryBuffer
 	{
 	public:
-		bool Initialize(CComPtr<ID3D11Device> device,
+		GeometryBuffer(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext);
+
+		bool Initialize(
 			std::vector<float>& positionData,
 			std::vector<uint16_t>& indicesData,
 			std::vector<float>& texCoordsData,
@@ -27,9 +29,11 @@ namespace Viewer
 		/// <summary>
 		/// Draws the geometry. <see cref="Use"/> is called within this method.
 		/// </summary>
-		void Draw(CComPtr<ID3D11DeviceContext> deviceContext);
+		void Draw();
 
 	private:
+		CComPtr<ID3D11Device> m_device;
+		CComPtr<ID3D11DeviceContext> m_deviceContext;
 
 		CComPtr<ID3D11Buffer> m_vertexPositionBuffer;
 		CComPtr<ID3D11Buffer> m_texCoordsBuffer;
@@ -38,5 +42,6 @@ namespace Viewer
 		CComPtr<ID3D11Buffer> m_vertexColorBuffer;
 
 		size_t m_indexCount;
+		size_t m_vertexCount;
 	};
 }

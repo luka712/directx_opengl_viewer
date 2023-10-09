@@ -11,6 +11,11 @@ cbuffer ModelConstantBuffer : register(b1)
     matrix NormalMatrix;
 }
 
+cbuffer TextureTillingBuffer : register(b2)
+{
+    float2 TextureTiling;
+}
+
 struct VS_INPUT
 {
     float4 pos : POSITION;
@@ -35,7 +40,7 @@ PS_INPUT main(VS_INPUT input)
     
     PS_INPUT output;
     output.pos = mul(worldPos, ProjectionViewMatrix);
-    output.tex = input.tex;
+    output.tex = input.tex * TextureTiling;
     output.normal = mul(input.normal, (float3x3)NormalMatrix);
     output.color = input.color;
     output.fragWorldPos = worldPos.xyz;

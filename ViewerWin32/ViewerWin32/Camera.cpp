@@ -18,12 +18,14 @@ namespace Viewer {
 
 
 		m_cameraBuffer = new ConstantBuffer<CameraData>(device, deviceContext);
+		m_skyboxCameraBuffer = new ConstantBuffer<DirectX::XMMATRIX>(device, deviceContext);
 	}
 
 
 	void Camera::Initialize()
 	{
 		m_cameraBuffer->Initialize();
+		m_skyboxCameraBuffer->Initialize();
 	}
 
 	void Camera::Update(MouseState& g_mouseState)
@@ -32,6 +34,21 @@ namespace Viewer {
 		m_projectionViewMatrix = DirectX::XMMatrixTranspose(m_viewMatrix * m_projectionMatrix);
 		CameraData cameraData = { m_projectionViewMatrix, m_eyePosition };
 		m_cameraBuffer->Update(&cameraData, 1);
+
+		// Update skybox camera
+		DirectX::XMFLOAT3X3 viewMatrix3x3 = DirectX::XMFLOAT3X3(
+			m_viewMatrix.r[0].m128_f32[0], m_viewMatrix.r[0].m128_f32[1], m_viewMatrix.r[0].m128_f32[2],
+			m_viewMatrix.r[1].m128_f32[0], m_viewMatrix.r[1].m128_f32[1], m_viewMatrix.r[1].m128_f32[2],
+			m_viewMatrix.r[2].m128_f32[0], m_viewMatrix.r[2].m128_f32[1], m_viewMatrix.r[2].m128_f32[2]
+		);
+		DirectX::XMMATRIX skyboxViewCamera = DirectX::XMMATRIX(
+			viewMatrix3x3._11, viewMatrix3x3._12, viewMatrix3x3._13, 0,
+			viewMatrix3x3._21, viewMatrix3x3._22, viewMatrix3x3._23, 0,
+			viewMatrix3x3._31, viewMatrix3x3._32, viewMatrix3x3._33, 0,
+			0, 0, 0, 1
+		);
+		DirectX::XMMATRIX skyboxProjectionViewMatrix = DirectX::XMMatrixTranspose(skyboxViewCamera * m_projectionMatrix);
+		m_skyboxCameraBuffer->Update(&skyboxProjectionViewMatrix, 1);
 	}
 
 }

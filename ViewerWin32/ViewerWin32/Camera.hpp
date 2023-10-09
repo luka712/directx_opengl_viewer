@@ -25,6 +25,7 @@ namespace Viewer
 		DirectX::XMMATRIX m_projectionViewMatrix;
 
 		ConstantBuffer<CameraData> *m_cameraBuffer;
+		ConstantBuffer<DirectX::XMMATRIX> *m_skyboxCameraBuffer;
 
 	public:
 		Camera(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext, float aspectRatio);
@@ -51,6 +52,8 @@ namespace Viewer
 		/// Gets the buffer containing the camera data.
 		/// </summary>
 		inline ConstantBuffer<CameraData>* GetCameraBuffer() { return m_cameraBuffer; }
+
+		inline ConstantBuffer<DirectX::XMMATRIX>* const GetSkyboxCameraBuffer() const { return m_skyboxCameraBuffer; }
 
 
 

@@ -15,13 +15,14 @@
 #include "camera/OrbitCamera.hpp"
 #include "loaders/TextureLoader.hpp"
 #include "scene/SceneLights.hpp"
-#include "transform/Transform.hpp"
+#include "mesh/Mesh.hpp"
+#include "skybox/Skybox.hpp"
 
 using namespace Viewer;
 
 Viewer::TextureLoader g_texutureLoader;
 
-int main(int argc, char* args[])
+int main(int argc, char *args[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
 
@@ -31,7 +32,7 @@ int main(int argc, char* args[])
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
 
-	SDL_Window* window = SDL_CreateWindow("OBJ Viewer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, clientWidth, clientHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	SDL_Window *window = SDL_CreateWindow("OBJ Viewer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, clientWidth, clientHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
 	Renderer renderer(*window);
 	if (!renderer.Initialize(clientWidth, clientHeight))
@@ -39,45 +40,40 @@ int main(int argc, char* args[])
 		return -1;
 	}
 
-	Geometry geometry = Geometry::CreateCubeGeometry();
-	GeometryBuffer createGeometryBuffer;
-	createGeometryBuffer.Initialize(geometry.positionVertices, geometry.indices, geometry.textureVertices, geometry.normalVertices, geometry.colorVertices);
+	Geometry cubeGeometry = Geometry::CreateCubeGeometry();
+	Mesh cubeMesh(cubeGeometry);
+	cubeMesh.Initialize();
+	cubeMesh.Material.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/crate_texture.png");
+	cubeMesh.Material.SpecularTexture = g_texutureLoader.LoadFromImg("assets/crate_specular.png");
+	cubeMesh.Material.DiffuseCoefficient = 0.5f;
+	cubeMesh.Material.SpecularCoefficient = 3.0f;
+	cubeMesh.Material.Shininess = 12.0f;
 
-	Geometry floorGeometry = Geometry::CreateQuadGeometry();
-	GeometryBuffer floorGeometryBuffer;
-	floorGeometryBuffer.Initialize(floorGeometry.positionVertices, floorGeometry.indices, floorGeometry.textureVertices, floorGeometry.normalVertices, floorGeometry.colorVertices);
+	Geometry floorGeometry = Viewer::Geometry::CreateQuadGeometry();
+	Mesh floorMesh(floorGeometry);
+	floorMesh.Initialize();
+	floorMesh.Material.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/wood_diffuse.png");
+	floorMesh.Material.SpecularTexture = g_texutureLoader.LoadFromImg("assets/wood_specular.png");
+	floorMesh.Material.DiffuseCoefficient = 0.5f;
+	floorMesh.Material.SpecularCoefficient = 3.0f;
+	floorMesh.Material.Shininess = 24.0f;
+	floorMesh.Material.TextureTilling = glm::vec2(5.0f, 5.0f);
+	floorMesh.Transform.Position.y = -0.5;
+	floorMesh.Transform.Scale.x = 10;
+	floorMesh.Transform.Scale.y = 10;
+	floorMesh.Transform.Rotation.x = 90;
 
-	// glm::mat4x4 projectionViewMatrix = glm::ortho(-10.0, 10.0, -5.0, 5.0, -1.0, 1.0);
-
-
-	StandardMaterial crateMaterial;
-	crateMaterial.Initialize();
-	crateMaterial.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/crate_texture.png");
-	crateMaterial.SpecularTexture = g_texutureLoader.LoadFromImg("assets/crate_specular.png");
-	crateMaterial.DiffuseCoefficient = 0.5;
-	crateMaterial.SpecularCoefficient = 3.0;
-	crateMaterial.Shininess = 12.0;
-
-	StandardMaterial floorMaterial;
-	floorMaterial.Initialize();
-	floorMaterial.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/wood_diffuse.png");
-	floorMaterial.SpecularTexture = g_texutureLoader.LoadFromImg("assets/wood_specular.png");
-	floorMaterial.DiffuseCoefficient = 0.5;
-	floorMaterial.SpecularCoefficient = 3.0;
-	floorMaterial.Shininess = 24.0;
+	Skybox skybox;
+	skybox.Initialize();
+	skybox.SkyTexture = g_texutureLoader.LoadFromImg("assets/right.jpg",
+													 "assets/left.jpg",
+													 "assets/top.jpg",
+													 "assets/bottom.jpg",
+													 "assets/front.jpg",
+													 "assets/back.jpg");
 
 	SceneLights sceneLights;
 	sceneLights.Initialize();
-
-	Transform transform;
-	transform.Initialize();
-
-	Transform floorTransform;
-	floorTransform.Initialize();
-	floorTransform.Position.y = -0.5;
-	floorTransform.Scale.x = 10;
-	floorTransform.Scale.y = 10;
-	floorTransform.Rotation.x = 90;
 
 	OrbitCamera camera(float(clientWidth) / clientHeight);
 	camera.Initialize();
@@ -137,36 +133,15 @@ int main(int argc, char* args[])
 
 		camera.Update(mouseState);
 		sceneLights.Update();
-		transform.Update();
-		floorTransform.Update();
+		cubeMesh.Update();
+		floorMesh.Update();
 
 		renderer.Begin();
 
 		// Draw
-		crateMaterial.Use();
-
-		crateMaterial.UpdateSelfProperties();
-		crateMaterial.UpdateCameraProperties(camera);
-		crateMaterial.UpdateTranformProperties(transform);
-		crateMaterial.UpdateLightsProperties(
-			sceneLights.GetAmbientLightBuffer(),
-			sceneLights.GetDirectionalLightsBuffer(),
-			sceneLights.GetPointLightsBuffer());
-
-		createGeometryBuffer.Draw();
-
-		// floor
-		floorMaterial.Use();
-
-		floorMaterial.UpdateSelfProperties();
-		floorMaterial.UpdateCameraProperties(camera);
-		floorMaterial.UpdateTranformProperties(floorTransform);
-		floorMaterial.UpdateLightsProperties(
-			sceneLights.GetAmbientLightBuffer(),
-			sceneLights.GetDirectionalLightsBuffer(),
-			sceneLights.GetPointLightsBuffer());
-
-		floorGeometryBuffer.Draw();
+ 		skybox.Draw(camera);
+		cubeMesh.Draw(camera, sceneLights);
+		floorMesh.Draw(camera, sceneLights);
 
 		renderer.End();
 

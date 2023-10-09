@@ -27,6 +27,9 @@ namespace Viewer
 
         UniformBuffer<CameraData> m_cameraBuffer;
 
+        // @brief This camera buffer does not contain translation, only scale/rotation
+        UniformBuffer<glm::mat4x4> m_skyboxCameraBuffer;
+
     public:
 
         Camera(float aspectRatio);
@@ -47,6 +50,8 @@ namespace Viewer
 
         // @brief Gets the camera buffer.
         inline UniformBuffer<CameraData> &GetCameraBuffer() { return m_cameraBuffer; }
+
+        inline UniformBuffer<glm::mat4x4> &GetSkyboxCameraBuffer() { return m_skyboxCameraBuffer; }
 
         // @brief Updates the camera.
         virtual void Update(MouseState& event);
