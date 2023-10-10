@@ -17,6 +17,7 @@
 #include "scene/SceneLights.hpp"
 #include "mesh/Mesh.hpp"
 #include "skybox/Skybox.hpp"
+#include "mesh/UnlitMesh.hpp"
 
 using namespace Viewer;
 
@@ -62,6 +63,19 @@ int main(int argc, char *args[])
 	floorMesh.Transform.Scale.x = 10;
 	floorMesh.Transform.Scale.y = 10;
 	floorMesh.Transform.Rotation.x = 90;
+
+	UnlitMesh unlitMesh[5] =
+		{
+			UnlitMesh(cubeGeometry),
+			UnlitMesh(cubeGeometry),
+			UnlitMesh(cubeGeometry),
+			UnlitMesh(cubeGeometry),
+			UnlitMesh(cubeGeometry),
+		};
+	for (int i = 0; i < 5; i++)
+	{
+		unlitMesh[i].Initialize();
+	}
 
 	Skybox skybox;
 	skybox.Initialize();
@@ -135,13 +149,25 @@ int main(int argc, char *args[])
 		sceneLights.Update();
 		cubeMesh.Update();
 		floorMesh.Update();
+		for (int i = 0; i < 5; i++)
+		{
+			unlitMesh[i].Transform.Position = sceneLights.GetPointLights(i).Position;
+			unlitMesh[i].Transform.Scale = glm::vec3(.2f);
+			unlitMesh[i].Material.DiffuseColor = sceneLights.GetPointLights(i).Color;
+			unlitMesh[i].Material.Intensity = sceneLights.GetPointLights(i).Intensity;
+			unlitMesh[i].Update();
+		}
 
 		renderer.Begin();
 
 		// Draw
- 		skybox.Draw(camera);
+		skybox.Draw(camera);
 		cubeMesh.Draw(camera, sceneLights);
 		floorMesh.Draw(camera, sceneLights);
+		for (int i = 0; i < 5; i++)
+		{
+			unlitMesh[i].Draw(camera);
+		}
 
 		renderer.End();
 

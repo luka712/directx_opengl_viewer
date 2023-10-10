@@ -56,7 +56,7 @@ namespace Viewer
 		glBindBufferBase(GL_UNIFORM_BUFFER, 5, uniformBuffer.GetBufferID());
 	}
 
-	void StandardMaterialShader::SetMaterial(UniformBuffer<MaterialData> &uniformBuffer)
+	void StandardMaterialShader::SetMaterial(UniformBuffer<PhongMaterialData> &uniformBuffer)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, 6, uniformBuffer.GetBufferID());
 	}

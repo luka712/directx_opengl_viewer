@@ -41,6 +41,8 @@ namespace Viewer
             {
                 throw std::exception("Index out of range.");
             }
+
+            return m_pointLights[index];
         }
 
         /// @brief Gets the ambient light buffer.

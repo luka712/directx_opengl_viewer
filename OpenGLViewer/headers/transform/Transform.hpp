@@ -14,6 +14,8 @@ namespace Viewer
             glm::vec3 Rotation;
             glm::vec3 Scale;
 
+            Transform();
+
             /// @brief Initializes the transform.
             void Initialize();
 

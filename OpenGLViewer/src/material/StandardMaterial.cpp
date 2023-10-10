@@ -6,7 +6,7 @@ namespace Viewer
 	StandardMaterial::StandardMaterial()
 	{
 		m_materialShader = new StandardMaterialShader();
-		m_materialBuffer = new UniformBuffer<MaterialData>();
+		m_materialBuffer = new UniformBuffer<PhongMaterialData>();
 		m_textureTillingBuffer = new UniformBuffer<glm::vec2>();
 
 		DiffuseTexture = nullptr;
@@ -25,7 +25,7 @@ namespace Viewer
 	void StandardMaterial::Initialize()
 	{
 		m_materialShader->Initialize();
-		MaterialData materialData;
+		PhongMaterialData materialData;
 		m_materialBuffer->Initialize(&materialData);
 
 		m_textureTillingBuffer->Initialize(&TextureTilling);
@@ -55,7 +55,7 @@ namespace Viewer
 		m_materialShader->SetSpecularTexture(*specularTexture);
 
 		// update non texture data.
-		MaterialData data;
+		PhongMaterialData data;
 		data.DiffuseCoefficient = DiffuseCoefficient;
 		data.SpecularCoefficient = SpecularCoefficient;
 		data.Shininess = Shininess;

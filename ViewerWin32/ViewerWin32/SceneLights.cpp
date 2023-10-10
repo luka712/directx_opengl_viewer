@@ -18,6 +18,22 @@ namespace Viewer
 		m_directionalLights[1].Direction = { -1.0f, -1.0f, -1.0f };
 
 		m_directionalLights[2].Intensity = 0.0f;
+
+		// POINT LIGHTS
+		m_pointLights[0].Color = { 1, 0, 0 };
+		m_pointLights[0].Position = { 3, 3, 0 };
+
+		m_pointLights[1].Color = { 0, 1, 0 };
+		m_pointLights[1].Position = { 0, 3, 3 };
+
+		m_pointLights[2].Color = { 0, 0, 1 };
+		m_pointLights[2].Position = { -3, 3, 0 };
+
+		m_pointLights[3].Color = { 1, 1, 0 };
+		m_pointLights[3].Position = { 0, 3, -3 };
+
+		m_pointLights[4].Color = { 1, 0, 1 };
+		m_pointLights[4].Position = { 0, 3, 0 };
 	}
 
 	void SceneLights::Initialize()

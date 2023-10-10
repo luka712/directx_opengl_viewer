@@ -3,12 +3,17 @@
 
 namespace Viewer
 {
-	void Transform::Initialize()
+	Transform::Transform()
 	{
-		m_transformBuffer.Initialize(2);
 		Scale = glm::vec3(1, 1, 1);
 		Position = glm::vec3(0, 0, 0);
 		Rotation = glm::vec3(0, 0, 0);
+	}
+
+	void Transform::Initialize()
+	{
+		m_transformBuffer.Initialize(2);
+
 	}
 
 	void Transform::Update()

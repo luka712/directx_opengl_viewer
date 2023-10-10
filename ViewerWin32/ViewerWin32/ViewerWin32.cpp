@@ -27,6 +27,7 @@
 #include "Mesh.hpp"
 #include "CubeTexture.hpp"
 #include "Skybox.hpp"
+#include "UnlitMesh.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -118,6 +119,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	floorMesh.Transform.Scale.y = 10;
 	floorMesh.Transform.Rotation.x = 90;
 
+
+	Viewer::UnlitMesh unlitMesh[5] =
+	{
+		Viewer::UnlitMesh(renderer.GetDevice(), renderer.GetDeviceContext(),cubeGeometry),
+		Viewer::UnlitMesh(renderer.GetDevice(), renderer.GetDeviceContext(),cubeGeometry),
+		Viewer::UnlitMesh(renderer.GetDevice(), renderer.GetDeviceContext(),cubeGeometry),
+		Viewer::UnlitMesh(renderer.GetDevice(), renderer.GetDeviceContext(),cubeGeometry),
+		Viewer::UnlitMesh(renderer.GetDevice(), renderer.GetDeviceContext(),cubeGeometry),
+	};
+	for (int i = 0; i < 5; i++)
+	{
+		unlitMesh[i].Initialize();
+	}
+
 	Viewer::Skybox skybox(renderer.GetDevice(), renderer.GetDeviceContext(), renderer);
 	skybox.SkyTexture = texLoader.LoadFromImg("right.jpg",
 		"left.jpg",
@@ -152,6 +167,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		camera.Update(g_mouseState);
 		floorMesh.Update();
 		cubeMesh.Update();
+		for (int i = 0; i < 5; i++)
+		{
+			unlitMesh[i].Transform.Position = sceneLights.GetPointLights(i).Position;
+			unlitMesh[i].Transform.Scale = DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f);
+			unlitMesh[i].Material.DiffuseColor = sceneLights.GetPointLights(i).Color;
+			unlitMesh[i].Material.Intensity = sceneLights.GetPointLights(i).Intensity;
+			unlitMesh[i].Update();
+		}
 
 		renderer.Begin();
 
@@ -159,6 +182,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		skybox.Draw(camera);
 		cubeMesh.Draw(camera, sceneLights);
 		floorMesh.Draw(camera, sceneLights);
+		for (int i = 0; i < 5; i++)
+		{
+			unlitMesh[i].Draw(camera);
+		}
 
 		// PRESENT
 		renderer.End();

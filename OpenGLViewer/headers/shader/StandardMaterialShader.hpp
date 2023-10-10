@@ -56,7 +56,7 @@ namespace Viewer
 
         /// @brief Sets the material.
         /// @param materialDataBuffer - The buffer containing the material data.
-        void SetMaterial(UniformBuffer<MaterialData> &materialDataBuffer);
+        void SetMaterial(UniformBuffer<PhongMaterialData> &materialDataBuffer);
 
     private:
         // Material

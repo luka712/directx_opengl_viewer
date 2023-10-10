@@ -207,6 +207,15 @@
     <ClInclude Include="Skybox.hpp">
       <Filter>Header Files\Skybox</Filter>
     </ClInclude>
+    <ClInclude Include="UnlitMaterialShader.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="UnlitMaterial.hpp">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="UnlitMesh.hpp">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -281,6 +290,15 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files\Skybox</Filter>
     </ClCompile>
+    <ClCompile Include="UnlitMaterialShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="UnlitMaterial.cpp">
+      <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="UnlitMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerWin32.rc">
@@ -339,6 +357,12 @@
       <Filter>Resource Files</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="UnlitMaterialVS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="UnlitMaterialPS.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>

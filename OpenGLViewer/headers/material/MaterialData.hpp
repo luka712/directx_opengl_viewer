@@ -2,9 +2,17 @@
 
 #define MATERIAL_DATA_HPP
 
+#include <glm/glm.hpp>
+
 namespace Viewer
 {
-    struct MaterialData
+    struct UnlitMaterialData
+    {
+        glm::vec3 DiffuseColor;
+        float Intensity;
+    };
+
+    struct PhongMaterialData
     {
         float DiffuseCoefficient;
         float SpecularCoefficient;

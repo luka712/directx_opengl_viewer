@@ -33,7 +33,7 @@ namespace Viewer
 		if (FAILED(hr))
 		{
 			// Handle texture creation failure
-			
+
 			MessageBoxW(nullptr, L"Failed to create texture", L"Error", MB_OK | MB_ICONERROR);
 			return;
 		}
@@ -71,5 +71,17 @@ namespace Viewer
 			MessageBoxW(nullptr, L"Failed to create sampler", L"Error", MB_OK | MB_ICONERROR);
 			return;
 		}
+	}
+	Texture2D* Texture2D::GetEmptyTexture(CComPtr<ID3D11Device> device)
+	{
+		static Texture2D* emptyTexture = nullptr;
+		if (emptyTexture == nullptr)
+		{
+			emptyTexture = new Texture2D(device);
+			unsigned char data[4] = { 255, 255, 255, 255 };
+			emptyTexture->Initialize(&data[0], 1, 1);
+		}
+
+		return emptyTexture;
 	}
 }

@@ -13,7 +13,7 @@ namespace Viewer
     {
     private:
         StandardMaterialShader *m_materialShader;
-        UniformBuffer<MaterialData> *m_materialBuffer;
+        UniformBuffer<PhongMaterialData> *m_materialBuffer;
         UniformBuffer<glm::vec2> *m_textureTillingBuffer;
 
     public:

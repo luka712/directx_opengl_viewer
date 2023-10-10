@@ -29,6 +29,8 @@ namespace Viewer
 		/// </summary>
 		ID3D11SamplerState* GetSamplerState() { return m_samplerState; }
 
+		static Texture2D* GetEmptyTexture(CComPtr<ID3D11Device> device);
+
 	private:
 		CComPtr<ID3D11Device> m_device;
 
