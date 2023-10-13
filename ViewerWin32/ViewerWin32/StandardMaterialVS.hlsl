@@ -31,7 +31,7 @@ struct PS_INPUT
     float3 normal : NORMAL;
     float3 color: COLOR;
     float3 fragWorldPos : VPOS;
-    float3 eyePosition: EYEPOS;
+    float3 viewDir : VIEWDIR;
 };
 
 PS_INPUT main(VS_INPUT input) 
@@ -41,9 +41,9 @@ PS_INPUT main(VS_INPUT input)
     PS_INPUT output;
     output.pos = mul(worldPos, ProjectionViewMatrix);
     output.tex = input.tex * TextureTiling;
-    output.normal = mul(input.normal, (float3x3)NormalMatrix);
+    output.normal = normalize(mul(input.normal, (float3x3) NormalMatrix));
     output.color = input.color;
     output.fragWorldPos = worldPos.xyz;
-    output.eyePosition = EyePosition;
+    output.viewDir = normalize(EyePosition - worldPos.xyz);
     return output;
 }

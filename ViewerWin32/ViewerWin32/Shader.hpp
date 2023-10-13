@@ -8,7 +8,7 @@
 
 namespace Viewer
 {
-	
+
 	class Shader
 	{
 	protected:
@@ -18,9 +18,12 @@ namespace Viewer
 
 		std::string m_vertexShaderFilename;
 		std::string m_fragmentShaderFilename;
+		std::string m_geometryShaderFilename;
 
 		CComPtr<ID3D11VertexShader> m_vertexShader;
 		CComPtr<ID3D11PixelShader> m_pixelShader;
+		CComPtr<ID3D11GeometryShader> m_geometryShader;
+
 		CComPtr<ID3D11InputLayout> m_inputLayout;
 
 		/// <summary>
@@ -33,7 +36,7 @@ namespace Viewer
 
 	public:
 		Shader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext,
-			std::string vertexShaderFilename, std::string fragmentShaderFilename);
+			std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename = "");
 		~Shader();
 
 		/// <summary>

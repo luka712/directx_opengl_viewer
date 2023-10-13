@@ -7,6 +7,8 @@
 #include "StandardMaterial.hpp" 
 #include "Camera.hpp"
 #include "SceneLights.hpp"
+#include "PosNormalGeometryBuffer.hpp"
+#include "DebugNormalMaterial.hpp"
 
 namespace Viewer
 {
@@ -16,6 +18,9 @@ namespace Viewer
 		Geometry& m_geometry;
 		GeometryBuffer m_geometryBuffer;
 
+		PosNormalGeometryBuffer m_posNormalGeometryBuffer; // for debug normals
+		DebugNormalMaterial m_debugNormalMaterial;
+
 		CComPtr<ID3D11Device> m_device;
 
 	public:
@@ -23,6 +28,8 @@ namespace Viewer
 
 		Transform Transform;
 		StandardMaterial Material;
+
+		bool DebugNormals;
 	
 		void Initialize();
 		void Update();

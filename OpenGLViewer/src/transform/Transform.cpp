@@ -25,10 +25,10 @@ namespace Viewer
 		glm::mat4x4 rotation = rotationX * rotationY * rotationZ;
 		glm::mat4x4 scale = glm::scale(glm::mat4x4(1.0f), Scale);
 
-		glm::mat4x4 modelMatrix = translation * rotation * scale;
-		glm::mat4x4 normalMatrix = glm::transpose(glm::inverse(modelMatrix));
+		ModelMatrix = translation * rotation * scale;
+		glm::mat4x4 normalMatrix = glm::transpose(glm::inverse(ModelMatrix));
 
-		glm::mat4x4 matrices[2] = { modelMatrix, normalMatrix };
+		glm::mat4x4 matrices[2] = { ModelMatrix, normalMatrix };
 		m_transformBuffer.Update(&matrices[0], 2);
 	}
 }

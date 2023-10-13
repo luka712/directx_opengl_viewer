@@ -21,6 +21,21 @@ namespace Viewer
 		/// </summary>
 		DirectX::XMFLOAT3 Color;
 
+		/// <summary>
+		/// The constant term of the attenuation equation
+		/// </summary>
+		float AttenuationConstant;
+
+		/// <summary>
+		/// The linear term of the attenuation equation
+		/// </summary>
+		float AttenuationLinear;
+
+		/// <summary>
+		/// The quadratic term of the attenuation equation
+		/// </summary>
+		float AttenuationQuadratic;
+
 		PointLight(DirectX::XMFLOAT3 pos, float intensity, DirectX::XMFLOAT3 color);
 
 		PointLight();
@@ -29,6 +44,6 @@ namespace Viewer
 		/// <summary>
 		/// Padding to make the struct size a multiple of 16 bytes
 		/// </summary>
-		float _padding = 0.0f;
+		float _padding[2];
 	};
 }

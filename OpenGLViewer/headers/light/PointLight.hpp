@@ -19,7 +19,16 @@ namespace Viewer
         /// @brief The color of the light.
         glm::vec3 Color;
 
-        float _padding;
+        /// @brief The constant term of attenuation of the light.
+        float AttenuationConstant;
+
+        /// @brief The linear term of attenuation of the light.
+        float AttenuationLinear;
+
+        /// @brief The quadratic term of attenuation of the light.
+        float AttenuationQuadratic;
+
+        float _padding[2];
     };
 }
 

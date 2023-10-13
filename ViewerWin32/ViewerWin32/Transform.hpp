@@ -16,6 +16,11 @@ namespace Viewer
 		DirectX::XMFLOAT3 Scale;
 
 		/// <summary>
+		/// Set on each update.
+		/// </summary>
+		DirectX::XMMATRIX ModelMatrix;
+
+		/// <summary>
 		/// Initialize the transform object.
 		/// </summary>
 		void Initialize();

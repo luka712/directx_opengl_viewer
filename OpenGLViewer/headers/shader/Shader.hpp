@@ -11,7 +11,7 @@ namespace Viewer
     class Shader
     {
     public:
-        Shader(std::string vertexPath, std::string);
+        Shader(std::string vertexPath, std::string fragmentPath, std::string geometryPath = "");
         ~Shader();
 
         virtual bool Initialize();
@@ -20,6 +20,7 @@ namespace Viewer
     protected:
         std::string m_vertexPath;
         std::string m_fragmentPath;
+        std::string m_geometryPath;
         unsigned int m_programId;
 
         /**

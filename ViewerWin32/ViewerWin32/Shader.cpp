@@ -7,8 +7,13 @@ namespace Viewer
 		CComPtr<ID3D11Device> device,
 		CComPtr<ID3D11DeviceContext> deviceContext,
 		std::string vertexShaderFilename,
-		std::string fragmentShaderFilename)
-		: m_device(device), m_deviceContext(deviceContext), m_vertexShaderFilename(vertexShaderFilename), m_fragmentShaderFilename(fragmentShaderFilename)
+		std::string fragmentShaderFilename,
+		std::string geometryShaderFilename)
+		: m_device(device),
+		m_deviceContext(deviceContext),
+		m_vertexShaderFilename(vertexShaderFilename),
+		m_fragmentShaderFilename(fragmentShaderFilename),
+		m_geometryShaderFilename(geometryShaderFilename)
 	{
 	}
 
@@ -21,7 +26,7 @@ namespace Viewer
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> Shader::GetInputLayout()
 	{
-		return 
+		return
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD"  , 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -51,6 +56,8 @@ namespace Viewer
 			MessageBoxW(nullptr, L"Failed to compile pixel shader", L"Error", MB_OK | MB_ICONERROR);
 			return false;
 		}
+
+
 
 		// Create the vertex shader from the compiled bytecode
 		HRESULT hr = m_device->CreateVertexShader(
@@ -82,6 +89,35 @@ namespace Viewer
 			return false;
 		}
 
+		m_geometryShader = nullptr;
+		if (m_geometryShaderFilename != "")
+		{
+			CComPtr<ID3DBlob> geometryShaderBlob = CompileShaderFromFile(m_geometryShaderFilename, "gs_5_0");
+
+			if (geometryShaderBlob == nullptr)
+			{
+				// Handle pixel shader compilation failure
+				MessageBoxW(nullptr, L"Failed to compile geometry shader", L"Error", MB_OK | MB_ICONERROR);
+				return false;
+			}
+
+			hr = m_device->CreateGeometryShader(
+				geometryShaderBlob->GetBufferPointer(),
+				geometryShaderBlob->GetBufferSize(),
+				nullptr,
+				&m_geometryShader
+			);
+
+			if (FAILED(hr))
+			{
+				// Handle pixel shader creation failure
+				MessageBoxW(nullptr, L"Failed to create geometry shader", L"Error", MB_OK | MB_ICONERROR);
+				return false;
+			}
+
+
+		}
+
 		std::vector<D3D11_INPUT_ELEMENT_DESC> layout = GetInputLayout();
 
 		// Create the input layout
@@ -109,6 +145,10 @@ namespace Viewer
 
 		m_deviceContext->VSSetShader(m_vertexShader, nullptr, 0);
 		m_deviceContext->PSSetShader(m_pixelShader, nullptr, 0);
+		if (m_geometryShader != nullptr)
+			m_deviceContext->GSSetShader(m_geometryShader, nullptr, 0);
+		else
+			m_deviceContext->GSSetShader(nullptr, nullptr, 0);
 	}
 
 	// Compile a shader from a file and return the compiled bytecode

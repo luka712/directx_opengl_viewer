@@ -37,8 +37,8 @@ namespace Viewer
 
 		D3D11_RASTERIZER_DESC raster_desc;
 		raster_desc.FillMode = D3D11_FILL_SOLID;
-		raster_desc.CullMode = D3D11_CULL_BACK;
-		raster_desc.FrontCounterClockwise = false;
+		raster_desc.CullMode = D3D11_CULL_NONE; //D3D11_CULL_FRONT;
+		raster_desc.FrontCounterClockwise = true;
 		raster_desc.DepthBias = 0;
 		raster_desc.DepthBiasClamp = 0.0f;
 		raster_desc.SlopeScaledDepthBias = 0.0f;

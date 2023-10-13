@@ -4,7 +4,7 @@ namespace Viewer
 {
 
 	SkyboxShader::SkyboxShader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext)
-		: Shader(device, deviceContext, "SkyboxVS.hlsl", "SkyboxPS.hlsl")
+		: Shader(device, deviceContext, "SkyboxVS.hlsl", "SkyboxPS.hlsl", "")
 	{
 	}
 

@@ -41,7 +41,7 @@ namespace Viewer
         void UpdateSelfProperties();
 
         /// @brief Updates the properties related to the camera.
-        void UpdateCameraProperties(Camera& camera);
+        void UpdateProperties(Camera& camera);
 
         /// @brief  Updates the properties related to the transform.
         void UpdateTransformProperties(Transform& transform);

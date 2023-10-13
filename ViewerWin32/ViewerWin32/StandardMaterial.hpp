@@ -17,7 +17,7 @@ namespace Viewer
 		CComPtr<ID3D11Device> m_device;
 		CComPtr<ID3D11DeviceContext> m_deviceContext;
 
-		StandardMaterialShader* m_materialShader;
+		StandardMaterialShader* m_shader;
 		ConstantBuffer<MaterialData> *m_materialBuffer;
 
 		ConstantBuffer<DirectX::XMFLOAT2> *m_textureTillingBuffer;

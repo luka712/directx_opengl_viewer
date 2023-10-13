@@ -44,20 +44,23 @@ int main(int argc, char *args[])
 	Geometry cubeGeometry = Geometry::CreateCubeGeometry();
 	Mesh cubeMesh(cubeGeometry);
 	cubeMesh.Initialize();
+	cubeMesh.DebugNormals = true;
 	cubeMesh.Material.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/crate_texture.png");
 	cubeMesh.Material.SpecularTexture = g_texutureLoader.LoadFromImg("assets/crate_specular.png");
 	cubeMesh.Material.DiffuseCoefficient = 0.5f;
 	cubeMesh.Material.SpecularCoefficient = 3.0f;
-	cubeMesh.Material.Shininess = 12.0f;
+	cubeMesh.Material.Shininess = 32.0f;
+	cubeMesh.Transform.Position.x = 1.0f;
 
 	Geometry floorGeometry = Viewer::Geometry::CreateQuadGeometry();
 	Mesh floorMesh(floorGeometry);
+	floorMesh.DebugNormals = true;
 	floorMesh.Initialize();
 	floorMesh.Material.DiffuseTexture = g_texutureLoader.LoadFromImg("assets/wood_diffuse.png");
 	floorMesh.Material.SpecularTexture = g_texutureLoader.LoadFromImg("assets/wood_specular.png");
 	floorMesh.Material.DiffuseCoefficient = 0.5f;
-	floorMesh.Material.SpecularCoefficient = 3.0f;
-	floorMesh.Material.Shininess = 24.0f;
+	floorMesh.Material.SpecularCoefficient = 2.0f;
+	floorMesh.Material.Shininess = 32.0f;
 	floorMesh.Material.TextureTilling = glm::vec2(5.0f, 5.0f);
 	floorMesh.Transform.Position.y = -0.5;
 	floorMesh.Transform.Scale.x = 10;

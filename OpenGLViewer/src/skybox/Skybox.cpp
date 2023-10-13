@@ -18,12 +18,18 @@ namespace Viewer
 
     void Skybox::Draw(Camera& camera)
     {
-        glDepthMask(GL_FALSE);
+        glCullFace(GL_FRONT); // geometry order is reversed
+        glDepthMask(GL_FALSE); // skybox is always drawn behind everything else
+
+
         m_shader.Use();
         m_shader.SetTexture(*SkyTexture);
         m_shader.SetCamera(camera.GetSkyboxCameraBuffer());
         m_geometryBuffer.Draw();
+
+        // back to default
         glDepthMask(GL_TRUE);
+        glCullFace(GL_BACK);
     }
 
 }

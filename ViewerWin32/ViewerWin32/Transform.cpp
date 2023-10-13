@@ -27,12 +27,11 @@ namespace Viewer
 		DirectX::XMMATRIX rotation = rotationZ * rotationY * rotationX;
 		DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
 
-		DirectX::XMMATRIX modelMatrix = DirectX::XMMatrixTranspose(
-			scale * rotation * translation
-		);
-		DirectX::XMMATRIX normalMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, modelMatrix));
+		ModelMatrix = scale * rotation * translation;
+		DirectX::XMMATRIX modelToBuffer = DirectX::XMMatrixTranspose(ModelMatrix);
+		DirectX::XMMATRIX normalMatrix = DirectX::XMMatrixInverse(nullptr, ModelMatrix);
 
-		DirectX::XMMATRIX matrices[2] = { modelMatrix, normalMatrix };
+		DirectX::XMMATRIX matrices[2] = { modelToBuffer, normalMatrix };
 		m_buffer.Update(&matrices[0], 2);
 	}
 }

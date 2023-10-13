@@ -97,16 +97,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Viewer::Geometry cubeGeometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::Mesh cubeMesh(renderer.GetDevice(), renderer.GetDeviceContext(), cubeGeometry);
+	cubeMesh.DebugNormals = true;
 	cubeMesh.Initialize();
 	cubeMesh.Material.DiffuseTexture = texLoader.LoadFromImg("crate_texture.png");
 	cubeMesh.Material.SpecularTexture = texLoader.LoadFromImg("crate_specular.png");
 	cubeMesh.Material.DiffuseCoefficient = 0.5f;
 	cubeMesh.Material.SpecularCoefficient = 3.0f;
-	cubeMesh.Material.Shininess = 12.0f;
+	cubeMesh.Material.Shininess = 32.0f;
+	cubeMesh.Transform.Position.x = 1.0f;
 
 
 	Viewer::Geometry floorGeometry = Viewer::Geometry::CreateQuadGeometry();
 	Viewer::Mesh floorMesh(renderer.GetDevice(), renderer.GetDeviceContext(), floorGeometry);
+	floorMesh.DebugNormals = true;
 	floorMesh.Initialize();
 	floorMesh.Material.DiffuseTexture = texLoader.LoadFromImg("wood_diffuse.png");
 	floorMesh.Material.SpecularTexture = texLoader.LoadFromImg("wood_specular.png");

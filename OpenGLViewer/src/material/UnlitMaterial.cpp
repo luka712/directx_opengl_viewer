@@ -60,7 +60,7 @@ namespace Viewer
 		m_materialShader->SetTextureTilling(*m_textureTillingBuffer);
 	}
 
-	void UnlitMaterial::UpdateCameraProperties(Camera& camera)
+	void UnlitMaterial::UpdateProperties(Camera& camera)
 	{
 		m_materialShader->SetCamera(camera.GetCameraBuffer());
 	}

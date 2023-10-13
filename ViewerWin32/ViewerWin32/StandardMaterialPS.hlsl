@@ -5,7 +5,7 @@ struct PS_INPUT
     float3 normal : NORMAL;
     float3 color: COLOR;
     float3 fragWorldPos : VPOS;
-    float3 eyePosition: EYEPOS;
+    float3 viewDir : VIEWDIR;
 };
 
 struct AmbientLight
@@ -27,7 +27,10 @@ struct PointLight
     float3 Position;
     float Intensity;
     float3 Color;
-    float _padding;
+    float Constant;
+    float Linear;
+    float Quadratic;
+    float2 _padding;
 };
 
 struct Material
@@ -71,54 +74,79 @@ float3 ambientLight(AmbientLight light, Material material)
     return light.Color * light.Intensity;
 }
 
-float3 directionalLight(DirectionalLight light, Material material, float3 normal)
+float3 directionalLight(DirectionalLight light, Material material, PS_INPUT input)
 {
     float3 lightDirection = normalize(-light.Direction);
-    return light.Color * light.Intensity * material.DiffuseCoefficient * max(dot(lightDirection, normal), 0.0f);
+    return light.Color * light.Intensity * material.DiffuseCoefficient * max(dot(lightDirection, input.normal), 0.0f);
 }
 
-float3 directionalSpecularLight(DirectionalLight light, Material material, float3 normal, PS_INPUT input)
+float3 directionalSpecularLight(DirectionalLight light, Material material, PS_INPUT input)
 {
     float3 lightDirection = normalize(-light.Direction);
-    float3 viewDir = normalize(input.eyePosition - input.fragWorldPos);
-    float3 halfwayDir = normalize(lightDirection + viewDir);
+    float3 halfwayDir = normalize(lightDirection + input.viewDir);
     // find specular intensity
-    float spec = max(dot(normal, halfwayDir), 0.0);
+    float spec = max(dot(input.normal, halfwayDir), 0.0);
     spec = pow(spec, material.Shininess); 
     return light.Intensity * light.Color * material.SpecularCoefficient * spec;
 }
 
+float3 pointDiffuseLight(PointLight light, Material material,  PS_INPUT input)
+{
+    float3 lightDirection = normalize(light.Position - input.fragWorldPos);
+    return light.Color * light.Intensity * material.DiffuseCoefficient * max(dot(lightDirection, input.normal), 0.0f);
+}
+
+float3 pointSpecularLight(PointLight light, Material material,  PS_INPUT input)
+{
+    float3 lightDir = normalize(light.Position - input.fragWorldPos);
+    float3 halfwayDir = normalize(lightDir + input.viewDir);
+    
+    // find specular intensity
+    float spec = max(dot(input.normal, halfwayDir), 0.0);
+    spec = pow(spec, material.Shininess);
+    
+    // combine results
+    float3 specular = light.Intensity * light.Color * material.SpecularCoefficient * spec;
+    return specular;
+}
+
+float pointLightAttenuation(PointLight l, float3 fragPos)
+{
+    float distance = length(l.Position - fragPos);
+    return 1.0 / (l.Constant + l.Linear * distance + l.Quadratic * (distance * distance));
+}
+
 float4 main(PS_INPUT input) : SV_TARGET
 {
- 
+
     // Ambient
     float3 ambient = ambientLight(c_ambient, c_material);
     
     // Directional
     float3 directional = float3(0.0, 0.0, 0.0);
     float3 directionalSpecular = float3(0.0, 0.0, 0.0);
-    float3 n_normal = normalize(input.normal);
     for (int i = 0; i < 3; i++)
     {
         DirectionalLight light = DirLights[i];
-        directional += directionalLight(light, c_material, n_normal);
-        directionalSpecular += directionalSpecularLight(light, c_material, n_normal, input);
+        directional += directionalLight(light, c_material, input);
+        directionalSpecular += directionalSpecularLight(light, c_material, input);
     }
     
     // Point 
     float3 pointL = float3(0.0, 0.0, 0.0);
+    float3 pointSpec = float3(0.0, 0.0, 0.0);
     for (int i = 0; i < 5; i++)
     {
         PointLight light = PointLights[i];
-        float3 n_direction = normalize(light.Position - input.fragWorldPos);
+        float a = pointLightAttenuation(light, input.fragWorldPos);
         
-        pointL += light.Intensity * light.Color * max(dot(n_normal, n_direction), 0.0f);
-        
+        pointL += pointDiffuseLight(light, c_material, input) * a;
+        pointSpec += pointSpecularLight(light, c_material, input) * a;
     }
     
     // total light    
     float3 lightAmount = ambient + directional + pointL;
-    float3 specularAmount = directionalSpecular;
+    float3 specularAmount = directionalSpecular + pointSpec;
     
     float3 diffuseColor = s_diffuseTexture.Sample(s_diffuseSampler, input.tex).xyz * lightAmount * input.color;
     float3 specularColor = s_specularTexture.Sample(s_specularSampler, input.tex).xyz * specularAmount * input.color;

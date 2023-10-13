@@ -5,8 +5,8 @@
 
 namespace Viewer
 {
-    Shader::Shader(std::string vertexPath, std::string fragmentPath)
-        : m_vertexPath(vertexPath), m_fragmentPath(fragmentPath)
+    Shader::Shader(std::string vertexPath, std::string fragmentPath, std::string geometryPath)
+        : m_vertexPath(vertexPath), m_fragmentPath(fragmentPath), m_geometryPath(geometryPath)
     {
         m_programId = 0;
     }
@@ -21,6 +21,8 @@ namespace Viewer
         FileLoader fileLoader;
         std::string vertexCode = fileLoader.LoadFile(m_vertexPath);
         std::string fragmentCode = fileLoader.LoadFile(m_fragmentPath);
+        std::string geometryCode = "";
+
 
         if (vertexCode == "")
         {
@@ -32,6 +34,8 @@ namespace Viewer
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "OpenGL error", "Failed to load fragment shader.", nullptr);
             return false;
         }
+
+
 
         unsigned int vertexShader = CreateShader(vertexCode, GL_VERTEX_SHADER);
         unsigned int fragmentShader = CreateShader(fragmentCode, GL_FRAGMENT_SHADER);
@@ -48,9 +52,28 @@ namespace Viewer
             return false;
         }
 
+        // OPTIONAL, GEOMETRY SHADER
+        unsigned int geometryShader = 0;
+        if(m_geometryPath != "")
+        {
+            geometryCode = fileLoader.LoadFile(m_geometryPath);
+            if (geometryCode == "")
+            {
+                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "OpenGL error", "Failed to load geometry shader.", nullptr);
+                return false;
+            }
+
+            geometryShader = CreateShader(geometryCode, GL_GEOMETRY_SHADER);
+        }
+
         m_programId = glCreateProgram();
         glAttachShader(m_programId, vertexShader);
         glAttachShader(m_programId, fragmentShader);
+        // OPTIONAL, GEOMETRY SHADER
+        if(geometryShader != 0)
+        {
+            glAttachShader(m_programId, geometryShader);
+        }
         glLinkProgram(m_programId);
 
         int success;
@@ -66,7 +89,11 @@ namespace Viewer
 
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
-
+        // OPTIONAL, GEOMETRY SHADER
+        if(geometryShader != 0)
+        {
+            glDeleteShader(geometryShader);
+        }
         return true;
     }
 

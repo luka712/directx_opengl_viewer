@@ -26,15 +26,15 @@ out vec2 v_texCoord;
 out vec3 v_normal;
 out vec3 v_color;
 out vec3 v_fragWorldPos;
-out vec3 v_eyePosition;
+out vec3 v_viewDir;
 
 void main()
 {
     mat4 modelViewProjectionMatrix = u_projectionViewMatrix * u_modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(a_position, 1.0);
     v_texCoord = a_texCoord * u_textureTilling;
-    v_normal = mat3(u_normalMatrix) * a_normal;
+    v_normal = normalize(mat3(u_normalMatrix) * a_normal);
     v_color = a_color;
     v_fragWorldPos = vec3(u_modelMatrix * vec4(a_position, 1.0));
-    v_eyePosition = u_eyePosition;
+    v_viewDir = normalize(u_eyePosition - v_fragWorldPos);
 }

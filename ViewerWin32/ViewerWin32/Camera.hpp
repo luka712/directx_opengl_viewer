@@ -21,14 +21,16 @@ namespace Viewer
 		DirectX::XMVECTOR m_upVector;
 
 		DirectX::XMMATRIX m_projectionMatrix;
-		DirectX::XMMATRIX m_viewMatrix;
 		DirectX::XMMATRIX m_projectionViewMatrix;
 
-		ConstantBuffer<CameraData> *m_cameraBuffer;
-		ConstantBuffer<DirectX::XMMATRIX> *m_skyboxCameraBuffer;
+		ConstantBuffer<CameraData>* m_cameraBuffer;
+		ConstantBuffer<DirectX::XMMATRIX>* m_skyboxCameraBuffer;
+		ConstantBuffer<DirectX::XMMATRIX>* m_projectionBuffer;
 
 	public:
 		Camera(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext, float aspectRatio);
+
+		DirectX::XMMATRIX ViewMatrix;
 
 		/// <summary>
 		/// Initialize the camera.
@@ -46,7 +48,6 @@ namespace Viewer
 
 		inline DirectX::XMVECTOR GetUpVector() const { return m_upVector; }
 
-		inline DirectX::XMMATRIX GetViewMatrix() const { return m_viewMatrix; }
 
 		/// <summary>
 		/// Gets the buffer containing the camera data.
@@ -54,6 +55,9 @@ namespace Viewer
 		inline ConstantBuffer<CameraData>* GetCameraBuffer() { return m_cameraBuffer; }
 
 		inline ConstantBuffer<DirectX::XMMATRIX>* const GetSkyboxCameraBuffer() const { return m_skyboxCameraBuffer; }
+
+		inline ConstantBuffer<DirectX::XMMATRIX>* const GetProjectionBuffer() const { return m_projectionBuffer; }
+
 
 
 

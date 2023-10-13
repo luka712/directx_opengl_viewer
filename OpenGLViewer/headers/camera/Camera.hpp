@@ -22,17 +22,21 @@ namespace Viewer
         glm::vec3 m_upVector;
 
         glm::mat4x4 m_projectionMatrix;
-        glm::mat4x4 m_viewMatrix;
         glm::mat4x4 m_projectionViewMatrix;
 
         UniformBuffer<CameraData> m_cameraBuffer;
 
-        // @brief This camera buffer does not contain translation, only scale/rotation
+        /// @brief This camera buffer does not contain translation, only scale/rotation
         UniformBuffer<glm::mat4x4> m_skyboxCameraBuffer;
+
+        /// @brief The projection camera buffer.
+        UniformBuffer<glm::mat4x4> m_projectionBuffer;
 
     public:
 
         Camera(float aspectRatio);
+
+        glm::mat4x4 ViewMatrix;
 
         virtual void Initialize();
 
@@ -52,6 +56,9 @@ namespace Viewer
         inline UniformBuffer<CameraData> &GetCameraBuffer() { return m_cameraBuffer; }
 
         inline UniformBuffer<glm::mat4x4> &GetSkyboxCameraBuffer() { return m_skyboxCameraBuffer; }
+
+        /// @brief Gets the projection camera buffer.
+        inline UniformBuffer<glm::mat4x4> &GetProjectionBuffer() { return m_projectionBuffer; }
 
         // @brief Updates the camera.
         virtual void Update(MouseState& event);

@@ -131,6 +131,8 @@
     <ClInclude Include="AmbientLight.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="CubeTexture.hpp" />
+    <ClInclude Include="DebugNormalMaterial.hpp" />
+    <ClInclude Include="DebugNormalShader.hpp" />
     <ClInclude Include="DirectionalLight.hpp" />
     <ClInclude Include="ImageLoader.hpp" />
     <ClInclude Include="MaterialData.hpp" />
@@ -138,6 +140,7 @@
     <ClInclude Include="MouseState.hpp" />
     <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="PointLight.hpp" />
+    <ClInclude Include="PosNormalGeometryBuffer.hpp" />
     <ClInclude Include="SceneLights.hpp" />
     <ClInclude Include="Skybox.hpp" />
     <ClInclude Include="SkyboxShader.hpp" />
@@ -166,12 +169,15 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeTexture.cpp" />
+    <ClCompile Include="DebugNormalMaterial.cpp" />
+    <ClCompile Include="DebugNormalShader.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="OrbitCamera.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="PosNormalGeometryBuffer.cpp" />
     <ClCompile Include="SceneLights.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyboxShader.cpp" />
@@ -211,6 +217,28 @@
     <Image Include="wood_specular.png" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="DebugNormalGS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="DebugNormalPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DebugNormalVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

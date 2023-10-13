@@ -16,8 +16,14 @@ namespace Viewer
             m_geometry.normalVertices,
             m_geometry.colorVertices);
 
+        m_posNormalGeometryBuffer.Initialize(
+            m_geometry.positionVertices,
+            m_geometry.indices,
+            m_geometry.normalVertices);
+
         Transform.Initialize();
         Material.Initialize();
+        m_debugNormalMaterial.Initialize();
     }
 
     void Mesh::Update()
@@ -31,9 +37,18 @@ namespace Viewer
 
         Material.UpdateSelfProperties();
         Material.UpdateTransformProperties(Transform);
-        Material.UpdateCameraProperties(camera);
+        Material.UpdateProperties(camera);
         Material.UpdateLightsProperties(lights);
 
         m_geometryBuffer.Draw();
+
+        if (DebugNormals)
+        {
+            m_debugNormalMaterial.Use();
+
+            m_debugNormalMaterial.UpdateProperties(camera, Transform);
+
+            m_posNormalGeometryBuffer.Draw();
+        }
     }
 }

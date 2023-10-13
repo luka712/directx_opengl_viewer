@@ -8,8 +8,6 @@
 #include "texture/CubeTexture.hpp"
 #include "camera/Camera.hpp"
 
-#define MAX_DIRECTIONAL_LIGHTS 3
-
 namespace Viewer
 {
     class SkyboxShader final : public Shader

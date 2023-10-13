@@ -3,7 +3,7 @@
 namespace Viewer
 {
 	UnlitMaterialShader::UnlitMaterialShader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext)
-		: Shader(device, deviceContext, "UnlitMaterialVS.hlsl", "UnlitMaterialPS.hlsl")
+		: Shader(device, deviceContext, "UnlitMaterialVS.hlsl", "UnlitMaterialPS.hlsl", "")
 	{
 	}
 

@@ -6,7 +6,7 @@ namespace Viewer
 	UnlitMaterial::UnlitMaterial(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext)
 		: m_device(device), m_deviceContext(deviceContext)
 	{
-		m_materialShader = new UnlitMaterialShader(device, deviceContext);
+		m_shader = new UnlitMaterialShader(device, deviceContext);
 		m_materialBuffer = new ConstantBuffer<UnlitMaterialData>(device, deviceContext);
 		m_textureTillingBuffer = new ConstantBuffer<DirectX::XMFLOAT2>(device, deviceContext);
 		DiffuseTexture = nullptr;
@@ -17,20 +17,20 @@ namespace Viewer
 
 	UnlitMaterial::~UnlitMaterial()
 	{
-		delete m_materialShader;
+		delete m_shader;
 		delete m_materialBuffer;
 	}
 
 	void UnlitMaterial::Initialize()
 	{
-		m_materialShader->Initialize();
+		m_shader->Initialize();
 		m_materialBuffer->Initialize();
 		m_textureTillingBuffer->Initialize();
 	}
 
 	void UnlitMaterial::Use()
 	{
-		m_materialShader->Use();
+		m_shader->Use();
 	}
 	void UnlitMaterial::UpdateSelfProperties()
 	{
@@ -41,26 +41,26 @@ namespace Viewer
 		}
 
 
-		m_materialShader->SetDiffuseTexture(diffuseTexture);
+		m_shader->SetDiffuseTexture(diffuseTexture);
 
 		UnlitMaterialData materialData;
 		materialData.Color = DiffuseColor;
 		materialData.Intensity = Intensity;
 		m_materialBuffer->Update(materialData);
-		m_materialShader->SetMaterial(*m_materialBuffer);
+		m_shader->SetMaterial(*m_materialBuffer);
 
 		// set texture tilling.
 		m_textureTillingBuffer->Update(TextureTilling);
-		m_materialShader->SetTextureTilling(m_textureTillingBuffer->GetBuffer());
+		m_shader->SetTextureTilling(m_textureTillingBuffer->GetBuffer());
 	}
 	void UnlitMaterial::UpdateCameraProperties(Camera& camera)
 	{
-		m_materialShader->SetCamera(camera.GetCameraBuffer()->GetBuffer());
+		m_shader->SetCamera(camera.GetCameraBuffer()->GetBuffer());
 	}
 
 	void UnlitMaterial::UpdateTransformProperties(Transform& transform)
 	{
-		m_materialShader->SetTransform(transform.GetBuffer().GetBuffer());
+		m_shader->SetTransform(transform.GetBuffer().GetBuffer());
 	}
 }
 

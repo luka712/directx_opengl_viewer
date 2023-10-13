@@ -3,7 +3,7 @@
 namespace Viewer
 {
 	StandardMaterialShader::StandardMaterialShader(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext)
-		: Shader(device, deviceContext, "StandardMaterialVS.hlsl", "StandardMaterialPS.hlsl")
+		: Shader(device, deviceContext, "StandardMaterialVS.hlsl", "StandardMaterialPS.hlsl", "")
 	{
 	}
 

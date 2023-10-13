@@ -31,7 +31,7 @@ namespace Viewer
 
         Material.UpdateSelfProperties();
         Material.UpdateTransformProperties(Transform);
-        Material.UpdateCameraProperties(camera);
+        Material.UpdateProperties(camera);
 
         m_geometryBuffer.Draw();
     }

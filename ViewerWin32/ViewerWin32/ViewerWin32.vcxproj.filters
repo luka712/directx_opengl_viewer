@@ -94,9 +94,6 @@
     <Filter Include="Source Files\Lights">
       <UniqueIdentifier>{16b438f9-240b-489c-90bb-1dcd051d6ce1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Transform">
-      <UniqueIdentifier>{6d187c57-83eb-4787-a3e8-f92043b2aa60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Transform">
       <UniqueIdentifier>{22793fda-e9ee-4601-ae31-38b6f48a44c8}</UniqueIdentifier>
     </Filter>
@@ -111,6 +108,9 @@
     </Filter>
     <Filter Include="Source Files\Skybox">
       <UniqueIdentifier>{f4a3cfa8-c54e-4e25-8c9f-ab4e1a4be9a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vendor\Transform">
+      <UniqueIdentifier>{6d187c57-83eb-4787-a3e8-f92043b2aa60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -190,7 +190,7 @@
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Transform.hpp">
-      <Filter>Header Files\Transform</Filter>
+      <Filter>Header Files\vendor\Transform</Filter>
     </ClInclude>
     <ClInclude Include="TextureLoader.hpp">
       <Filter>Header Files\Loaders</Filter>
@@ -215,6 +215,15 @@
     </ClInclude>
     <ClInclude Include="UnlitMesh.hpp">
       <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugNormalShader.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugNormalMaterial.hpp">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="PosNormalGeometryBuffer.hpp">
+      <Filter>Header Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +308,15 @@
     <ClCompile Include="UnlitMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="DebugNormalShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugNormalMaterial.cpp">
+      <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="PosNormalGeometryBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerWin32.rc">
@@ -363,6 +381,15 @@
       <Filter>Resource Files</Filter>
     </FxCompile>
     <FxCompile Include="UnlitMaterialPS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="DebugNormalVS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="DebugNormalPS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="DebugNormalGS.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>
