@@ -23,8 +23,11 @@ namespace Viewer
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 		ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
-		depthStencilDesc.DepthEnable = false;                  // Disable depth testingg
-		depthStencilDesc.StencilEnable = false;		// Disable stencil testing (not used for skybox rendering)
+		depthStencilDesc.DepthEnable = true;                 
+		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+		depthStencilDesc.StencilEnable = false;
 
 		HRESULT hr = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState.p);
 

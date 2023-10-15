@@ -141,6 +141,9 @@
     <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="PointLight.hpp" />
     <ClInclude Include="PosNormalGeometryBuffer.hpp" />
+    <ClInclude Include="ReflectiveMaterial.hpp" />
+    <ClInclude Include="ReflectiveMaterialShader.hpp" />
+    <ClInclude Include="ReflectiveMesh.hpp" />
     <ClInclude Include="SceneLights.hpp" />
     <ClInclude Include="Skybox.hpp" />
     <ClInclude Include="SkyboxShader.hpp" />
@@ -178,6 +181,9 @@
     <ClCompile Include="OrbitCamera.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PosNormalGeometryBuffer.cpp" />
+    <ClCompile Include="ReflectiveMaterial.cpp" />
+    <ClCompile Include="ReflectiveMaterialShader.cpp" />
+    <ClCompile Include="ReflectiveMesh.cpp" />
     <ClCompile Include="SceneLights.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyboxShader.cpp" />
@@ -234,6 +240,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="DebugNormalVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="ReflectiveMaterialPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="ReflectiveMaterialVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

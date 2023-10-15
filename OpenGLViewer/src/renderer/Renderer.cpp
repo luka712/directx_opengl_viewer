@@ -25,6 +25,7 @@ namespace Viewer
 
         glViewport(0, 0, width, height);
         glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
         glEnable(GL_BLEND);
         return true;
     }

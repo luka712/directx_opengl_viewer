@@ -16,6 +16,12 @@
       <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\DebugNormalVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\ReflectiveMaterialPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\ReflectiveMaterialVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\SkyboxPS.cso</FullPath>
     </ContentFile>
     <ContentFile>

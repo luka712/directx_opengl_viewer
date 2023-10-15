@@ -28,6 +28,7 @@
 #include "CubeTexture.hpp"
 #include "Skybox.hpp"
 #include "UnlitMesh.hpp"
+#include "ReflectiveMesh.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -94,6 +95,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	Viewer::TextureLoader texLoader(renderer.GetDevice());
+	Viewer::CubeTexture* skyboxTexture = texLoader.LoadFromImg("right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"front.jpg",
+		"back.jpg");
 
 	Viewer::Geometry cubeGeometry = Viewer::Geometry::CreateCubeGeometry();
 	Viewer::Mesh cubeMesh(renderer.GetDevice(), renderer.GetDeviceContext(), cubeGeometry);
@@ -104,7 +111,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	cubeMesh.Material.DiffuseCoefficient = 0.5f;
 	cubeMesh.Material.SpecularCoefficient = 3.0f;
 	cubeMesh.Material.Shininess = 32.0f;
-	cubeMesh.Transform.Position.x = 1.0f;
 
 
 	Viewer::Geometry floorGeometry = Viewer::Geometry::CreateQuadGeometry();
@@ -122,6 +128,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	floorMesh.Transform.Scale.y = 10;
 	floorMesh.Transform.Rotation.x = 90;
 
+	Viewer::ReflectiveMesh reflectiveCubeMesh(renderer.GetDevice(), renderer.GetDeviceContext(), cubeGeometry);
+	reflectiveCubeMesh.Initialize();
+	reflectiveCubeMesh.Material.EnvMapTexture = skyboxTexture;
+	reflectiveCubeMesh.Transform.Position.x = 3.0f;
+
 
 	Viewer::UnlitMesh unlitMesh[5] =
 	{
@@ -137,12 +148,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	Viewer::Skybox skybox(renderer.GetDevice(), renderer.GetDeviceContext(), renderer);
-	skybox.SkyTexture = texLoader.LoadFromImg("right.jpg",
-		"left.jpg",
-		"top.jpg",
-		"bottom.jpg",
-		"front.jpg",
-		"back.jpg");
+	skybox.SkyTexture = skyboxTexture;
 	skybox.Initialize();
 
 	Viewer::SceneLights sceneLights(renderer.GetDevice(), renderer.GetDeviceContext());
@@ -170,6 +176,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		camera.Update(g_mouseState);
 		floorMesh.Update();
 		cubeMesh.Update();
+		reflectiveCubeMesh.Update();
 		for (int i = 0; i < 5; i++)
 		{
 			unlitMesh[i].Transform.Position = sceneLights.GetPointLights(i).Position;
@@ -182,14 +189,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		renderer.Begin();
 
 		// DRAW
-		skybox.Draw(camera);
 		cubeMesh.Draw(camera, sceneLights);
 		floorMesh.Draw(camera, sceneLights);
 		for (int i = 0; i < 5; i++)
 		{
 			unlitMesh[i].Draw(camera);
 		}
-
+		reflectiveCubeMesh.Draw(camera);
+		skybox.Draw(camera);
 		// PRESENT
 		renderer.End();
 

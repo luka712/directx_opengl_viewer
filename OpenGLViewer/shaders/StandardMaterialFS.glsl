@@ -49,7 +49,7 @@ layout (std140, binding = 3) uniform AmbientLightBuffer
 
 layout(std140, binding = 4) uniform DirectionalLightsBuffer 
 {
-    DirectionalLight u_directionalLights[MAX_DIRECTIONAL_LIGHTS];
+    DirectionalLight u_directionalLight;
 };
 
 layout(std140, binding = 5) uniform PointLightsBuffer 
@@ -120,17 +120,9 @@ void main()
     vec3 ambient =  ambientLight(u_ambientLight, u_material);
 
     // Directional
-    vec3 directional = vec3(0.0);
-    vec3 directionalSpec = vec3(0.0);
-    for (int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++) 
-    {
-        // Diffuse
-        DirectionalLight light = u_directionalLights[i];
-
-        directional += directionalDiffuseLight(light, u_material);
-        directionalSpec += directionalSpecularLight(light, u_material);
-    }
-
+    vec3 directional = directionalDiffuseLight(u_directionalLight, u_material);
+    vec3 directionalSpec = directionalSpecularLight(u_directionalLight, u_material);
+    
     // Point Lights 
     vec3 point = vec3(0.0);
     vec3 pointSpec = vec3(0.0);

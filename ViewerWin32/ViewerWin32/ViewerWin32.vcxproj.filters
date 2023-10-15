@@ -225,6 +225,15 @@
     <ClInclude Include="PosNormalGeometryBuffer.hpp">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="ReflectiveMaterialShader.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectiveMaterial.hpp">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectiveMesh.hpp">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -317,6 +326,15 @@
     <ClCompile Include="PosNormalGeometryBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="ReflectiveMaterialShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectiveMaterial.cpp">
+      <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectiveMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerWin32.rc">
@@ -390,6 +408,12 @@
       <Filter>Resource Files</Filter>
     </FxCompile>
     <FxCompile Include="DebugNormalGS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="ReflectiveMaterialVS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="ReflectiveMaterialPS.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>

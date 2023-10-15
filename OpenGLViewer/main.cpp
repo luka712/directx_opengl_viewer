@@ -18,6 +18,7 @@
 #include "mesh/Mesh.hpp"
 #include "skybox/Skybox.hpp"
 #include "mesh/UnlitMesh.hpp"
+#include "mesh/ReflectiveMesh.hpp"
 
 using namespace Viewer;
 
@@ -40,6 +41,13 @@ int main(int argc, char *args[])
 	{
 		return -1;
 	}
+
+	Viewer::CubeTexture *skyboxTexture = g_texutureLoader.LoadFromImg("assets/right.jpg",
+																	  "assets/left.jpg",
+																	  "assets/top.jpg",
+																	  "assets/bottom.jpg",
+																	  "assets/front.jpg",
+																	  "assets/back.jpg");
 
 	Geometry cubeGeometry = Geometry::CreateCubeGeometry();
 	Mesh cubeMesh(cubeGeometry);
@@ -67,6 +75,11 @@ int main(int argc, char *args[])
 	floorMesh.Transform.Scale.y = 10;
 	floorMesh.Transform.Rotation.x = 90;
 
+	ReflectiveMesh reflectiveCubeMesh(cubeGeometry);
+	reflectiveCubeMesh.Initialize();
+	reflectiveCubeMesh.Material.EnvMapTexture = skyboxTexture;
+	reflectiveCubeMesh.Transform.Position.x = 3.0f;
+
 	UnlitMesh unlitMesh[5] =
 		{
 			UnlitMesh(cubeGeometry),
@@ -82,12 +95,7 @@ int main(int argc, char *args[])
 
 	Skybox skybox;
 	skybox.Initialize();
-	skybox.SkyTexture = g_texutureLoader.LoadFromImg("assets/right.jpg",
-													 "assets/left.jpg",
-													 "assets/top.jpg",
-													 "assets/bottom.jpg",
-													 "assets/front.jpg",
-													 "assets/back.jpg");
+	skybox.SkyTexture =skyboxTexture;
 
 	SceneLights sceneLights;
 	sceneLights.Initialize();
@@ -152,6 +160,7 @@ int main(int argc, char *args[])
 		sceneLights.Update();
 		cubeMesh.Update();
 		floorMesh.Update();
+		reflectiveCubeMesh.Update();
 		for (int i = 0; i < 5; i++)
 		{
 			unlitMesh[i].Transform.Position = sceneLights.GetPointLights(i).Position;
@@ -164,13 +173,14 @@ int main(int argc, char *args[])
 		renderer.Begin();
 
 		// Draw
-		skybox.Draw(camera);
 		cubeMesh.Draw(camera, sceneLights);
 		floorMesh.Draw(camera, sceneLights);
 		for (int i = 0; i < 5; i++)
 		{
 			unlitMesh[i].Draw(camera);
 		}
+		reflectiveCubeMesh.Draw(camera);
+		skybox.Draw(camera);
 
 		renderer.End();
 

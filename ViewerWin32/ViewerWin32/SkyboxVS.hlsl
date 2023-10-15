@@ -19,7 +19,8 @@ PS_INPUT main(VS_INPUT input)
 {
     
     PS_INPUT output;
-    output.pos = mul(float4(input.pos.xyz, 1.0), ProjectionViewMatrix);
+    float4 pos = mul(float4(input.pos.xyz, 1.0), ProjectionViewMatrix);
+    output.pos = pos.xyww;
     output.tex = input.pos.xyz;
     return output;
 }
