@@ -14,6 +14,8 @@ namespace Viewer
 
     bool Renderer::Initialize(unsigned int width, unsigned int height)
     {
+        m_width = width;
+        m_height = height;
         m_glContext = SDL_GL_CreateContext(&m_window);
 
         // Initialize Glad (after creating an OpenGL context)

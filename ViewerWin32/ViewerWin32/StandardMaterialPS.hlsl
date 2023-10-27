@@ -148,8 +148,9 @@ float4 main(PS_INPUT input) : SV_TARGET
     float3 lightAmount = ambient + directional + pointL;
     float3 specularAmount = directionalSpecular + pointSpec;
     
-    float3 diffuseColor = s_diffuseTexture.Sample(s_diffuseSampler, input.tex).xyz * lightAmount * input.color;
-    float3 specularColor = s_specularTexture.Sample(s_specularSampler, input.tex).xyz * specularAmount * input.color;
+    float2 texCoords = float2(input.tex.x, 1.0 - input.tex.y);
+    float3 diffuseColor = s_diffuseTexture.Sample(s_diffuseSampler, texCoords).xyz * lightAmount * input.color;
+    float3 specularColor = s_specularTexture.Sample(s_specularSampler, texCoords).xyz * specularAmount * input.color;
 
     return float4(diffuseColor + specularColor, 1.0);
 }

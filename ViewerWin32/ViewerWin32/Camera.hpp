@@ -16,8 +16,6 @@ namespace Viewer
 	class Camera
 	{
 	protected:
-		DirectX::XMVECTOR m_eyePosition;
-		DirectX::XMVECTOR m_lookAtPosition;
 		DirectX::XMVECTOR m_upVector;
 
 		DirectX::XMMATRIX m_projectionMatrix;
@@ -29,6 +27,16 @@ namespace Viewer
 
 	public:
 		Camera(CComPtr<ID3D11Device> device, CComPtr<ID3D11DeviceContext> deviceContext, float aspectRatio);
+
+		/// <summary>
+		/// The position of the camera.
+		/// </summary>
+		DirectX::XMVECTOR EyePosition;
+
+		/// <summary>
+		/// The look at position of the camera.
+		/// </summary>
+		DirectX::XMVECTOR LookAtPosition;
 
 		DirectX::XMMATRIX ViewMatrix;
 
@@ -42,9 +50,6 @@ namespace Viewer
 		/// </summary>
 		virtual void Update(MouseState& g_mouseState);
 
-		inline DirectX::XMVECTOR GetEyePosition() const { return m_eyePosition; }
-
-		inline DirectX::XMVECTOR GetLookAtPosition() const { return m_lookAtPosition; }
 
 		inline DirectX::XMVECTOR GetUpVector() const { return m_upVector; }
 

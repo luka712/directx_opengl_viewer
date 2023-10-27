@@ -144,6 +144,10 @@
     <ClInclude Include="ReflectiveMaterial.hpp" />
     <ClInclude Include="ReflectiveMaterialShader.hpp" />
     <ClInclude Include="ReflectiveMesh.hpp" />
+    <ClInclude Include="RefractionMaterial.hpp" />
+    <ClInclude Include="RefractionMaterialShader.hpp" />
+    <ClInclude Include="RefractionMesh.hpp" />
+    <ClInclude Include="RenderTarget.hpp" />
     <ClInclude Include="SceneLights.hpp" />
     <ClInclude Include="Skybox.hpp" />
     <ClInclude Include="SkyboxShader.hpp" />
@@ -184,6 +188,10 @@
     <ClCompile Include="ReflectiveMaterial.cpp" />
     <ClCompile Include="ReflectiveMaterialShader.cpp" />
     <ClCompile Include="ReflectiveMesh.cpp" />
+    <ClCompile Include="RefractionMaterial.cpp" />
+    <ClCompile Include="RefractionMaterialShader.cpp" />
+    <ClCompile Include="RefractionMesh.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="SceneLights.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyboxShader.cpp" />
@@ -257,6 +265,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="RefractionMaterialPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="RefractionMaterialVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -288,6 +308,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

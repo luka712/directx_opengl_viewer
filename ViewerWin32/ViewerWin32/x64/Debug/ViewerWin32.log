@@ -1,2 +1,5 @@
-﻿  Skybox.cpp
+﻿  ViewerWin32.cpp
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(192,22): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(215,20): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\ViewerWin32\ViewerWin32.cpp(219,21): warning C4305: '=': truncation from 'double' to 'float'
   ViewerWin32.vcxproj -> C:\Users\lukaa\OneDrive\Desktop\Projects\directx_opengl_viewer\ViewerWin32\x64\Debug\ViewerWin32.exe

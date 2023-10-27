@@ -17,8 +17,8 @@ namespace Viewer
 		sd.OutputWindow = windowHandle;
 		sd.SampleDesc.Count = 1;
 		sd.Windowed = TRUE;
-		sd.Flags = D3D11_CREATE_DEVICE_DEBUG; 
-		
+		sd.Flags = D3D11_CREATE_DEVICE_DEBUG;
+
 		// Create the Direct3D 11 device and swap chain
 		HRESULT hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,
@@ -103,7 +103,7 @@ namespace Viewer
 		}
 
 
-	
+
 
 		return true;
 	}
@@ -120,6 +120,14 @@ namespace Viewer
 		m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
+	void Renderer::DrawToScreenTexture()
+	{
+		ID3D11RenderTargetView* renderTargetViewPtr = m_renderTargetView.p;
+		ID3D11DepthStencilView* depthStencilViewPtr = m_depthStencilView.p;
+		m_deviceContext->OMSetRenderTargets(1, &renderTargetViewPtr, depthStencilViewPtr);
+	}
+
+
 	void Renderer::End()
 	{
 		// present
@@ -128,7 +136,7 @@ namespace Viewer
 
 	void Renderer::ResetRasterizerState()
 	{
-m_deviceContext->RSSetState(m_rasterizerState);
+		m_deviceContext->RSSetState(m_rasterizerState);
 	}
 
 	bool Renderer::ConfigureDepthStencil(unsigned int Width, unsigned int Height)

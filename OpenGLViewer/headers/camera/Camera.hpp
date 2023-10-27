@@ -17,8 +17,6 @@ namespace Viewer
     class Camera
     {
     protected:
-        glm::vec3 m_eyePosition;
-        glm::vec3 m_lookAtPosition;
         glm::vec3 m_upVector;
 
         glm::mat4x4 m_projectionMatrix;
@@ -36,15 +34,22 @@ namespace Viewer
 
         Camera(float aspectRatio);
 
+        /// @brief The eye position of the camera.
+        glm::vec3 EyePosition;
+
+        /// @brief The look at position of the camera.
+        glm::vec3 LootAtPosition;
+
+        /// @brief The view matrix of the camera.
         glm::mat4x4 ViewMatrix;
 
         virtual void Initialize();
 
         // @brief Gets the eye position of the camera.    
-        inline glm::vec3 GetEyePosition() const { return m_eyePosition; }
+        inline glm::vec3 GetEyePosition() const { return EyePosition; }
 
         // @brief Gets the look at position of the camera.
-        inline glm::vec3 GetLookAtPosition() const { return m_lookAtPosition; }
+        inline glm::vec3 GetLookAtPosition() const { return LootAtPosition; }
 
         // @brief Gets the up vector of the camera.
         inline glm::vec3 GetUpVector() const { return m_upVector; }

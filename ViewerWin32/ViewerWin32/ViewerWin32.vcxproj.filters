@@ -112,6 +112,12 @@
     <Filter Include="Header Files\vendor\Transform">
       <UniqueIdentifier>{6d187c57-83eb-4787-a3e8-f92043b2aa60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RenderTarget">
+      <UniqueIdentifier>{789d7f5d-c9cf-438a-a145-924686829292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderTarget">
+      <UniqueIdentifier>{3fd0c63e-1633-49ea-9698-183b6f998310}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -234,6 +240,18 @@
     <ClInclude Include="ReflectiveMesh.hpp">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="RefractionMaterial.hpp">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="RefractionMaterialShader.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RefractionMesh.hpp">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.hpp">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewerWin32.cpp">
@@ -335,6 +353,18 @@
     <ClCompile Include="ReflectiveMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="RefractionMaterialShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RefractionMaterial.cpp">
+      <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="RefractionMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ViewerWin32.rc">
@@ -416,5 +446,14 @@
     <FxCompile Include="ReflectiveMaterialPS.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
+    <FxCompile Include="RefractionMaterialVS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="RefractionMaterialPS.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
   </ItemGroup>
 </Project>

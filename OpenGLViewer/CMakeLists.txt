@@ -32,6 +32,13 @@ FetchContent_Declare(
     GIT_TAG 0.9.9.8)
     FetchContent_MakeAvailable(glm)
 
+# IMGUI
+FetchContent_Declare(
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG v1.89.9)
+FetchContent_MakeAvailable(imgui)
+
 # GLAD
 add_subdirectory(vendored/glad EXCLUDE_FROM_ALL)
 
@@ -39,6 +46,11 @@ file(GLOB SRC_FILES
     shaders/*.glsl
     headers/*.hpp src/*.cpp 
     headers/**/*.hpp src/**/*.cpp 
+
+    # imgui targets
+    ${CMAKE_BINARY_DIR}/_deps/imgui-src/backends/imgui_impl_sdl2.cpp 
+    ${CMAKE_BINARY_DIR}/_deps/imgui-src/backends/imgui_impl_opengl3.cpp
+    ${CMAKE_BINARY_DIR}/_deps/imgui-src/imgui*.cpp
 )
 
 # sources
@@ -54,6 +66,7 @@ endif()
 target_link_libraries(Viewer PRIVATE SDL2::SDL2 SDL2_image Glad glm)
 
 include_directories(${CMAKE_BINARY_DIR}/_deps/sdl2_image-src/include)
+include_directories(${CMAKE_BINARY_DIR}/_deps/imgui-src) # add imgui to include path
 include_directories("headers")
 include_directories("vendored")
 

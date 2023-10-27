@@ -8,9 +8,10 @@ namespace Viewer
 	{
 	}
 
-	void Texture2D::Initialize(unsigned char* data, unsigned int width, unsigned int height)
+	void Texture2D::Initialize(unsigned char* data, unsigned int width, unsigned int height, UINT bindFlags)
 	{
 		D3D11_TEXTURE2D_DESC textureDesc = {};
+		ZeroMemory(&textureDesc, sizeof(textureDesc));
 		textureDesc.Width = width;
 		textureDesc.Height = height;
 		textureDesc.MipLevels = 1;
@@ -19,17 +20,24 @@ namespace Viewer
 		textureDesc.SampleDesc.Count = 1;
 		textureDesc.SampleDesc.Quality = 0;
 		textureDesc.Usage = D3D11_USAGE_DEFAULT;
-		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.BindFlags = bindFlags;
 		textureDesc.CPUAccessFlags = 0;
 		textureDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA initData = {};
-		initData.pSysMem = data;
-		initData.SysMemPitch = width * 4;
-		initData.SysMemSlicePitch = 0;
+		HRESULT hr;
+		if (data != nullptr)
+		{
+			D3D11_SUBRESOURCE_DATA initData = {};
+			initData.pSysMem = data;
+			initData.SysMemPitch = width * 4;
+			initData.SysMemSlicePitch = 0;
 
-		HRESULT hr = m_device->CreateTexture2D(&textureDesc, &initData, &m_texture.p);
-
+			hr = m_device->CreateTexture2D(&textureDesc, &initData, &m_texture.p);
+		}
+		else
+		{
+			hr = m_device->CreateTexture2D(&textureDesc, nullptr, &m_texture.p);
+		}
 		if (FAILED(hr))
 		{
 			// Handle texture creation failure

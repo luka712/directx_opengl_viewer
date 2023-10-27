@@ -66,7 +66,7 @@ namespace Viewer
 		float x = m_radius * cos(m_inclination) * cos(m_azimuth);
 		float y = m_radius * sin(m_inclination);
 		float z = m_radius * cos(m_inclination) * sin(m_azimuth);
-		m_eyePosition = glm::vec3(x, y, z);
+		EyePosition = glm::vec3(x, y, z);
 
 		Camera::Update(mouseState);
 	}

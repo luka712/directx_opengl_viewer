@@ -29,6 +29,8 @@
 #include "Skybox.hpp"
 #include "UnlitMesh.hpp"
 #include "ReflectiveMesh.hpp"
+#include "RefractionMesh.hpp"
+#include "RenderTarget.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -41,8 +43,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ int       nCmdShow)
 {
 
-	unsigned int Width = 1280;
-	unsigned int Height = 720;
+	unsigned int Width = 1920;
+	unsigned int Height = 1080;
 
 	// Initialize COM
 	HRESULT hr = CoInitialize(nullptr);
@@ -94,6 +96,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
+	Viewer::RenderTarget renderTarget(renderer.GetDevice(), renderer.GetDeviceContext(), renderer, Width, Height);
+	renderTarget.Initialize();
+
 	Viewer::TextureLoader texLoader(renderer.GetDevice());
 	Viewer::CubeTexture* skyboxTexture = texLoader.LoadFromImg("right.jpg",
 		"left.jpg",
@@ -113,8 +118,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	cubeMesh.Material.Shininess = 32.0f;
 
 
-	Viewer::Geometry floorGeometry = Viewer::Geometry::CreateQuadGeometry();
-	Viewer::Mesh floorMesh(renderer.GetDevice(), renderer.GetDeviceContext(), floorGeometry);
+	Viewer::Geometry quadGeometry = Viewer::Geometry::CreateQuadGeometry();
+	Viewer::Mesh floorMesh(renderer.GetDevice(), renderer.GetDeviceContext(), quadGeometry);
 	floorMesh.DebugNormals = true;
 	floorMesh.Initialize();
 	floorMesh.Material.DiffuseTexture = texLoader.LoadFromImg("wood_diffuse.png");
@@ -128,10 +133,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	floorMesh.Transform.Scale.y = 10;
 	floorMesh.Transform.Rotation.x = 90;
 
+	Viewer::Mesh mirrorMesh(renderer.GetDevice(), renderer.GetDeviceContext(), quadGeometry);
+	mirrorMesh.Initialize();
+	mirrorMesh.DebugNormals = true;
+	mirrorMesh.Transform.Position = DirectX::XMFLOAT3(0, 2, 5);
+	mirrorMesh.Transform.Scale = DirectX::XMFLOAT3(5, 5, 1);
+	mirrorMesh.Material.DiffuseTexture = &renderTarget.GetTexture();
+	mirrorMesh.Material.SpecularTexture = &renderTarget.GetTexture();
+
 	Viewer::ReflectiveMesh reflectiveCubeMesh(renderer.GetDevice(), renderer.GetDeviceContext(), cubeGeometry);
 	reflectiveCubeMesh.Initialize();
 	reflectiveCubeMesh.Material.EnvMapTexture = skyboxTexture;
 	reflectiveCubeMesh.Transform.Position.x = 3.0f;
+
+	Viewer::RefractionMesh refractionCubeMesh(renderer.GetDevice(), renderer.GetDeviceContext(), cubeGeometry);
+	refractionCubeMesh.Initialize();
+	refractionCubeMesh.Material.RefractionIndex = 1.0f;
+	refractionCubeMesh.Material.EnvMapTexture = skyboxTexture;
+	refractionCubeMesh.Transform.Position.x = -3.0f;
 
 
 	Viewer::UnlitMesh unlitMesh[5] =
@@ -161,6 +180,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	Viewer::OrbitCamera camera(renderer.GetDevice(), renderer.GetDeviceContext(), aspectRatio);
 	camera.Initialize();
 
+	Viewer::Camera textureCamera(renderer.GetDevice(), renderer.GetDeviceContext(), 1);
+	textureCamera.EyePosition.m128_f32[0] = mirrorMesh.Transform.Position.x;
+	textureCamera.EyePosition.m128_f32[1] = mirrorMesh.Transform.Position.y;
+	textureCamera.EyePosition.m128_f32[2] = 6;
+	textureCamera.LookAtPosition.m128_f32[0] = mirrorMesh.Transform.Position.x;
+	textureCamera.LookAtPosition.m128_f32[1] = mirrorMesh.Transform.Position.y;
+	textureCamera.LookAtPosition.m128_f32[2] = mirrorMesh.Transform.Position.z + -1;
+	textureCamera.Initialize();
+
+	float cubeDirection = 0.02;
 
 	// Main message loop:
 	while (true)
@@ -172,11 +201,29 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
-		sceneLights.Update();
 		camera.Update(g_mouseState);
-		floorMesh.Update();
+		DirectX::XMVECTOR I = DirectX::XMVectorSubtract(camera.LookAtPosition, camera.EyePosition);
+		textureCamera.LookAtPosition = DirectX::XMVector3Reflect(I, DirectX::XMVectorSet(0, 0, 1, 0));
+		textureCamera.Update(g_mouseState);
+		sceneLights.Update();
+
+		cubeMesh.Transform.Position.x += cubeDirection;
+		cubeMesh.Transform.Position.y += cubeDirection;
+		cubeMesh.Transform.Position.z += cubeDirection;
+		if (cubeMesh.Transform.Position.y <= 0)
+		{
+			cubeDirection = 0.01;
+		}
+		else if (cubeMesh.Transform.Position.y >= 1.5)
+		{
+			cubeDirection = -0.01;
+		}
 		cubeMesh.Update();
+		floorMesh.Update();
 		reflectiveCubeMesh.Update();
+		refractionCubeMesh.Update();
+		mirrorMesh.Update();
+
 		for (int i = 0; i < 5; i++)
 		{
 			unlitMesh[i].Transform.Position = sceneLights.GetPointLights(i).Position;
@@ -188,6 +235,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		renderer.Begin();
 
+		if (true)
+		{
+			renderTarget.Use();
+
+			// DRAW
+			cubeMesh.Draw(textureCamera, sceneLights);
+			floorMesh.Draw(textureCamera, sceneLights);
+			reflectiveCubeMesh.Draw(textureCamera);
+			refractionCubeMesh.Draw(textureCamera);
+			skybox.Draw(textureCamera);
+
+			renderer.DrawToScreenTexture();
+		}
+
 		// DRAW
 		cubeMesh.Draw(camera, sceneLights);
 		floorMesh.Draw(camera, sceneLights);
@@ -196,6 +257,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			unlitMesh[i].Draw(camera);
 		}
 		reflectiveCubeMesh.Draw(camera);
+		refractionCubeMesh.Draw(camera);
+		mirrorMesh.Draw(camera, sceneLights);
 		skybox.Draw(camera);
 		// PRESENT
 		renderer.End();

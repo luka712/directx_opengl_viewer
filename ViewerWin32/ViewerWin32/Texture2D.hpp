@@ -11,7 +11,14 @@ namespace Viewer
 	public:
 		Texture2D(CComPtr<ID3D11Device> device);
 
-		void Initialize(unsigned char* Data, unsigned int Width, unsigned int Height);
+		/// <summary>
+		/// Initialie the texture.
+		/// </summary>
+		/// <param name="Data">The texture data</param>
+		/// <param name="Width">The width of a texture</param>
+		/// <param name="Height">The height of a texture</param>
+		/// <param name="bindFlags">Binds flags, by default D3D11_BIND_RENDER_TARGET. Pass D3D11_BIND_RENDER_TARGET to use as render target.</param>
+		void Initialize(unsigned char* Data, unsigned int Width, unsigned int Height, UINT bindFlags = D3D11_BIND_SHADER_RESOURCE);
 
 		/// <summary>
 		/// Gets the texture.

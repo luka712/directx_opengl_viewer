@@ -18,6 +18,11 @@ namespace Viewer
         float SpecularCoefficient;
         float Shininess;
     };
+
+    struct RefractionMaterialData
+    {
+        float RefractionIndex;
+    };
 }
 
 #endif

@@ -67,7 +67,7 @@ namespace Viewer
 		float x = m_radius * cos(m_inclination) * cos(m_azimuth);
 		float y = m_radius * sin(m_inclination);
 		float z = m_radius * cos(m_inclination) * sin(m_azimuth);
-		m_eyePosition = DirectX::XMVECTOR({ x, y, z, 0 });
+		EyePosition = DirectX::XMVECTOR({ x, y, z, 0 });
 
 		Camera::Update(g_mouseState);
 	}

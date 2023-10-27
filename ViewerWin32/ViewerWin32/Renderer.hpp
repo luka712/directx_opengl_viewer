@@ -13,6 +13,7 @@ namespace Viewer
 	public:
 		bool Initialize(HWND windowHandle, unsigned int Width, unsigned int Height);
 		void Begin();
+		void DrawToScreenTexture();
 		void End();
 
 		void ResetRasterizerState();
